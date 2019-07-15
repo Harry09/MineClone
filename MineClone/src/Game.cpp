@@ -131,6 +131,11 @@ void Game::update()
 		_camera.move({ -cameraSpeed, 0.f, 0.f });
 	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
 		_camera.move({ cameraSpeed, 0.f, 0.f });
+
+	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		_block->update();
+	}
 }
 
 void Game::render()

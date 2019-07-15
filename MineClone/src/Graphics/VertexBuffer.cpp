@@ -1,45 +1,26 @@
 #include "VertexBuffer.hpp"
 
+#include <algorithm>
+
 #include "Texture.hpp"
 
-//VertexBuffer::VertexBuffer(PrimitiveType primitiveType) noexcept
-//	: 
-//	_vbo(0),
-//	_vao(0),
-//	_ebo(0),
-//	_primitiveType(primitiveType)
-//{
-//}
-//
-//VertexBuffer::VertexBuffer(size_t size, PrimitiveType primitiveType) noexcept
-//	:
-//	_vbo(0),
-//	_vao(0),
-//	_ebo(0),
-//	_primitiveType(primitiveType)
-//{
-//
-//}
-
-VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType) noexcept
-	:
-	_vertices(vertices, vertices + size),
-	_primitiveType(primitiveType)
+VertexBuffer::VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
+	: 
+	_vertices(size, Vertex()),
+	_primitiveType(primitiveType),
+	_drawType(drawType)
 {
 	_init();
 }
 
-//VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType) noexcept
-//	:
-//	_vbo(0),
-//	_vao(0),
-//	_ebo(0),
-//	_vertices(vertices, vertices + verticesCount),
-//	_indices(indices, indices + indicesCount),
-//	_primitiveType(primitiveType)
-//{
-//	glGenBuffers(1, &_ebo);
-//}
+VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
+	:
+	_vertices(vertices, vertices + size),
+	_primitiveType(primitiveType),
+	_drawType(drawType)
+{
+	_init();
+}
 
 VertexBuffer::~VertexBuffer()
 {
@@ -50,13 +31,6 @@ VertexBuffer::~VertexBuffer()
 	{
 		glDeleteBuffers(1, &_ebo);
 	}
-}
-
-void VertexBuffer::create(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType)
-{
-	_vertices = Vertices_t{ vertices, vertices + size };
-	_primitiveType = primitiveType;
-	_init();
 }
 
 void VertexBuffer::bind()
@@ -71,6 +45,31 @@ void VertexBuffer::unbind()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+const Vertex& VertexBuffer::getVertex(size_t index)
+{
+	return _vertices.at(index);
+}
+
+void VertexBuffer::setVertex(size_t index, const Vertex& vertex)
+{
+	_updateRange.x = std::min(_updateRange.x, index);
+	_updateRange.y = std::max(_updateRange.y, index);
+
+	_vertices.at(index) = vertex;
+
+	_needUpdate = true;
+}
+
+Vertex& VertexBuffer::operator[](size_t index)
+{
+	_updateRange.x = std::min(_updateRange.x, index);
+	_updateRange.y = std::max(_updateRange.y, index);
+
+	_needUpdate = true;
+
+	return _vertices.at(index);
+}
+
 void VertexBuffer::setTexture(Texture& texture)
 {
 	_texture = texture;
@@ -79,6 +78,22 @@ void VertexBuffer::setTexture(Texture& texture)
 void VertexBuffer::setMatrix(const glm::mat4x4& mat)
 {
 	_mat = mat;
+}
+
+void VertexBuffer::update()
+{
+	if (_needUpdate)
+	{
+		bind();
+
+		auto offset = _updateRange.x * sizeof(Vertex);
+		auto size = (_updateRange.y - _updateRange.x + 1) * sizeof(Vertex);
+
+		glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
+		unbind();
+
+		_needUpdate = false;
+	}
 }
 
 void VertexBuffer::draw(ShaderProgram& shaderProgram)
@@ -100,10 +115,11 @@ void VertexBuffer::_init()
 
 	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertice_t), _vertices.data(), GL_STATIC_DRAW); // TODO: Add more draw type
 
-	if (_ebo != 0)
+	// TODO
+	/*if (_ebo != 0)
 	{
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned), _indices.data(), GL_STATIC_DRAW);
-	}
+	}*/
 
 	using posType = decltype(Vertex::position);
 	using colorType = decltype(Vertex::color);
