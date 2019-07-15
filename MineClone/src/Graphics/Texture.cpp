@@ -20,25 +20,31 @@ Texture::~Texture() noexcept
 }
 
 Texture::Texture(Texture& other) noexcept
-	: _texture(other._texture)
+	: 
+	_texture(other._texture),
+	_size(other._size)
 {
 }
 
 Texture& Texture::operator=(Texture& other) noexcept
 {
 	_texture = other._texture;
+	_size = other._size;
 
 	return *this;
 }
 
 Texture::Texture(Texture&& other) noexcept
-	: _texture(std::move(other._texture))
+	: 
+	_texture(std::move(other._texture)),
+	_size(std::move(other._size))
 {
 }
 
 Texture& Texture::operator=(Texture&& other) noexcept
 {
 	_texture = std::move(other._texture);
+	_size = std::move(other._size);
 
 	return *this;
 }
@@ -53,6 +59,8 @@ void Texture::loadFromFile(const std::string& filePath)
 	{
 		return;
 	}
+
+	_size = { width, height };
 
 	glGenTextures(1, &_texture);
 	glBindTexture(GL_TEXTURE_2D, _texture);

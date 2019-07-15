@@ -2,10 +2,14 @@
 #include <cstdint>
 #include <string>
 
+#include <glm/vec2.hpp>
+
 class Texture
 {
 private:
 	uint32_t _texture = 0;
+
+	glm::uvec2 _size{ 0.f };
 
 public:
 	Texture() noexcept = default;
@@ -18,8 +22,9 @@ public:
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 
-
 	void loadFromFile(const std::string& filePath);
+
+	const glm::uvec2& getSize() const { return _size; }
 
 	bool isValid() const { return _texture != 0; }
 
