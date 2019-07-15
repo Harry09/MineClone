@@ -2,6 +2,8 @@ workspace "MineClone"
     configurations { "Debug", "Release" }
     architecture "x86_64"
 
+    location "MineClone"
+
     language "C++"
     startproject "MineClone"
     cppdialect "C++17"
@@ -29,9 +31,9 @@ project "glad"
 project "MineClone"
     kind "ConsoleApp"
     targetdir "bin/%{cfg.buildcfg}"
-    includedirs { "vendor/glad/include", "vendor/glfw/include" }
+    includedirs { "vendor/glad/include", "vendor/glfw3/include", "vendor/glm" }
 
-    libdirs { "vendor/glfw/src/%{cfg.longname}" }
+    libdirs { "vendor/glfw3/src/%{cfg.longname}" }
     links { "glad", "glfw3" }
 
-    files { "src/**.hpp", "src/**.cpp" }
+    files { "MineClone/src/**.hpp", "MineClone/src/**.cpp" }
