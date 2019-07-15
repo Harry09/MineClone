@@ -31,7 +31,7 @@ project "glad"
 project "MineClone"
     kind "ConsoleApp"
     targetdir "bin/%{cfg.buildcfg}"
-    includedirs { "vendor/glad/include", "vendor/glfw3/include", "vendor/glm" }
+    includedirs { "MineClone/src", "vendor/glad/include", "vendor/glfw3/include", "vendor/glm", "vendor/stb" }
 
     libdirs { "vendor/glfw3/src/%{cfg.longname}" }
     links { "glad", "glfw3" }
