@@ -6,9 +6,9 @@
 
 struct Vertex
 {
-	glm::vec3 position { 0.f, 0.f, 0.f };
-	glm::vec4 color { 0.f, 0.f, 0.f, 1.f };
-	glm::vec2 texCoord { 0.f, 0.f };
+	glm::vec3 position { 0.f };
+	glm::vec4 color { 1.f };
+	glm::vec2 texCoord { 0.f };
 
 	// constructor
 	Vertex() noexcept = default;

@@ -9,7 +9,7 @@ class Texture
 private:
 	uint32_t _texture = 0;
 
-	glm::uvec2 _size{ 0.f };
+	glm::uvec2 _size{ 0 };
 
 public:
 	Texture() noexcept = default;
