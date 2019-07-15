@@ -8,7 +8,8 @@ workspace "MineClone"
     startproject "MineClone"
     cppdialect "C++17"
 
-    
+    objdir "obj/%{prj.name}/%{cfg.buildcfg}"
+
     filter "configurations:Debug"
         defines { "DEBUG" }
         symbols "On"
@@ -32,6 +33,7 @@ project "MineClone"
     kind "ConsoleApp"
     targetdir "bin/%{cfg.buildcfg}"
     includedirs { "MineClone/src", "vendor/glad/include", "vendor/glfw3/include", "vendor/glm", "vendor/stb" }
+    debugdir "MineClone/assets"
 
     libdirs { "vendor/glfw3/src/%{cfg.longname}" }
     links { "glad", "glfw3" }
