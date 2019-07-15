@@ -8,7 +8,7 @@
 #include "Vertex.hpp"
 #include "PrimitiveType.hpp"
 #include "Texture.hpp"
-#include "RenderState.hpp"
+#include "ShaderProgram.hpp"
 
 class VertexBuffer
 {

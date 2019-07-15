@@ -4,7 +4,6 @@
 
 #include "Graphics/Camera.hpp"
 #include "Graphics/ShaderProgram.hpp"
-#include "Graphics/RenderState.hpp"
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/ShaderProgram.hpp"
 
