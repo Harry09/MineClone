@@ -2,29 +2,25 @@
 
 Vertex::Vertex(const glm::vec3& position)
 	:
-	position(position),
-	color(1.f, 1.f, 1.f, 1.f),
-	texCoord(0.f, 0.f)
+	position(position)
 {
 }
 
-Vertex::Vertex(const glm::vec3& position, const glm::vec4& color)
+Vertex::Vertex(const glm::vec3& position, const glm::vec3& color)
 	:
 	position(position),
-	color(color),
-	texCoord(0.f, 0.f)
+	color(color)
 {
 }
 
 Vertex::Vertex(const glm::vec3& position, const glm::vec2& texCoord)
 	:
 	position(position),
-	color(1.f, 1.f, 1.f, 1.f),
 	texCoord(texCoord)
 {
 }
 
-Vertex::Vertex(const glm::vec3& position, const glm::vec4& color, const glm::vec2& texCoord)
+Vertex::Vertex(const glm::vec3& position, const glm::vec3& color, const glm::vec2& texCoord)
 	: 
 	position(position),
 	color(color),
