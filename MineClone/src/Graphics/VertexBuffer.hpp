@@ -55,7 +55,7 @@ public:
 	VertexBuffer() noexcept = default;
 	VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
 	VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
-	//VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType) noexcept;
+	VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
 
 	~VertexBuffer();
 

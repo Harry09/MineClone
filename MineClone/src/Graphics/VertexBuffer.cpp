@@ -22,6 +22,18 @@ VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType
 	_init();
 }
 
+VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType) noexcept
+	: 
+	_vertices(vertices, vertices + verticesCount),
+	_indices(indices, indices + indicesCount),
+	_primitiveType(primitiveType),
+	_drawType(drawType)
+{
+	glGenBuffers(1, &_ebo);
+
+	_init();
+}
+
 VertexBuffer::~VertexBuffer()
 {
 	glDeleteVertexArrays(1, &_vao);
@@ -37,17 +49,27 @@ void VertexBuffer::bind()
 {
 	glBindVertexArray(_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, _vbo);
+
+	if (_ebo != 0)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
+	}
 }
 
 void VertexBuffer::unbind()
 {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	if (_ebo != 0)
+	{
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
 }
 
 const Vertex& VertexBuffer::getVertex(size_t index)
 {
-	return _vertices.at(index);
+	return _vertices[index];
 }
 
 void VertexBuffer::setVertex(size_t index, const Vertex& vertex)
@@ -55,7 +77,7 @@ void VertexBuffer::setVertex(size_t index, const Vertex& vertex)
 	_updateRange.x = std::min(_updateRange.x, index);
 	_updateRange.y = std::max(_updateRange.y, index);
 
-	_vertices.at(index) = vertex;
+	_vertices[index] = vertex;
 
 	_needUpdate = true;
 }
@@ -67,7 +89,7 @@ Vertex& VertexBuffer::operator[](size_t index)
 
 	_needUpdate = true;
 
-	return _vertices.at(index);
+	return _vertices[index];
 }
 
 void VertexBuffer::setTexture(Texture& texture)
@@ -102,7 +124,15 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 
 	bind();
 	glBindTexture(GL_TEXTURE_2D, _texture.getNativeHandle());
-	glDrawArrays(static_cast<GLenum>(_primitiveType), 0, static_cast<GLsizei>(getSize()));
+
+	if (_ebo != 0)
+	{
+		glDrawElements(static_cast<GLenum>(_primitiveType), _indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glDrawArrays(static_cast<GLenum>(_primitiveType), 0, static_cast<GLsizei>(getSize()));
+	}
 	unbind();
 }
 
@@ -113,13 +143,12 @@ void VertexBuffer::_init()
 
 	bind();
 
-	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertice_t), _vertices.data(), GL_STATIC_DRAW); // TODO: Add more draw type
+	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertice_t), _vertices.data(), _drawType); // TODO: Add more draw type
 
-	// TODO
-	/*if (_ebo != 0)
+	if (_ebo != 0)
 	{
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned), _indices.data(), GL_STATIC_DRAW);
-	}*/
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(Indices_t), _indices.data(), _drawType);
+	}
 
 	using posType = decltype(Vertex::position);
 	using colorType = decltype(Vertex::color);
