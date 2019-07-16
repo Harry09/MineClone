@@ -41,6 +41,8 @@ glm::vec2 TextureMap::getTextureCoords(Textures textureId, Corner corner)
 			return getTextureCoords(1, 0, corner);
 		case Textures::GrassTop:
 			return getTextureCoords(2, 0, corner);
+		case Textures::Stone:
+			return getTextureCoords(3, 0, corner);
 	}
 
 	return getTextureCoords(15, 15, corner);

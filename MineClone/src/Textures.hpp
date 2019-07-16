@@ -4,5 +4,6 @@ enum class Textures
 {
 	Dirt,
 	GrassSide,
-	GrassTop
+	GrassTop,
+	Stone
 };
