@@ -31,17 +31,17 @@ glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner cor
 	return coords;
 }
 
-glm::vec2 TextureMap::getTextureCoords(Textures textureId, Corner corner)
+glm::vec2 TextureMap::getTextureCoords(Blocks blockId, Corner corner)
 {
-	switch (textureId)
+	switch (blockId)
 	{
-		case Textures::Dirt:
+		case Blocks::Dirt:
 			return getTextureCoords(0, 0, corner);
-		case Textures::GrassSide:
+		case Blocks::GrassSide:
 			return getTextureCoords(1, 0, corner);
-		case Textures::GrassTop:
+		case Blocks::GrassTop:
 			return getTextureCoords(2, 0, corner);
-		case Textures::Stone:
+		case Blocks::Stone:
 			return getTextureCoords(3, 0, corner);
 	}
 

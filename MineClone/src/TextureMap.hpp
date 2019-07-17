@@ -4,7 +4,7 @@
 
 #include "Graphics/Texture.hpp"
 
-#include "Textures.hpp"
+#include "Blocks/Blocks.hpp"
 
 class TextureMap
 {
@@ -26,5 +26,5 @@ public:
 	TextureMap(Texture& texture, unsigned singleTextureSize);
 
 	glm::vec2 getTextureCoords(unsigned row, unsigned column, Corner corner);
-	glm::vec2 getTextureCoords(Textures textureId, Corner corner);
+	glm::vec2 getTextureCoords(Blocks blockId, Corner corner);
 };

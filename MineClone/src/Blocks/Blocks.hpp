@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-enum class Textures
+enum class Blocks
 {
 	Dirt,
 	GrassSide,
