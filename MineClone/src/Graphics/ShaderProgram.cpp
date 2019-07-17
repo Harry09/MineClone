@@ -47,42 +47,56 @@ bool ShaderProgram::isValid()
 
 void ShaderProgram::setUniform(const char* name, bool value)
 {
-	glUniform1i(glGetUniformLocation(_shaderProgram, name), value);
+	glUniform1i(getUniformLocation(name), value);
 }
 
 void ShaderProgram::setUniform(const char* name, int value)
 {
-	glUniform1i(glGetUniformLocation(_shaderProgram, name), value);
+	glUniform1i(getUniformLocation(name), value);
 }
 
 void ShaderProgram::setUniform(const char* name, unsigned value)
 {
-	glUniform1ui(glGetUniformLocation(_shaderProgram, name), value);
+	glUniform1ui(getUniformLocation(name), value);
 }
 
 void ShaderProgram::setUniform(const char* name, float value)
 {
-	glUniform1f(glGetUniformLocation(_shaderProgram, name), value);
+	glUniform1f(getUniformLocation(name), value);
 }
 
 void ShaderProgram::setUniform(const char* name, const glm::vec2& value)
 {
-	glUniform2f(glGetUniformLocation(_shaderProgram, name), value.x, value.y);
+	glUniform2f(getUniformLocation(name), value.x, value.y);
 }
 
 void ShaderProgram::setUniform(const char* name, const glm::vec3& value)
 {
-	glUniform3f(glGetUniformLocation(_shaderProgram, name), value.x, value.y, value.z);
+	glUniform3f(getUniformLocation(name), value.x, value.y, value.z);
 }
 
 void ShaderProgram::setUniform(const char* name, const glm::vec4& value)
 {
-	glUniform4f(glGetUniformLocation(_shaderProgram, name), value.x, value.y, value.z, value.w);
+	glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w);
 }
 
 void ShaderProgram::setUniform(const char* name, const glm::mat4x4& value)
 {
-	auto asdf = glGetUniformLocation(_shaderProgram, name);
+	glUniformMatrix4fv(getUniformLocation(name), 1, false, glm::value_ptr(value));
+}
 
-	glUniformMatrix4fv(asdf, 1, false, glm::value_ptr(value));
+unsigned ShaderProgram::getUniformLocation(const char* name)
+{
+	auto location = _uniformLocations.find(name);
+
+	if (location == _uniformLocations.end())
+	{
+		auto loc = glGetUniformLocation(_shaderProgram, name);
+
+		_uniformLocations[name] = loc;
+
+		return loc;
+	}
+
+	return (*location).second; 
 }

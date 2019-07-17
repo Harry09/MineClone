@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <type_traits>
+#include <unordered_map>
 
 #include <glad/glad.h>
 #include <glm/vec2.hpp>
@@ -13,6 +14,8 @@ class ShaderProgram
 {
 private:
 	unsigned _shaderProgram;
+
+	std::unordered_map<std::string, unsigned> _uniformLocations;
 
 public:
 	ShaderProgram();
@@ -50,4 +53,7 @@ public:
 
 		glLinkProgram(_shaderProgram);
 	}
+
+private:
+	unsigned getUniformLocation(const char* name);
 };
