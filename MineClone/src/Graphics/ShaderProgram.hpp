@@ -17,11 +17,11 @@ private:
 public:
 	ShaderProgram();
 
-	ShaderProgram(ShaderProgram& other);
-	ShaderProgram& operator=(ShaderProgram& other);
+	ShaderProgram(const ShaderProgram& other) noexcept;
+	ShaderProgram& operator=(const ShaderProgram& other) noexcept;
 
-	ShaderProgram(ShaderProgram&& other);
-	ShaderProgram& operator=(ShaderProgram&& other);
+	ShaderProgram(ShaderProgram&& other) noexcept;
+	ShaderProgram& operator=(ShaderProgram&& other) noexcept;
 
 	template<typename... Ts>
 	ShaderProgram(Ts... ts) : ShaderProgram()

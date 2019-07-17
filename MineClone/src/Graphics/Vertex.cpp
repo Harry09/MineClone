@@ -17,7 +17,7 @@ Vertex& Vertex::operator=(const Vertex& other) noexcept
 	return *this;
 }
 
-Vertex::Vertex(const Vertex&& other) noexcept
+Vertex::Vertex(Vertex&& other) noexcept
 	: 
 	position(std::move(other.position)), 
 	color(std::move(other.color)),
@@ -25,7 +25,7 @@ Vertex::Vertex(const Vertex&& other) noexcept
 {
 }
 
-Vertex& Vertex::operator=(const Vertex&& other) noexcept
+Vertex& Vertex::operator=(Vertex&& other) noexcept
 {
 	position = std::move(other.position);
 	color = std::move(other.color);

@@ -16,8 +16,8 @@ public:
 	Texture(const std::string& filePath) noexcept;
 	~Texture() noexcept;
 	
-	Texture(Texture& other) noexcept;
-	Texture& operator=(Texture& othe) noexcept;
+	Texture(const Texture& other) noexcept;
+	Texture& operator=(const Texture& othe) noexcept;
 
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;

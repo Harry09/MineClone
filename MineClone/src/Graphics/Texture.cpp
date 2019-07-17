@@ -19,14 +19,14 @@ Texture::~Texture() noexcept
 	_texture = 0;
 }
 
-Texture::Texture(Texture& other) noexcept
+Texture::Texture(const Texture& other) noexcept
 	: 
 	_texture(other._texture),
 	_size(other._size)
 {
 }
 
-Texture& Texture::operator=(Texture& other) noexcept
+Texture& Texture::operator=(const Texture& other) noexcept
 {
 	_texture = other._texture;
 	_size = other._size;

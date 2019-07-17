@@ -47,6 +47,6 @@ struct Vertex
 	Vertex& operator=(const Vertex& other) noexcept;
 
 	// move
-	Vertex(const Vertex&& other) noexcept;
-	Vertex& operator=(const Vertex&& other) noexcept;
+	Vertex(Vertex&& other) noexcept;
+	Vertex& operator=(Vertex&& other) noexcept;
 };

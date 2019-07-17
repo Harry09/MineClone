@@ -8,24 +8,24 @@ ShaderProgram::ShaderProgram()
 	_shaderProgram = glCreateProgram();
 }
 
-ShaderProgram::ShaderProgram(ShaderProgram& other)
+ShaderProgram::ShaderProgram(const ShaderProgram& other) noexcept
 	: _shaderProgram(other._shaderProgram)
 {
 }
 
-ShaderProgram& ShaderProgram::operator=(ShaderProgram& other)
+ShaderProgram& ShaderProgram::operator=(const ShaderProgram& other) noexcept
 {
 	_shaderProgram = other._shaderProgram;
 
 	return *this;
 }
 
-ShaderProgram::ShaderProgram(ShaderProgram&& other)
+ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept
 	: _shaderProgram(std::move(other._shaderProgram))
 {
 }
 
-ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other)
+ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
 {
 	_shaderProgram = std::move(other._shaderProgram);
 
@@ -82,5 +82,7 @@ void ShaderProgram::setUniform(const char* name, const glm::vec4& value)
 
 void ShaderProgram::setUniform(const char* name, const glm::mat4x4& value)
 {
-	glUniformMatrix4fv(glGetUniformLocation(_shaderProgram, name), 1, false, glm::value_ptr(value));
+	auto asdf = glGetUniformLocation(_shaderProgram, name);
+
+	glUniformMatrix4fv(asdf, 1, false, glm::value_ptr(value));
 }
