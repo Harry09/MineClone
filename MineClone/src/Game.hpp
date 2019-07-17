@@ -7,7 +7,7 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/ShaderProgram.hpp"
 
-#include "Block.hpp"
+#include "Chunk.hpp"
 
 class Texture;
 struct GLFWwindow;
@@ -25,7 +25,7 @@ private:
 
 	std::unique_ptr<ShaderProgram> _shaderProgram;
 
-	std::unique_ptr<Block> _block;
+	Chunk _chunk;
 
 	glm::vec2 _lastCursorPos;
 

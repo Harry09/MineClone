@@ -11,8 +11,6 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/Texture.hpp"
 
-#include "Block.hpp"
-
 void frameBufferSizeCallback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
@@ -81,11 +79,18 @@ bool Game::init()
 	}
 
 	_shaderProgram = std::make_unique<ShaderProgram>(vertexShader, fragmentShader);
-
-
-	_block = std::make_unique<Block>();
+	
+	if (!_shaderProgram->isValid())
+	{
+		puts("Cannot create shader program!");
+		return false;
+	}
 
 	_camera.setPosition({0.f, 0.f, 3.f});
+
+	glEnable(GL_DEPTH_TEST);
+
+	_chunk.init();
 
 	return true;
 }
@@ -99,7 +104,7 @@ void Game::run()
 		update();
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		_shaderProgram->use();
 
@@ -131,14 +136,13 @@ void Game::update()
 		_camera.move({ -cameraSpeed, 0.f, 0.f });
 	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
 		_camera.move({ cameraSpeed, 0.f, 0.f });
-
 	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
-	{
-		_block->update();
-	}
+		_camera.move({ 0.f, cameraSpeed, 0.f });
+	if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
+		_camera.move({ 0.f, -cameraSpeed, 0.f });
 }
 
 void Game::render()
 {
-	_block->draw(*_shaderProgram);
+	_chunk.draw(*_shaderProgram);
 }

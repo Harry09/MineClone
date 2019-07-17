@@ -3,7 +3,6 @@
 enum class Blocks
 {
 	Dirt,
-	GrassSide,
-	GrassTop,
+	Grass,
 	Stone
 };
