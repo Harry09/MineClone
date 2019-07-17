@@ -85,44 +85,44 @@ protected:
 		vertices[offset * 4 + 3].texCoord = textureMap.getTextureCoords(textureId, TextureMap::LeftTop);
 	}
 
-	constexpr static auto getMesh()
+	constexpr auto getMesh()
 	{
-		return std::array<Vertex, 4 * 6>{
+		return std::array{
 			// North
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } },   // 12
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } },   // 13
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } },   // 14
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } },   // 15
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },   // 12
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },   // 13
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },   // 14
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },   // 15
 
 			// East
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } },   // 4
-			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } },   // 5
-			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } },   // 6
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } },   // 7
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },   // 4
+			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },   // 5
+			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } + _pos },   // 6
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },   // 7
 
 			// South
-			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } },    // 0
-			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } },    // 1
-			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } },    // 2
-			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } },    // 3
+			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + _pos },    // 0
+			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + _pos },    // 1
+			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } + _pos },    // 2
+			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos },    // 3
 
 			// West
-			Vertex{ glm::vec3 {  -0.5f, -0.5f, -0.5f } },  // 8
-			Vertex{ glm::vec3 {  -0.5f, -0.5f,  0.5f } },  // 9
-			Vertex{ glm::vec3 {  -0.5f,  0.5f,  0.5f } },  // 10
-			Vertex{ glm::vec3 {  -0.5f,  0.5f, -0.5f } },  // 11
+			Vertex{ glm::vec3 {  -0.5f, -0.5f, -0.5f } + _pos },  // 8
+			Vertex{ glm::vec3 {  -0.5f, -0.5f,  0.5f } + _pos },  // 9
+			Vertex{ glm::vec3 {  -0.5f,  0.5f,  0.5f } + _pos },  // 10
+			Vertex{ glm::vec3 {  -0.5f,  0.5f, -0.5f } + _pos },  // 11
 
 			// Top
-			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } },    // 16
-			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } },    // 17
-			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } },    // 18
-			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } },    // 19
+			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + _pos },    // 16
+			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + _pos },    // 17
+			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } + _pos },    // 18
+			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos },    // 19
 
 			// Bottom
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } },   // 20
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } },   // 21
-			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } },   // 22
-			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } }    // 23
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },   // 20
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },   // 21
+			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },   // 22
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos }    // 23
 		};
 	}
 };

@@ -21,10 +21,5 @@ std::array<Vertex, 4 * 6> StoneBlock::getVertices(TextureMap& textureMap)
 	texture<TexturingSide::Top>(vertices,    Textures::Stone, textureMap);
 	texture<TexturingSide::Bottom>(vertices, Textures::Stone, textureMap);
 
-	for (int i = 0; i < 4 * 6; i++)
-	{
-		vertices[i].position += _pos;
-	}
-
 	return vertices;
 }

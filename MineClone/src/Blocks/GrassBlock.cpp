@@ -21,11 +21,5 @@ std::array<Vertex, 4 * 6> GrassBlock::getVertices(TextureMap& textureMap)
 	texture<TexturingSide::Top>(vertices,    Textures::GrassTop, textureMap);
 	texture<TexturingSide::Bottom>(vertices, Textures::Dirt, textureMap);
 
-	for (int i = 0; i < 4 * 6; i++)
-	{
-		vertices[i].position += _pos;
-	}
-
 	return vertices;
-
 }
