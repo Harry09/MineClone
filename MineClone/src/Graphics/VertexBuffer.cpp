@@ -13,7 +13,7 @@ VertexBuffer::VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType dr
 	init();
 }
 
-VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
+VertexBuffer::VertexBuffer(const Vertex_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
 	:
 	_vertices(vertices, vertices + size),
 	_primitiveType(primitiveType),
@@ -22,7 +22,7 @@ VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType
 	init();
 }
 
-VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType) noexcept
+VertexBuffer::VertexBuffer(const Vertex_t* vertices, size_t verticesCount, const Index_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType) noexcept
 	: 
 	_vertices(vertices, vertices + verticesCount),
 	_indices(indices, indices + indicesCount),
@@ -175,7 +175,7 @@ void VertexBuffer::init()
 
 	bind();
 
-	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertice_t), _vertices.data(), _drawType); // TODO: Add more draw type
+	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), _drawType); // TODO: Add more draw type
 
 	if (_ebo != 0)
 	{

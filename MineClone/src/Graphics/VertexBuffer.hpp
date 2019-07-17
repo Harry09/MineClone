@@ -21,10 +21,10 @@ public:
 	};
 
 private:
-	using Vertice_t = Vertex;
-	using Vertices_t = std::vector<Vertice_t>;
-	using Indice_t = unsigned;
-	using Indices_t = std::vector<Indice_t>;
+	using Vertex_t = Vertex;
+	using Vertices_t = std::vector<Vertex_t>;
+	using Index_t = unsigned;
+	using Indices_t = std::vector<Index_t>;
 	using ullvec2 = glm::vec<2, size_t, glm::defaultp>;
 
 private:
@@ -54,8 +54,8 @@ private:
 public:
 	VertexBuffer() noexcept = default;
 	VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
-	VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
-	VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
+	VertexBuffer(const Vertex_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
+	VertexBuffer(const Vertex_t* vertices, size_t verticesCount, const Index_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
 	~VertexBuffer();
 
 	VertexBuffer(const VertexBuffer&) = delete;
