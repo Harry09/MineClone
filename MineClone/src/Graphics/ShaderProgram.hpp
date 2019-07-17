@@ -49,9 +49,11 @@ public:
 	{
 		static_assert((std::is_same_v<Shader, Ts> && ...), "All Ts must be exactly Shader");
 
-		((glAttachShader(_shaderProgram, ts.getNativeHandle())), ...);
+		(glAttachShader(_shaderProgram, ts.getNativeHandle()), ...);
 
 		glLinkProgram(_shaderProgram);
+
+		(glDetachShader(_shaderProgram, ts.getNativeHandle()), ...);
 	}
 
 private:
