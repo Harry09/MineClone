@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <vector>
+#include <memory>
 
 #include "Blocks/Block.hpp"
 
@@ -13,7 +14,7 @@ class Chunk
 {
 	//VertexBuffer _data{ 4 * 6 * 16 * 16 * 16, PrimitiveType::Triangles };
 
-	std::vector<Block> _blocks;
+	std::vector<std::unique_ptr<Block>> _blocks;
 
 	Texture _texture;
 

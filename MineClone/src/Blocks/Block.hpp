@@ -48,10 +48,7 @@ public:
 	void setPosition(const glm::vec3& pos) { _pos = pos; }
 	const auto& getPosition() { return _pos; }
 
-	virtual std::array<Vertex, 4 * 6> getVertices(TextureMap & textureMap)
-	{
-		return std::array<Vertex, 4 * 6>();
-	}
+	virtual std::array<Vertex, 4 * 6> getVertices(TextureMap & textureMap) = 0;
 
 	static constexpr std::array<uint32_t, 6 * 6> getIndices()
 	{
