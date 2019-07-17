@@ -11,11 +11,36 @@ struct Vertex
 	glm::vec2 texCoord { 0.f };
 
 	// constructor
-	Vertex() noexcept = default;
-	Vertex(const glm::vec3& position);
-	Vertex(const glm::vec3& position, const glm::vec3& color);
-	Vertex(const glm::vec3& position, const glm::vec2& texCoord);
-	Vertex(const glm::vec3& position, const glm::vec3& color, const glm::vec2& texCoord);
+	constexpr Vertex() noexcept = default;
+	constexpr Vertex(const glm::vec3& position)
+		:
+		position(position)
+	{
+	}
+
+	constexpr Vertex(const glm::vec3& position, const glm::vec3& color)
+		:
+		position(position),
+		color(color)
+	{
+	}
+
+
+	constexpr Vertex(const glm::vec3& position, const glm::vec2& texCoord)
+		:
+		position(position),
+		texCoord(texCoord)
+	{
+	}
+
+
+	constexpr Vertex(const glm::vec3& position, const glm::vec3& color, const glm::vec2& texCoord)
+		:
+		position(position),
+		color(color),
+		texCoord(texCoord)
+	{
+	}
 
 	// copy
 	Vertex(const Vertex& other);
