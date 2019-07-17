@@ -8,6 +8,7 @@
 #include "Graphics/ShaderProgram.hpp"
 
 #include "Chunk.hpp"
+#include "Player.hpp"
 
 class Texture;
 struct GLFWwindow;
@@ -19,9 +20,12 @@ public:
 	static constexpr unsigned ScreenHeight = 768;
 
 private:
+	static Game* _inst;
+
 	GLFWwindow* _window = nullptr;
 
 	Camera _camera;
+	Player _player;
 
 	std::unique_ptr<ShaderProgram> _shaderProgram;
 
@@ -30,7 +34,7 @@ private:
 	glm::vec2 _lastCursorPos;
 
 public:
-	Game() = default;
+	Game();
 	~Game();
 
 	bool init();
@@ -38,6 +42,9 @@ public:
 
 	Camera& getCamera() { return _camera; }
 	const Camera& getCamera() const { return _camera; }
+
+	GLFWwindow* getWindow() { return _window; }
+	const GLFWwindow* getWindow() const { return _window; }
 
 	glm::vec2 getCursorOffset(const glm::vec2& pos) 
 	{ 
@@ -47,6 +54,11 @@ public:
 		_lastCursorPos = pos; 
 
 		return result;
+	}
+
+	static Game* get()
+	{
+		return _inst;
 	}
 
 private:

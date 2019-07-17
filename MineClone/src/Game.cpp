@@ -11,9 +11,14 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/Texture.hpp"
 
-void frameBufferSizeCallback(GLFWwindow* window, int width, int height)
+Game* Game::_inst;
+
+Game::Game()
+	: 
+	_player(_camera),
+	_lastCursorPos{ Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f }
 {
-	glViewport(0, 0, width, height);
+	_inst = this;
 }
 
 Game::~Game()
@@ -49,24 +54,13 @@ bool Game::init()
 		return false;
 	}
 
-	glfwSetWindowUserPointer(_window, this);
+	glEnable(GL_DEPTH_TEST);
 
-	glfwSetCursorPos(_window, Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f);
-
-	_lastCursorPos = { Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f };
-
-	glfwSetFramebufferSizeCallback(_window, frameBufferSizeCallback);
-	glfwSetCursorPosCallback(_window, [](GLFWwindow* window, double x, double y) {
-		auto game = static_cast<Game*>(glfwGetWindowUserPointer(window));
-		auto& camera = game->getCamera();
-
-		constexpr float sensitivity = 0.1f;
-
-		auto offset = game->getCursorOffset({ x, y }) * sensitivity;
-
-		camera.rotate(offset);
+	glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
 	});
 
+	glfwSetCursorPos(_window, Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	auto vertexShader = Shader(ShaderType::Vertex, "vertex_shader.glsl");
@@ -88,7 +82,8 @@ bool Game::init()
 
 	_camera.setPosition({0.f, 0.f, 3.f});
 
-	glEnable(GL_DEPTH_TEST);
+
+	_player.init();
 
 	_chunk.init();
 
@@ -127,19 +122,7 @@ void Game::update()
 		glfwSetWindowShouldClose(_window, true);
 	}
 
-	float cameraSpeed = 0.05f; // adjust accordingly
-	if (glfwGetKey(_window, GLFW_KEY_W) == GLFW_PRESS)
-		_camera.move({ 0.f, 0.f, -cameraSpeed });
-	if (glfwGetKey(_window, GLFW_KEY_S) == GLFW_PRESS)
-		_camera.move({ 0.f, 0.f, cameraSpeed });
-	if (glfwGetKey(_window, GLFW_KEY_A) == GLFW_PRESS)
-		_camera.move({ -cameraSpeed, 0.f, 0.f });
-	if (glfwGetKey(_window, GLFW_KEY_D) == GLFW_PRESS)
-		_camera.move({ cameraSpeed, 0.f, 0.f });
-	if (glfwGetKey(_window, GLFW_KEY_E) == GLFW_PRESS)
-		_camera.move({ 0.f, cameraSpeed, 0.f });
-	if (glfwGetKey(_window, GLFW_KEY_Q) == GLFW_PRESS)
-		_camera.move({ 0.f, -cameraSpeed, 0.f });
+	_player.update(_window);
 }
 
 void Game::render()
