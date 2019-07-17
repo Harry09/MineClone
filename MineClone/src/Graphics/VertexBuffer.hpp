@@ -56,8 +56,13 @@ public:
 	VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
 	VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
 	VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
-
 	~VertexBuffer();
+
+	VertexBuffer(const VertexBuffer&) = delete;
+	VertexBuffer& operator=(const VertexBuffer&) = delete;
+
+	VertexBuffer(VertexBuffer&& other) noexcept;
+	VertexBuffer& operator=(VertexBuffer&& other) noexcept;
 
 	void bind();
 	void unbind();
@@ -78,5 +83,6 @@ public:
 	void draw(ShaderProgram& shaderProgram);
 
 private:
-	void _init();
+	void init();
+	void destroy();
 };

@@ -10,7 +10,7 @@ VertexBuffer::VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType dr
 	_primitiveType(primitiveType),
 	_drawType(drawType)
 {
-	_init();
+	init();
 }
 
 VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
@@ -19,7 +19,7 @@ VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t size, PrimitiveType
 	_primitiveType(primitiveType),
 	_drawType(drawType)
 {
-	_init();
+	init();
 }
 
 VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t verticesCount, const Indice_t* indices, size_t indicesCount, PrimitiveType primitiveType, DrawType drawType) noexcept
@@ -31,18 +31,50 @@ VertexBuffer::VertexBuffer(const Vertice_t* vertices, size_t verticesCount, cons
 {
 	glGenBuffers(1, &_ebo);
 
-	_init();
+	init();
 }
 
 VertexBuffer::~VertexBuffer()
 {
-	glDeleteVertexArrays(1, &_vao);
-	glDeleteBuffers(1, &_vbo);
+	destroy();
+}
 
-	if (_ebo != 0)
+VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
+	:
+	_vbo(std::move(other._vbo)),
+	_vao(std::move(other._vao)),
+	_ebo(std::move(other._ebo)),
+	_vertices(std::move(other._vertices)),
+	_indices(std::move(other._indices)),
+	_primitiveType(std::move(other._primitiveType)),
+	_drawType(std::move(other._drawType)),
+	_texture(std::move(other._texture)),
+	_needUpdate(std::move(other._needUpdate)),
+	_updateRange(std::move(other._updateRange)),
+	_mat(std::move(other._mat))
+{
+}
+
+VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept
+{
+	if (this != &other)
 	{
-		glDeleteBuffers(1, &_ebo);
+		destroy();
+
+		_vbo = std::move(other._vbo);
+		_vao = std::move(other._vao);
+		_ebo = std::move(other._ebo);
+		_vertices = std::move(other._vertices);
+		_indices = std::move(other._indices);
+		_primitiveType = std::move(other._primitiveType);
+		_drawType = std::move(other._drawType);
+		_texture = std::move(other._texture);
+		_needUpdate = std::move(other._needUpdate);
+		_updateRange = std::move(other._updateRange);
+		_mat = std::move(other._mat);
 	}
+
+	return *this;
 }
 
 void VertexBuffer::bind()
@@ -136,7 +168,7 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 	unbind();
 }
 
-void VertexBuffer::_init()
+void VertexBuffer::init()
 {
 	glGenVertexArrays(1, &_vao);
 	glGenBuffers(1, &_vbo);
@@ -164,4 +196,24 @@ void VertexBuffer::_init()
 	glEnableVertexAttribArray(2);
 
 	unbind();
+}
+
+void VertexBuffer::destroy()
+{
+	_vertices.clear();
+
+	glDeleteVertexArrays(1, &_vao);
+	_vao = 0;
+
+	glDeleteBuffers(1, &_vbo);
+	_vbo = 0;
+
+	if (_ebo != 0)
+	{
+		glDeleteBuffers(1, &_ebo);
+	}
+
+	_updateRange = { -1, 0 };
+
+	_needUpdate = false;
 }
