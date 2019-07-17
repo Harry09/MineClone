@@ -127,7 +127,7 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 
 	if (_ebo != 0)
 	{
-		glDrawElements(static_cast<GLenum>(_primitiveType), _indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(static_cast<GLenum>(_primitiveType), static_cast<GLsizei>(_indices.size()), GL_UNSIGNED_INT, 0);
 	}
 	else
 	{
