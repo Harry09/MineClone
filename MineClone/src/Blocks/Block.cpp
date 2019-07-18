@@ -49,9 +49,8 @@ Block& Block::operator=(Block&& other) noexcept
 void Block::create(TextureMap& map)
 {
 	auto vertices = getVertices(map);
-	auto indices = getIndices();
 
-	_mesh = std::make_unique<VertexBuffer>(vertices.data(), vertices.size(), indices.data(), indices.size(), PrimitiveType::Triangles);
+	_mesh = std::make_unique<VertexBuffer>(vertices.data(), vertices.size(), PrimitiveType::Triangles);
 	_mesh->setTexture(map.getTexture());
 }
 

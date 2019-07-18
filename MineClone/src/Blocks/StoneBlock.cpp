@@ -10,7 +10,7 @@ StoneBlock::StoneBlock(const glm::vec3& pos) noexcept
 {
 }
 
-std::array<Vertex, 4 * 6> StoneBlock::getVertices(TextureMap& textureMap)
+std::array<Vertex, 2 * 3 * 6> StoneBlock::getVertices(TextureMap& textureMap)
 {
 	auto vertices = getMesh();
 
