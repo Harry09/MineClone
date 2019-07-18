@@ -14,12 +14,12 @@ const std::array<Vertex, 2 * 3 * 6> DirtBlock::getVertices(TextureMap& textureMa
 {
 	auto vertices = getMesh();
 
-	texture<TexturingSide::North>(vertices,  Textures::Dirt, textureMap);
-	texture<TexturingSide::East>(vertices,   Textures::Dirt, textureMap);
-	texture<TexturingSide::South>(vertices,  Textures::Dirt, textureMap);
-	texture<TexturingSide::West>(vertices,   Textures::Dirt, textureMap);
-	texture<TexturingSide::Top>(vertices,    Textures::Dirt, textureMap);
-	texture<TexturingSide::Bottom>(vertices, Textures::Dirt, textureMap);
+	texture<BlockSide::North>(vertices,  Textures::Dirt, textureMap);
+	texture<BlockSide::East>(vertices,   Textures::Dirt, textureMap);
+	texture<BlockSide::South>(vertices,  Textures::Dirt, textureMap);
+	texture<BlockSide::West>(vertices,   Textures::Dirt, textureMap);
+	texture<BlockSide::Top>(vertices,    Textures::Dirt, textureMap);
+	texture<BlockSide::Bottom>(vertices, Textures::Dirt, textureMap);
 
 	return vertices;
 }

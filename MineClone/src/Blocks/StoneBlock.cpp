@@ -14,12 +14,12 @@ const std::array<Vertex, 2 * 3 * 6> StoneBlock::getVertices(TextureMap& textureM
 {
 	auto vertices = getMesh();
 
-	texture<TexturingSide::North>(vertices,  Textures::Stone, textureMap);
-	texture<TexturingSide::East>(vertices,   Textures::Stone, textureMap);
-	texture<TexturingSide::South>(vertices,  Textures::Stone, textureMap);
-	texture<TexturingSide::West>(vertices,   Textures::Stone, textureMap);
-	texture<TexturingSide::Top>(vertices,    Textures::Stone, textureMap);
-	texture<TexturingSide::Bottom>(vertices, Textures::Stone, textureMap);
+	texture<BlockSide::North>(vertices,  Textures::Stone, textureMap);
+	texture<BlockSide::East>(vertices,   Textures::Stone, textureMap);
+	texture<BlockSide::South>(vertices,  Textures::Stone, textureMap);
+	texture<BlockSide::West>(vertices,   Textures::Stone, textureMap);
+	texture<BlockSide::Top>(vertices,    Textures::Stone, textureMap);
+	texture<BlockSide::Bottom>(vertices, Textures::Stone, textureMap);
 
 	return vertices;
 }
