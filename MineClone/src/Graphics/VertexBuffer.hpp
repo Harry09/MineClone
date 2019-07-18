@@ -67,10 +67,11 @@ public:
 	void bind();
 	void unbind();
 
-	const Vertex& getVertex(size_t index);
-	void setVertex(size_t index, const Vertex& vertex);
+	const Vertex_t& getVertex(size_t index);
+	void setVertex(size_t index, const Vertex_t& vertex);
+	void setVertices(size_t offset, const Vertex_t* start, size_t size);
 
-	Vertex& operator[](size_t index);
+	Vertex_t& operator[](size_t index);
 
 	void setTexture(Texture& texture);
 	void setMatrix(const glm::mat4x4& mat);

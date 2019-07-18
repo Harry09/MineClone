@@ -16,27 +16,36 @@ void Chunk::init()
 {
 	_texture.loadFromFile("textures.jpg");
 
-	TextureMap textureMap(_texture, 16);
+	_textureMap = std::make_unique<TextureMap>(_texture, 16);
 
-	for (int i = 0; i < 16; i++)
+	_data = std::make_unique<VertexBuffer>(6 * 6 * Size.x * Size.y * Size.z + 1, PrimitiveType::Triangles);
+	_data->setTexture(_texture);
+	
+	for (int x = 0; x < 16; x++)
 	{
-		for (int j = 0; j < 16; j++)
+		for (int y = 0; y < 16; y++)
 		{
-			auto grass = std::make_unique<GrassBlock>(glm::vec3{ i, 0.f, j });
-			grass->create(textureMap);
-			_blocks.push_back(std::move(grass));
-
-			auto stone = std::make_unique<StoneBlock>(glm::vec3{ i, -1.f, j });
-			stone->create(textureMap);
-			_blocks.push_back(std::move(stone));
+			for (int z = 0; z < 16; z++)
+			{
+				placeBlock(DirtBlock(glm::vec3{ x, y, z }));
+			}
 		}
 	}
+
+	_data->update();	
+}
+
+void Chunk::placeBlock(const Block& block)
+{
+	auto pos = glm::ivec3(block.getPosition());
+	auto vertices = block.getVertices(*_textureMap);
+
+	auto arrayPos = (pos.x + Size.x * (pos.y + Size.y * pos.z)) * 36;
+
+	_data->setVertices(arrayPos, vertices.data(), vertices.size());
 }
 
 void Chunk::draw(ShaderProgram& shaderProgram)
 {
-	for (auto& block : _blocks)
-	{
-		block->draw(shaderProgram);
-	}
+	_data->draw(shaderProgram);
 }

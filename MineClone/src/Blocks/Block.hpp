@@ -45,14 +45,13 @@ public:
 
 	void draw(ShaderProgram& shaderProgram);
 
-	void setPosition(const glm::vec3& pos) { _pos = pos; }
-	const auto& getPosition() { return _pos; }
+	const auto& getPosition() const { return _pos; }
 
-	virtual std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap & textureMap) = 0;
+	virtual const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap& textureMap) const = 0;
 
 protected:
 	template<TexturingSide Side>
-	void texture(std::array<Vertex, 2 * 3 * 6>& vertices, Textures textureId, TextureMap& textureMap)
+	const void texture(std::array<Vertex, 2 * 3 * 6>& vertices, Textures textureId, TextureMap& textureMap) const
 	{
 		unsigned offset = static_cast<unsigned>(Side);
 
@@ -65,7 +64,7 @@ protected:
 		vertices[offset * 6 + 5].texCoord = textureMap.getTextureCoords(textureId, TextureMap::LeftTop);
 	}
 
-	constexpr auto getMesh()
+	constexpr auto getMesh() const
 	{
 		return std::array{
 			// North
@@ -96,13 +95,13 @@ protected:
 			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos },
 
 			// West
-			Vertex{ glm::vec3 {  -0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  -0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  -0.5f,  0.5f, -0.5f } + _pos },
-
-			Vertex{ glm::vec3 {  -0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  -0.5f,  0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  -0.5f,  0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
+							    
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f,  0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
 
 			// Top
 			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + _pos },

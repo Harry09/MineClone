@@ -99,12 +99,12 @@ void VertexBuffer::unbind()
 	}
 }
 
-const Vertex& VertexBuffer::getVertex(size_t index)
+const VertexBuffer::Vertex_t& VertexBuffer::getVertex(size_t index)
 {
 	return _vertices[index];
 }
 
-void VertexBuffer::setVertex(size_t index, const Vertex& vertex)
+void VertexBuffer::setVertex(size_t index, const Vertex_t& vertex)
 {
 	_updateRange.x = std::min(_updateRange.x, index);
 	_updateRange.y = std::max(_updateRange.y, index);
@@ -114,7 +114,17 @@ void VertexBuffer::setVertex(size_t index, const Vertex& vertex)
 	_needUpdate = true;
 }
 
-Vertex& VertexBuffer::operator[](size_t index)
+void VertexBuffer::setVertices(size_t offset, const Vertex_t* start, size_t size)
+{
+	_updateRange.x = std::min(_updateRange.x, offset);
+	_updateRange.y = std::max(_updateRange.y, offset + size);
+
+	std::copy(start, start + size, _vertices.begin() + offset);
+
+	_needUpdate = true;
+}
+
+VertexBuffer::Vertex_t& VertexBuffer::operator[](size_t index)
 {
 	_updateRange.x = std::min(_updateRange.x, index);
 	_updateRange.y = std::max(_updateRange.y, index);

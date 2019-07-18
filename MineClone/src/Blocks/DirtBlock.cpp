@@ -10,7 +10,7 @@ DirtBlock::DirtBlock(const glm::vec3& pos) noexcept
 {
 }
 
-std::array<Vertex, 2 * 3 * 6> DirtBlock::getVertices(TextureMap& textureMap)
+const std::array<Vertex, 2 * 3 * 6> DirtBlock::getVertices(TextureMap& textureMap) const
 {
 	auto vertices = getMesh();
 

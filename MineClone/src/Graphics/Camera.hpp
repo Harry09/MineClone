@@ -22,7 +22,7 @@ private:
 	glm::mat4 _viewMatrix{ 1.f };
 	glm::mat4 _projectionMatrix{ 1.f };
 
-	float _fov = 45.f;
+	float _fov = 80.f;
 
 	float _aspectRatio = 0.f;
 
