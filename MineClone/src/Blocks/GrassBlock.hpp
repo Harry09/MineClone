@@ -5,9 +5,14 @@
 class GrassBlock : public Block
 {
 public:
-	GrassBlock() noexcept;
-	GrassBlock(const glm::vec3& pos) noexcept;
-
-	const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap& textureMap) const override;
-
+	GrassBlock(const glm::vec3& pos) noexcept
+		: Block(pos, Blocks::Grass)
+	{
+		setTexture(BlockSide::North,  Textures::GrassSide);
+		setTexture(BlockSide::East,   Textures::GrassSide);
+		setTexture(BlockSide::South,  Textures::GrassSide);
+		setTexture(BlockSide::West,   Textures::GrassSide);
+		setTexture(BlockSide::Top,    Textures::GrassTop);
+		setTexture(BlockSide::Bottom, Textures::Dirt);
+	}
 };

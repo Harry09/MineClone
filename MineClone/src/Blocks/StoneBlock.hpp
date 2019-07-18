@@ -5,8 +5,14 @@
 class StoneBlock : public Block
 {
 public:
-	StoneBlock() noexcept;
-	StoneBlock(const glm::vec3& pos) noexcept;
-
-	const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap& textureMap) const override;
+	StoneBlock(const glm::vec3& pos) noexcept
+		: Block(pos, Blocks::Stone)
+	{
+		setTexture(BlockSide::North,  Textures::Stone);
+		setTexture(BlockSide::East,   Textures::Stone);
+		setTexture(BlockSide::South,  Textures::Stone);
+		setTexture(BlockSide::West,   Textures::Stone);
+		setTexture(BlockSide::Top,    Textures::Stone);
+		setTexture(BlockSide::Bottom, Textures::Stone);
+	}
 };

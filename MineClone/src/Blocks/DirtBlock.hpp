@@ -5,8 +5,14 @@
 class DirtBlock : public Block
 {
 public:
-	DirtBlock() noexcept;
-	DirtBlock(const glm::vec3& pos) noexcept;
-
-	const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap& textureMap) const override;
+	DirtBlock(const glm::vec3& pos) noexcept
+		: Block(pos, Blocks::Dirt)
+	{
+		setTexture(BlockSide::North,  Textures::Dirt);
+		setTexture(BlockSide::East,   Textures::Dirt);
+		setTexture(BlockSide::South,  Textures::Dirt);
+		setTexture(BlockSide::West,   Textures::Dirt);
+		setTexture(BlockSide::Top,    Textures::Dirt);
+		setTexture(BlockSide::Bottom, Textures::Dirt);
+	}
 };

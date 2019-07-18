@@ -25,6 +25,8 @@ public:
 		Size
 	};
 
+	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
+
 protected:
 	glm::vec3 _pos = { 0.f, 0.f, 0.f };
 
@@ -32,10 +34,11 @@ protected:
 
 	Blocks _blockType;
 
-	Block* _neighbor[6] = { nullptr };
+	Block* _neighbor[BlockSideSize] = { nullptr };
+
+	Textures _sideTexture[BlockSideSize];
 
 public:
-	Block(Blocks blockType) noexcept;
 	Block(const glm::vec3& pos, Blocks blockType) noexcept;
 
 	Block(const Block& other) noexcept;
@@ -53,21 +56,26 @@ public:
 	Block* getNeighbor(BlockSide side) { return _neighbor[static_cast<int>(side)]; }
 	bool hasNeighbor(BlockSide side) { return _neighbor[static_cast<int>(side)] != nullptr; }
 
-	virtual const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap& textureMap) const = 0;
+	const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap & textureMap) const;
 
 protected:
-	template<BlockSide Side>
-	const void texture(std::array<Vertex, 2 * 3 * 6>& vertices, Textures textureId, TextureMap& textureMap) const
+	constexpr void setTexture(BlockSide side, Textures textureId)
 	{
-		unsigned offset = static_cast<unsigned>(Side);
+		_sideTexture[static_cast<int>(side)] = textureId;
+	}
 
-		vertices[offset * 6 + 0].texCoord = textureMap.getTextureCoords(textureId, TextureMap::LeftBottom);
-		vertices[offset * 6 + 1].texCoord = textureMap.getTextureCoords(textureId, TextureMap::RightBottom);
-		vertices[offset * 6 + 2].texCoord = textureMap.getTextureCoords(textureId, TextureMap::LeftTop);
+	template<BlockSide Side>
+	const void texture(std::array<Vertex, 2 * 3 * 6>& vertices, TextureMap& textureMap) const
+	{
+		unsigned sideValue = static_cast<unsigned>(Side);
 
-		vertices[offset * 6 + 3].texCoord = textureMap.getTextureCoords(textureId, TextureMap::RightBottom);
-		vertices[offset * 6 + 4].texCoord = textureMap.getTextureCoords(textureId, TextureMap::RightTop);
-		vertices[offset * 6 + 5].texCoord = textureMap.getTextureCoords(textureId, TextureMap::LeftTop);
+		vertices[sideValue * 6 + 0].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftBottom);
+		vertices[sideValue * 6 + 1].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+		vertices[sideValue * 6 + 2].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
+
+		vertices[sideValue * 6 + 3].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+		vertices[sideValue * 6 + 4].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightTop);
+		vertices[sideValue * 6 + 5].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
 	}
 
 	constexpr auto getMesh() const
