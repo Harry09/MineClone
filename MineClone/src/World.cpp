@@ -1,5 +1,7 @@
 #include "World.hpp"
 
+#include <FastNoise.h>
+
 World::World()
 {
 }
@@ -9,16 +11,17 @@ void World::init()
 	_texture.loadFromFile("textures.jpg");
 
 	_textureMap = std::make_unique<TextureMap>(_texture, 16);
+
+	FastNoise noise;
+	noise.SetNoiseType(FastNoise::NoiseType::Perlin);
+	noise.SetFrequency(0.05f);
 	
-	for (int x = 0; x < 3; x++)
+	for (int x = 0; x < 10; x++)
 	{
-		for (int y = 0; y < 3; y++)
+		for (int z = 0; z < 10; z++)
 		{
-			for (int z = 0; z < 3; z++)
-			{
-				_chunks.push_back(std::make_unique<Chunk>(glm::ivec3{ x, y, z }, *_textureMap));
-				printf("%d %d %d done\n", x, y, z);
-			}
+			_chunks.push_back(std::make_unique<Chunk>(glm::ivec3{ x, 0, z }, noise, *_textureMap));
+			printf("%d %d\n", x, z);
 		}
 	}
 }

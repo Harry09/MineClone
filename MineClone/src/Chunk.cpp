@@ -1,12 +1,13 @@
 #include "Chunk.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <FastNoise.h>
 
 #include "Blocks/DirtBlock.hpp"
 #include "Blocks/GrassBlock.hpp"
 #include "Blocks/StoneBlock.hpp"
 
-Chunk::Chunk(const glm::ivec3& pos, TextureMap& textureMap)
+Chunk::Chunk(const glm::ivec3& pos, FastNoise& noise, TextureMap& textureMap)
 {
 	auto mat = _data.getMatrix();
 	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
@@ -16,23 +17,23 @@ Chunk::Chunk(const glm::ivec3& pos, TextureMap& textureMap)
 
 	for (int x = 0; x < 16; x++)
 	{
-		for (int y = 0; y < 16; y++)
+		for (int z = 0; z < 16; z++)
 		{
-			for (int z = 0; z < 16; z++)
-			{
-				if (y < 10)
-				{
-					placeBlock<StoneBlock>(glm::ivec3{ x, y, z });
-				}
-				else if (y < 15)
-				{
-					placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
-				}
-				else
-				{
-					placeBlock<GrassBlock>(glm::ivec3{ x, y, z });
-				}
+			auto xx = static_cast<float>(x + pos.x * Chunk::Size.x);
+			auto zz = static_cast<float>(z + pos.z * Chunk::Size.z);
 
+			auto height = static_cast<int>(noise.GetNoise(xx, zz) * Chunk::Size.y) + 4;
+
+			if (height < 0 || height > 15)
+			{
+				continue;
+			}
+
+			placeBlock<GrassBlock>(glm::ivec3{ x, height, z });
+
+			for (int y = 0; y < height; y++)
+			{
+				placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
 			}
 		}
 	}

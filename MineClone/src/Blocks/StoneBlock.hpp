@@ -5,7 +5,7 @@
 class StoneBlock : public Block
 {
 public:
-	StoneBlock(const glm::vec3& pos) noexcept
+	StoneBlock(const glm::ivec3& pos) noexcept
 		: Block(pos, Blocks::Stone)
 	{
 		setTexture<

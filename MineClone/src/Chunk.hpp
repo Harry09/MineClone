@@ -9,6 +9,8 @@
 
 #include "TextureMap.hpp"
 
+class FastNoise;
+
 class Chunk
 {
 public:
@@ -19,7 +21,7 @@ private:
 	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
 
 public:
-	Chunk(const glm::ivec3& pos, TextureMap& textureMap);
+	Chunk(const glm::ivec3& pos, FastNoise& noise, TextureMap& textureMap);
 	~Chunk() = default;
 
 	template<typename T>

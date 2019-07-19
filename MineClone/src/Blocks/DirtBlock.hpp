@@ -5,7 +5,7 @@
 class DirtBlock : public Block
 {
 public:
-	DirtBlock(const glm::vec3& pos) noexcept
+	DirtBlock(const glm::ivec3& pos) noexcept
 		: Block(pos, Blocks::Dirt)
 	{
 		setTexture<

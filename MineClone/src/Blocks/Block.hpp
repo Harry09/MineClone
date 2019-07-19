@@ -121,7 +121,7 @@ public:
 	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
 
 protected:
-	glm::vec3 _pos = { 0.f, 0.f, 0.f };
+	glm::ivec3 _pos = { 0.f, 0.f, 0.f };
 
 	uint64_t _flatPos = 0;
 
@@ -132,7 +132,7 @@ protected:
 	Textures _faceTexture[BlockSideSize];
 
 public:
-	Block(const glm::vec3& pos, Blocks blockType) noexcept;
+	Block(const glm::ivec3& pos, Blocks blockType) noexcept;
 
 	Block(const Block& other) noexcept;
 	Block& operator=(const Block& other) noexcept;

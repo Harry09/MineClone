@@ -2,14 +2,12 @@
 
 #include "Chunk.hpp"
 
-Block::Block(const glm::vec3& pos, Blocks blockType) noexcept
+Block::Block(const glm::ivec3& pos, Blocks blockType) noexcept
 	: 
 	_pos(pos),
 	_blockType(blockType)
 {
-	auto ipos = glm::ivec3(pos);
-
-	_flatPos = (ipos.x + Chunk::Size.x * (ipos.y + Chunk::Size.y * ipos.z)) * 36;
+	_flatPos = (pos.x + Chunk::Size.x * (pos.y + Chunk::Size.y * pos.z)) * 36;
 }
 
 Block::Block(const Block& other) noexcept
