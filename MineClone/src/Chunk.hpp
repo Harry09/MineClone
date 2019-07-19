@@ -49,5 +49,4 @@ public:
 
 private:
 	void setupNeighbourhood(Block* block, const glm::ivec3& pos);
-
 };

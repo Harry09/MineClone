@@ -47,16 +47,26 @@ public:
 	Block(Block&& other) noexcept;
 	Block& operator=(Block&& other) noexcept;
 
-	~Block();
+	~Block() = default;
 
 	const auto& getPosition() const { return _pos; }
 	const auto getFlatPosition() const { return _flatPos; }
 
 	void setNeighbor(Block* block, BlockSide side) { _neighbor[static_cast<int>(side)] = block; }
-	Block* getNeighbor(BlockSide side) { return _neighbor[static_cast<int>(side)]; }
-	bool hasNeighbor(BlockSide side) { return _neighbor[static_cast<int>(side)] != nullptr; }
+	Block* getNeighbor(BlockSide side) const { return _neighbor[static_cast<int>(side)]; }
+	bool hasNeighbor(BlockSide side) const { return _neighbor[static_cast<int>(side)] != nullptr; }
 
-	const std::array<Vertex, 2 * 3 * 6> getVertices(TextureMap & textureMap) const;
+	template<BlockSide... Sides>
+	const auto getVertices(TextureMap& textureMap) const
+	{
+		std::array<Vertex, 2 * 3 * 6> vertices;
+
+		int offset = 0;
+
+		((getVerticesImp<Sides>(vertices, offset, textureMap), offset++), ...);
+
+		return vertices;
+	}
 
 protected:
 	constexpr void setTexture(BlockSide side, Textures textureId)
@@ -64,69 +74,114 @@ protected:
 		_sideTexture[static_cast<int>(side)] = textureId;
 	}
 
+private:
 	template<BlockSide Side>
-	const void texture(std::array<Vertex, 2 * 3 * 6>& vertices, TextureMap& textureMap) const
+	const void getVerticesImp(std::array<Vertex, 2 * 3 * 6>& vertices, int offset, TextureMap& textureMap) const
+	{
+		if (!hasNeighbor(Side))
+		{
+			auto mesh = getMesh<Side>();
+
+			texture<Side>(mesh, textureMap);
+
+			std::copy(mesh.begin(), mesh.end(), vertices.begin() + (offset * 6));
+		}
+	}
+
+	template<BlockSide Side>
+	const void texture(std::array<Vertex, 6>& vertices, TextureMap& textureMap) const
 	{
 		unsigned sideValue = static_cast<unsigned>(Side);
 
-		vertices[sideValue * 6 + 0].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftBottom);
-		vertices[sideValue * 6 + 1].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
-		vertices[sideValue * 6 + 2].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
+		vertices[0].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftBottom);
+		vertices[1].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+		vertices[2].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
 
-		vertices[sideValue * 6 + 3].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
-		vertices[sideValue * 6 + 4].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightTop);
-		vertices[sideValue * 6 + 5].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
+		vertices[3].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+		vertices[4].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightTop);
+		vertices[5].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
 	}
 
+	template<BlockSide Side>
 	constexpr auto getMesh() const
 	{
+
+	}
+
+	template<>
+	constexpr auto getMesh<BlockSide::North>() const
+	{
 		return std::array{
-			// North
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } +_pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } +_pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } +_pos },
 
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } +_pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } +_pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } +_pos }
+		};
+	}
 
-			// East
+	template<>
+	constexpr auto getMesh<BlockSide::East>() const
+	{
+		return std::array{
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },
 
 			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos }
+		};
+	}
 
-			// South
+	template<>
+	constexpr auto getMesh<BlockSide::South>() const
+	{
+		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos },
 
 			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos }
+		};
+	}
 
-			// West
+	template<>
+	constexpr auto getMesh<BlockSide::West>() const
+	{
+		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
 							    
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f,  0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos }
+		};
+	}
 
-			// Top
+	template<>
+	constexpr auto getMesh<BlockSide::Top>() const
+	{
+		return std::array{
 			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos },
 
 			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos },
+			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos }
+		};
+	}
 
-			// Bottom
+	template<>
+	constexpr auto getMesh<BlockSide::Bottom>() const
+	{
+		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },

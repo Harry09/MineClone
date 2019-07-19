@@ -27,7 +27,7 @@ void Chunk::init()
 		{
 			for (int z = 0; z < 16; z++)
 			{
-				placeBlock<DirtBlock>(glm::vec3{ x, y, z });
+				placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
 			}
 		}
 	}
@@ -47,7 +47,13 @@ void Chunk::generateMesh()
 
 				if (block != nullptr)
 				{
-					auto vertices = block->getVertices(*_textureMap);
+					auto vertices = block->getVertices<
+						Block::BlockSide::North, 
+						Block::BlockSide::East, 
+						Block::BlockSide::South, 
+						Block::BlockSide::West, 
+						Block::BlockSide::Top, 
+						Block::BlockSide::Bottom>(*_textureMap);
 
 					_data->setVertices(block->getFlatPosition(), vertices.data(), vertices.size());
 				}
@@ -68,9 +74,9 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 	Block* neighbor = nullptr;
 
 	// north
-	if (pos.x < 15)
+	if (pos.z < 15)
 	{
-		neighbor = _blocks[pos.x + 1][pos.y][pos.z].get();
+		neighbor = _blocks[pos.x][pos.y][pos.z + 1].get();
 
 		if (neighbor != nullptr)
 		{
@@ -80,9 +86,9 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 	}
 
 	// south
-	if (pos.x > 0)
+	if (pos.z > 0)
 	{
-		neighbor = _blocks[pos.x - 1][pos.y][pos.z].get();
+		neighbor = _blocks[pos.x][pos.y][pos.z - 1].get();
 
 		if (neighbor != nullptr)
 		{
@@ -92,21 +98,22 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 	}
 
 	// east
-	if (pos.z < 15)
+	if (pos.x < 15)
 	{
-		neighbor = _blocks[pos.x][pos.y][pos.z + 1].get();
+		neighbor = _blocks[pos.x + 1][pos.y][pos.z].get();
 
 		if (neighbor != nullptr)
 		{
 			neighbor->setNeighbor(block, Block::BlockSide::West);
 			block->setNeighbor(neighbor, Block::BlockSide::East);
 		}
+
 	}
 
 	// west
-	if (pos.z > 0)
+	if (pos.x > 0)
 	{
-		neighbor = _blocks[pos.x][pos.y][pos.z - 1].get();
+		neighbor = _blocks[pos.x - 1][pos.y][pos.z].get();
 
 		if (neighbor != nullptr)
 		{

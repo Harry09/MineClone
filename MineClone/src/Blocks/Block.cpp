@@ -43,21 +43,3 @@ Block& Block::operator=(Block&& other) noexcept
 
 	return *this;
 }
-
-Block::~Block()
-{
-}
-
-const std::array<Vertex, 2 * 3 * 6> Block::getVertices(TextureMap& textureMap) const
-{
-	auto vertices = getMesh();
-
-	texture<BlockSide::North>(vertices, textureMap);
-	texture<BlockSide::East>(vertices,  textureMap);
-	texture<BlockSide::South>(vertices, textureMap);
-	texture<BlockSide::West>(vertices,  textureMap);
-	texture<BlockSide::Top>(vertices,   textureMap);
-	texture<BlockSide::Bottom>(vertices,textureMap);
-
-	return vertices;
-}
