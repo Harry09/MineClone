@@ -1,26 +1,19 @@
 #include "Chunk.hpp"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "Blocks/DirtBlock.hpp"
 #include "Blocks/GrassBlock.hpp"
 #include "Blocks/StoneBlock.hpp"
 
-Chunk::Chunk()
+Chunk::Chunk(const glm::ivec3& pos, TextureMap& textureMap)
 {
-}
+	auto mat = _data.getMatrix();
+	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
+	_data.setMatrix(mat);
 
-Chunk::~Chunk()
-{
-}
+	_data.setTexture(textureMap.getTexture());
 
-void Chunk::init()
-{
-	_texture.loadFromFile("textures.jpg");
-
-	_textureMap = std::make_unique<TextureMap>(_texture, 16);
-
-	_data = std::make_unique<VertexBuffer>(6 * 6 * Size.x * Size.y * Size.z + 1, PrimitiveType::Triangles);
-	_data->setTexture(_texture);
-	
 	for (int x = 0; x < 16; x++)
 	{
 		for (int y = 0; y < 16; y++)
@@ -44,10 +37,10 @@ void Chunk::init()
 		}
 	}
 
-	generateMesh();
+	generateMesh(textureMap);
 }
 
-void Chunk::generateMesh()
+void Chunk::generateMesh(TextureMap& textureMap)
 {
 	for (int x = 0; x < 16; x++)
 	{
@@ -65,20 +58,20 @@ void Chunk::generateMesh()
 						BlockSide::South, 
 						BlockSide::West, 
 						BlockSide::Top, 
-						BlockSide::Bottom>(*_textureMap);
+						BlockSide::Bottom>(textureMap);
 
-					_data->setVertices(block->getFlatPosition(), vertices.data(), vertices.size());
+					_data.setVertices(block->getFlatPosition(), vertices.data(), vertices.size());
 				}
 			}
 		}
 	}
 
-	_data->update();
+	_data.update();
 }
 
 void Chunk::draw(ShaderProgram& shaderProgram)
 {
-	_data->draw(shaderProgram);
+	_data.draw(shaderProgram);
 }
 
 void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)

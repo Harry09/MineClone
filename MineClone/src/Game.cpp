@@ -123,10 +123,10 @@ bool Game::initGame()
 		glViewport(0, 0, width, height);
 	});
 
-	_camera.setPosition({ 0.f, 0.f, 3.f });
+	_camera.setPosition({ -3.f, 0.f, 3.f });
 
 	_player.init();
-	_chunk.init();
+	_world.init();
 
 	return true;
 }
@@ -143,5 +143,5 @@ void Game::update()
 
 void Game::render()
 {
-	_chunk.draw(*_shaderProgram);
+	_world.draw(*_shaderProgram);
 }

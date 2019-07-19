@@ -9,7 +9,7 @@ class Player
 private:
 	Camera& _camera;
 
-	static constexpr float PlayerSpeed = 0.05f;
+	static constexpr float PlayerSpeed = 0.1f;
 
 public:
 	Player(Camera& camera);

@@ -7,7 +7,7 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/ShaderProgram.hpp"
 
-#include "Chunk.hpp"
+#include "World.hpp"
 #include "Player.hpp"
 
 class Texture;
@@ -29,7 +29,7 @@ private:
 
 	std::unique_ptr<ShaderProgram> _shaderProgram;
 
-	Chunk _chunk;
+	World _world;
 
 	glm::vec2 _lastCursorPos;
 

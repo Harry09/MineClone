@@ -7,7 +7,6 @@
 
 #include "Graphics/VertexBuffer.hpp"
 
-#include "Graphics/Texture.hpp"
 #include "TextureMap.hpp"
 
 class Chunk
@@ -16,18 +15,12 @@ public:
 	static constexpr glm::ivec3 Size = { 16, 16, 16 };
 
 private:
-	std::unique_ptr<VertexBuffer> _data;
-
+	VertexBuffer _data{ 6 * 6 * Size.x * Size.y * Size.z + 1, PrimitiveType::Triangles };
 	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
 
-	Texture _texture;
-	std::unique_ptr<TextureMap> _textureMap;
-
 public:
-	Chunk();
-	~Chunk();
-
-	void init();
+	Chunk(const glm::ivec3& pos, TextureMap& textureMap);
+	~Chunk() = default;
 
 	template<typename T>
 	Block* placeBlock(const glm::ivec3& pos)
@@ -43,7 +36,7 @@ public:
 		return block.get();
 	}
 
-	void generateMesh();
+	void generateMesh(TextureMap& textureMap);
 
 	void draw(ShaderProgram& shaderProgram);
 

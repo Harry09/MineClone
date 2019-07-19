@@ -5,7 +5,7 @@ TextureMap::TextureMap(Texture& texture, unsigned singleTextureSize)
 {
 }
 
-glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner corner)
+glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner corner) const
 {
 	glm::vec2 coords;
 
@@ -31,7 +31,7 @@ glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner cor
 	return coords;
 }
 
-glm::vec2 TextureMap::getTextureCoords(Textures textureId, Corner corner)
+glm::vec2 TextureMap::getTextureCoords(Textures textureId, Corner corner) const
 {
 	switch (textureId)
 	{

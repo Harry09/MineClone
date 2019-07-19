@@ -8,8 +8,6 @@
 Player::Player(Camera& camera)
 	: _camera(camera)
 {
-
-
 }
 
 void Player::init()

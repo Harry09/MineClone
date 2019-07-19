@@ -33,8 +33,8 @@ private:
 public:
 	TextureMap(Texture& texture, unsigned singleTextureSize);
 
-	glm::vec2 getTextureCoords(unsigned row, unsigned column, Corner corner);
-	glm::vec2 getTextureCoords(Textures textureId, Corner corner);
+	glm::vec2 getTextureCoords(unsigned row, unsigned column, Corner corner) const;
+	glm::vec2 getTextureCoords(Textures textureId, Corner corner) const;
 
 	auto& getTexture() { return _texture; }
 };
