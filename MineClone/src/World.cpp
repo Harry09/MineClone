@@ -10,7 +10,6 @@ void World::init()
 
 	_textureMap = std::make_unique<TextureMap>(_texture, 16);
 	
-
 	for (int x = 0; x < 3; x++)
 	{
 		for (int y = 0; y < 3; y++)

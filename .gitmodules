@@ -7,3 +7,6 @@
 [submodule "vendor/stb"]
 	path = vendor/stb
 	url = https://github.com/nothings/stb.git
+[submodule "vendor/FastNoise"]
+	path = vendor/FastNoise
+	url = https://github.com/Auburns/FastNoise.git
