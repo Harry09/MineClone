@@ -27,7 +27,19 @@ void Chunk::init()
 		{
 			for (int z = 0; z < 16; z++)
 			{
-				placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
+				if (y < 10)
+				{
+					placeBlock<StoneBlock>(glm::ivec3{ x, y, z });
+				}
+				else if (y < 15)
+				{
+					placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
+				}
+				else
+				{
+					placeBlock<GrassBlock>(glm::ivec3{ x, y, z });
+				}
+
 			}
 		}
 	}
