@@ -69,9 +69,10 @@ public:
 	}
 
 protected:
-	constexpr void setTexture(BlockSide side, Textures textureId)
+	template<BlockSide... Sides>
+	constexpr void setTexture(Textures textureId)
 	{
-		_sideTexture[static_cast<int>(side)] = textureId;
+		((_sideTexture[static_cast<int>(Sides)] = textureId), ...);
 	}
 
 private:
