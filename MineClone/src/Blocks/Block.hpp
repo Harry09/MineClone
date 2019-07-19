@@ -11,20 +11,113 @@
 #include "Graphics/Vertex.hpp"
 #include "Graphics/VertexBuffer.hpp"
 
+enum class BlockSide : unsigned
+{
+	North = 0,
+	East,
+	South,
+	West,
+	Top,
+	Bottom,
+	Size
+};
+
+namespace detail
+{
+	template<BlockSide Side>
+	inline auto getMesh(const glm::vec3& pos)
+	{
+
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::North>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos },
+
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos }
+		};
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::East>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos },
+
+			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos }
+		};
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::South>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + pos },
+
+			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + pos }
+		};
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::West>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos },
+
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos }
+		};
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::Top>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + pos },
+
+			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + pos }
+		};
+	}
+
+	template<>
+	inline auto getMesh<BlockSide::Bottom>(const glm::vec3& pos)
+	{
+		return std::array{
+			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos },
+
+			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos },
+			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos },
+			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos }
+		};
+	}
+}
+
 class Block
 {
 public:
-	enum class BlockSide : unsigned
-	{
-		North = 0,
-		East,
-		South,
-		West,
-		Top,
-		Bottom,
-		Size
-	};
-
 	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
 
 protected:
@@ -81,115 +174,19 @@ private:
 	{
 		if (!hasNeighbor(Side))
 		{
-			auto mesh = getMesh<Side>();
+			auto mesh = detail::getMesh<Side>(_pos);
 
-			texture<Side>(mesh, textureMap);
+			unsigned sideValue = static_cast<unsigned>(Side);
+
+			mesh[0].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftBottom);
+			mesh[1].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+			mesh[2].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
+
+			mesh[3].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
+			mesh[4].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightTop);
+			mesh[5].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
 
 			std::copy(mesh.begin(), mesh.end(), vertices.begin() + (offset * 6));
 		}
-	}
-
-	template<BlockSide Side>
-	const void texture(std::array<Vertex, 6>& vertices, TextureMap& textureMap) const
-	{
-		unsigned sideValue = static_cast<unsigned>(Side);
-
-		vertices[0].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftBottom);
-		vertices[1].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
-		vertices[2].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
-
-		vertices[3].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightBottom);
-		vertices[4].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::RightTop);
-		vertices[5].texCoord = textureMap.getTextureCoords(_sideTexture[sideValue], TextureMap::LeftTop);
-	}
-
-	template<BlockSide Side>
-	constexpr auto getMesh() const
-	{
-
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::North>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } +_pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } +_pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } +_pos },
-
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } +_pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } +_pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } +_pos }
-		};
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::East>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos },
-
-			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + _pos }
-		};
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::South>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos },
-
-			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + _pos }
-		};
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::West>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos },
-							    
-			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + _pos }
-		};
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::Top>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos },
-
-			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + _pos }
-		};
-	}
-
-	template<>
-	constexpr auto getMesh<BlockSide::Bottom>() const
-	{
-		return std::array{
-			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos },
-
-			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + _pos },
-			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + _pos },
-			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + _pos }
-		};
 	}
 };

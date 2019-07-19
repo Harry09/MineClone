@@ -48,12 +48,12 @@ void Chunk::generateMesh()
 				if (block != nullptr)
 				{
 					auto vertices = block->getVertices<
-						Block::BlockSide::North, 
-						Block::BlockSide::East, 
-						Block::BlockSide::South, 
-						Block::BlockSide::West, 
-						Block::BlockSide::Top, 
-						Block::BlockSide::Bottom>(*_textureMap);
+						BlockSide::North, 
+						BlockSide::East, 
+						BlockSide::South, 
+						BlockSide::West, 
+						BlockSide::Top, 
+						BlockSide::Bottom>(*_textureMap);
 
 					_data->setVertices(block->getFlatPosition(), vertices.data(), vertices.size());
 				}
@@ -80,8 +80,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::North);
-			block->setNeighbor(neighbor, Block::BlockSide::South);
+			neighbor->setNeighbor(block, BlockSide::North);
+			block->setNeighbor(neighbor, BlockSide::South);
 		}
 	}
 
@@ -92,8 +92,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::South);
-			block->setNeighbor(neighbor, Block::BlockSide::North);
+			neighbor->setNeighbor(block, BlockSide::South);
+			block->setNeighbor(neighbor, BlockSide::North);
 		}
 	}
 
@@ -104,8 +104,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::West);
-			block->setNeighbor(neighbor, Block::BlockSide::East);
+			neighbor->setNeighbor(block, BlockSide::West);
+			block->setNeighbor(neighbor, BlockSide::East);
 		}
 
 	}
@@ -117,8 +117,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::East);
-			block->setNeighbor(neighbor, Block::BlockSide::West);
+			neighbor->setNeighbor(block, BlockSide::East);
+			block->setNeighbor(neighbor, BlockSide::West);
 		}
 	}
 
@@ -129,8 +129,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::Bottom);
-			block->setNeighbor(neighbor, Block::BlockSide::Top);
+			neighbor->setNeighbor(block, BlockSide::Bottom);
+			block->setNeighbor(neighbor, BlockSide::Top);
 		}
 	}
 
@@ -141,8 +141,8 @@ void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
 
 		if (neighbor != nullptr)
 		{
-			neighbor->setNeighbor(block, Block::BlockSide::Top);
-			block->setNeighbor(neighbor, Block::BlockSide::Bottom);
+			neighbor->setNeighbor(block, BlockSide::Top);
+			block->setNeighbor(neighbor, BlockSide::Bottom);
 		}
 	}
 }
