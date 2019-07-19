@@ -31,61 +31,11 @@ Game::~Game()
 
 bool Game::init()
 {
-	if (!glfwInit())
+	if (initRenderer() == false)
 		return false;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	_window = glfwCreateWindow(ScreenWidth, ScreenHeight, "Hello World", nullptr, nullptr);
-
-	if (!_window)
-	{
-		std::cout << "Cannot create window!" << std::endl;
+	if (initGame() == false)
 		return false;
-	}
-
-	glfwMakeContextCurrent(_window);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return false;
-	}
-
-	glEnable(GL_DEPTH_TEST);
-
-	glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
-		glViewport(0, 0, width, height);
-	});
-
-	glfwSetCursorPos(_window, Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f);
-	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-	auto vertexShader = Shader(ShaderType::Vertex, "vertex_shader.glsl");
-	auto fragmentShader = Shader(ShaderType::Fragment, "fragment_shader.glsl");
-
-	if (vertexShader.isValid() == false || fragmentShader.isValid() == false)
-	{
-		puts("Cannot create shaders!");
-		return false;
-	}
-
-	_shaderProgram = std::make_unique<ShaderProgram>(vertexShader, fragmentShader);
-	
-	if (!_shaderProgram->isValid())
-	{
-		puts("Cannot create shader program!");
-		return false;
-	}
-
-	_camera.setPosition({0.f, 0.f, 3.f});
-
-
-	_player.init();
-
-	_chunk.init();
 
 	return true;
 }
@@ -113,6 +63,70 @@ void Game::run()
 
 		std::this_thread::sleep_for(10ms);
 	}
+}
+
+bool Game::initRenderer()
+{
+	if (!glfwInit())
+		return false;
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	_window = glfwCreateWindow(ScreenWidth, ScreenHeight, "Hello World", nullptr, nullptr);
+
+	if (!_window)
+	{
+		std::cout << "Cannot create window!" << std::endl;
+		return false;
+	}
+
+	glfwMakeContextCurrent(_window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return false;
+	}
+
+	glEnable(GL_DEPTH_TEST);
+
+	glfwSetCursorPos(_window, Game::ScreenWidth / 2.f, Game::ScreenHeight / 2.f);
+	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	auto vertexShader = Shader(ShaderType::Vertex, "vertex_shader.glsl");
+	auto fragmentShader = Shader(ShaderType::Fragment, "fragment_shader.glsl");
+
+	if (vertexShader.isValid() == false || fragmentShader.isValid() == false)
+	{
+		puts("Cannot create shaders!");
+		return false;
+	}
+
+	_shaderProgram = std::make_unique<ShaderProgram>(vertexShader, fragmentShader);
+
+	if (!_shaderProgram->isValid())
+	{
+		puts("Cannot create shader program!");
+		return false;
+	}
+
+	return true;
+}
+
+bool Game::initGame()
+{
+	glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
+	});
+
+	_camera.setPosition({ 0.f, 0.f, 3.f });
+
+	_player.init();
+	_chunk.init();
+
+	return true;
 }
 
 void Game::update()

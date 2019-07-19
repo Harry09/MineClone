@@ -62,6 +62,9 @@ public:
 	}
 
 private:
+	bool initRenderer();
+	bool initGame();
+
 	void update();
 	void render();
 };
