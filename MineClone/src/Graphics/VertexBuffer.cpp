@@ -144,18 +144,42 @@ void VertexBuffer::setMatrix(const glm::mat4x4& mat)
 	_mat = mat;
 }
 
+void VertexBuffer::resize(size_t size)
+{
+	if (getSize() != size)
+	{
+		_needUpdate = true;
+		_needReallocate = _vertices.capacity() < size;
+
+		_updateRange = { 0, size - 1 };
+
+		_vertices.resize(size);
+	}
+}
+
 void VertexBuffer::update()
 {
 	if (_needUpdate)
 	{
 		bind();
 
-		auto offset = _updateRange.x * sizeof(Vertex);
-		auto size = (_updateRange.y - _updateRange.x + 1) * sizeof(Vertex);
+		if (_needReallocate)
+		{
+			glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), GL_DYNAMIC_DRAW);
 
-		glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
-		unbind();
+			_needReallocate = false;
+		}
+		else
+		{
+			auto offset = _updateRange.x * sizeof(Vertex);
+			auto size = (_updateRange.y - _updateRange.x + 1) * sizeof(Vertex);
 
+			glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
+			unbind();
+		}
+
+		_updateRange = { 0, -1 };
+		
 		_needUpdate = false;
 	}
 }

@@ -41,6 +41,7 @@ private:
 	Texture _texture;
 
 	bool _needUpdate = false;
+	bool _needReallocate = false;
 	ullvec2 _updateRange{ -1, 0 };
 
 	glm::mat4x4 _mat = 
@@ -78,6 +79,8 @@ public:
 	const glm::mat4x4& getMatrix() const { return _mat; }
 
 	PrimitiveType getPrimitiveType() const { return _primitiveType; }
+
+	void resize(size_t size);
 	size_t getSize() const { return _vertices.size(); }
 
 	void update();
