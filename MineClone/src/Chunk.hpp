@@ -21,12 +21,22 @@ private:
 	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
 
 public:
-	Chunk(const glm::ivec3& pos, FastNoise& noise, TextureMap& textureMap);
+	Chunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap);
 	~Chunk() = default;
 
 	template<typename T>
 	Block* placeBlock(const glm::ivec3& pos)
 	{
+		if (pos.x < 0 ||
+			pos.x > Size.x - 1 ||
+			pos.y < 0 ||
+			pos.y > Size.y - 1 ||
+			pos.z < 0 ||
+			pos.z > Size.z - 1)
+		{
+			return nullptr;
+		}
+
 		static_assert(std::is_base_of_v<Block, T>, "T must inherits Block!");
 
 		auto block = std::make_unique<T>(pos);
@@ -37,6 +47,8 @@ public:
 
 		return block.get();
 	}
+
+	Block* getBlock(int x, int y, int z) const { return _blocks[x][y][z].get(); }
 
 	void generateMesh(TextureMap& textureMap);
 

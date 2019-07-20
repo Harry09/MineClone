@@ -7,13 +7,15 @@
 #include "Blocks/GrassBlock.hpp"
 #include "Blocks/StoneBlock.hpp"
 
-Chunk::Chunk(const glm::ivec3& pos, FastNoise& noise, TextureMap& textureMap)
+Chunk::Chunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap)
 {
 	auto mat = _data.getMatrix();
 	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
 	_data.setMatrix(mat);
 
 	_data.setTexture(textureMap.getTexture());
+
+	auto yy = pos.y * Chunk::Size.y;
 
 	for (int x = 0; x < 16; x++)
 	{
@@ -22,18 +24,39 @@ Chunk::Chunk(const glm::ivec3& pos, FastNoise& noise, TextureMap& textureMap)
 			auto xx = static_cast<float>(x + pos.x * Chunk::Size.x);
 			auto zz = static_cast<float>(z + pos.z * Chunk::Size.z);
 
-			auto height = static_cast<int>(noise.GetNoise(xx, zz) * Chunk::Size.y) + 4;
+			auto height = heightMap[xx][zz];
+			auto height_ = height;
 
-			if (height < 0 || height > 15)
+			// is under chunk
+			if (height < yy)
 			{
 				continue;
 			}
 
-			placeBlock<GrassBlock>(glm::ivec3{ x, height, z });
-
-			for (int y = 0; y < height; y++)
+			// is in chunk
+			if (height < yy + 16)
 			{
-				placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
+				height_ = height - yy;
+
+				placeBlock<GrassBlock>(glm::ivec3{ x, height_, z });
+			}
+			else // is above chunk
+			{
+				height_ = 16;
+			}
+
+			// fill rest
+			for (int y = 0; y < height_; y++)
+			{
+				// if current block is at least 4 block beneath the top
+				if (height - (y + yy) > 4)
+				{
+					placeBlock<StoneBlock>(glm::ivec3{ x, y, z });
+				}
+				else
+				{
+					placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
+				}
 			}
 		}
 	}
