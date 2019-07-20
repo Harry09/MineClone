@@ -162,7 +162,7 @@ Block* Chunk::getNeighbourOfBlock(const Block* block, BlockSide side) const
 				if (neighbour == nullptr)
 					return nullptr;
 
-				return neighbour->getBlock({ pos.x, Size.y + 1, pos.z });
+				return neighbour->getBlock({ pos.x, Size.y - 1, pos.z });
 			}
 
 			return getBlock(pos);
