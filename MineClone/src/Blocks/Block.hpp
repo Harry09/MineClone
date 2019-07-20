@@ -11,6 +11,8 @@
 #include "Graphics/Vertex.hpp"
 #include "Graphics/VertexBuffer.hpp"
 
+class Chunk;
+
 enum class BlockSide : unsigned
 {
 	North = 0,
@@ -121,18 +123,16 @@ public:
 	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
 
 protected:
+	Chunk& _chunk;
+
 	glm::ivec3 _pos = { 0.f, 0.f, 0.f };
 
-	uint64_t _flatPos = 0;
-
 	Blocks _blockType;
-
-	Block* _neighbor[BlockSideSize] = { nullptr };
 
 	Textures _faceTexture[BlockSideSize];
 
 public:
-	Block(const glm::ivec3& pos, Blocks blockType) noexcept;
+	Block(Chunk& chunk, const glm::ivec3& pos, Blocks blockType) noexcept;
 
 	Block(const Block& other) noexcept;
 	Block& operator=(const Block& other) noexcept;
@@ -143,16 +143,15 @@ public:
 	~Block() = default;
 
 	const auto& getPosition() const { return _pos; }
-	const auto getFlatPosition() const { return _flatPos; }
 
-	void setNeighbor(Block* block, BlockSide side) { _neighbor[static_cast<int>(side)] = block; }
-	Block* getNeighbor(BlockSide side) const { return _neighbor[static_cast<int>(side)]; }
-	bool hasNeighbor(BlockSide side) const { return _neighbor[static_cast<int>(side)] != nullptr; }
+	Block* getNeighbor(BlockSide side) const;
+
+	bool hasNeighbor(BlockSide side) const { return getNeighbor(side) != nullptr; }
 
 	template<BlockSide... Sides>
 	const auto getVertices(TextureMap& textureMap) const
 	{
-		std::array<Vertex, 2 * 3 * 6> vertices;
+		std::vector<Vertex> vertices;
 
 		int offset = 0;
 
@@ -170,15 +169,17 @@ protected:
 
 private:
 	template<BlockSide Side>
-	const void getVerticesImp(std::array<Vertex, 2 * 3 * 6>& vertices, int offset, TextureMap& textureMap) const
+	const void getVerticesImp(std::vector<Vertex>& vertices, int offset, TextureMap& textureMap) const
 	{
 		if (!hasNeighbor(Side))
 		{
 			unsigned sideValue = static_cast<unsigned>(Side);
 
-			auto mesh = detail::getMesh<Side>(_pos, _faceTexture[sideValue], textureMap);
+			std::array<Vertex, 6> mesh = detail::getMesh<Side>(_pos, _faceTexture[sideValue], textureMap);
 
-			std::copy(mesh.begin(), mesh.end(), vertices.begin() + (offset * 6));
+			vertices.reserve(vertices.size() + 6);
+
+			vertices.insert(vertices.end(), mesh.begin(), mesh.end());
 		}
 	}
 };

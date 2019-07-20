@@ -21,5 +21,7 @@ public:
 
 	void init();
 
+	Chunk* getChunk(const glm::ivec3& pos) const;
+
 	void draw(ShaderProgram& shaderProgram);
 };

@@ -5,8 +5,8 @@
 class StoneBlock : public Block
 {
 public:
-	StoneBlock(const glm::ivec3& pos) noexcept
-		: Block(pos, Blocks::Stone)
+	StoneBlock(Chunk& chunk, const glm::ivec3& pos) noexcept
+		: Block(chunk, pos, Blocks::Stone)
 	{
 		setTexture<
 			BlockSide::North,

@@ -104,6 +104,9 @@ bool Game::initRenderer()
 
 	if (vertexShader.isValid() == false || fragmentShader.isValid() == false)
 	{
+		puts(vertexShader.getInfoLog().c_str());
+		puts(fragmentShader.getInfoLog().c_str());
+
 		puts("Cannot create shaders!");
 		return false;
 	}

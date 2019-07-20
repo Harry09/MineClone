@@ -18,12 +18,14 @@ void World::init()
 	
 	std::vector<std::vector<int>> heightMap;
 
-	const int ChunkCount = 5;
+	const int ChunkCount = 10;
 
 	const int Size = ChunkCount * 16;
 
 	heightMap.resize(Size);
 	
+	printf("Generating height map...\n");
+
 	for (int x = 0; x < Size; x++)
 	{
 		heightMap[x].resize(Size);
@@ -34,17 +36,38 @@ void World::init()
 		}
 	}
 
+	printf("Generating world...\n");
+
 	for (int x = 0; x < ChunkCount; x++)
 	{
 		for (int y = 0; y < 3; y++)
 		{
 			for (int z = 0; z < ChunkCount; z++)
 			{
-				_chunks.push_back(std::make_unique<Chunk>(glm::ivec3{ x, y - 1, z }, heightMap, *_textureMap));
+				_chunks.push_back(std::make_unique<Chunk>(*this, glm::ivec3{ x, y - 1, z }, heightMap, *_textureMap));
 				printf("%d %d\n", x, z);
 			}
 		}
 	}
+
+	printf("Generating mesh...\n");
+
+	for (auto& chunk : _chunks)
+	{
+		chunk->generateMesh(*_textureMap);
+	}
+}
+
+Chunk* World::getChunk(const glm::ivec3& pos) const
+{
+	auto it = std::find_if(_chunks.begin(), _chunks.end(), [&](auto& it) { return it->getPos() == pos; });
+
+	if (it != _chunks.end())
+	{
+		return (*it).get();
+	}
+
+	return nullptr;
 }
 
 void World::draw(ShaderProgram& shaderProgram)

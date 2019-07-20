@@ -7,7 +7,10 @@
 #include "Blocks/GrassBlock.hpp"
 #include "Blocks/StoneBlock.hpp"
 
-Chunk::Chunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap)
+#include "World.hpp"
+
+Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap)
+	: _world(world), _pos(pos)
 {
 	auto mat = _data.getMatrix();
 	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
@@ -21,8 +24,8 @@ Chunk::Chunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightM
 	{
 		for (int z = 0; z < 16; z++)
 		{
-			auto xx = static_cast<float>(x + pos.x * Chunk::Size.x);
-			auto zz = static_cast<float>(z + pos.z * Chunk::Size.z);
+			auto xx = x + pos.x * Chunk::Size.x;
+			auto zz = z + pos.z * Chunk::Size.z;
 
 			auto height = heightMap[xx][zz];
 			auto height_ = height;
@@ -60,12 +63,120 @@ Chunk::Chunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightM
 			}
 		}
 	}
+}
 
-	generateMesh(textureMap);
+Block* Chunk::getNeighbourOfBlock(const Block* block, BlockSide side) const
+{
+	auto& blockPos = block->getPosition();
+
+	switch (side)
+	{
+		case BlockSide::North:
+		{
+			auto pos = blockPos + glm::ivec3{ 0, 0, -1 };
+
+			if (pos.z < 0)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 0, -1 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ pos.x, pos.y, Size.z - 1 });
+			}
+
+			return getBlock(pos);
+		} break;
+		case BlockSide::East:
+		{
+			auto pos = blockPos + glm::ivec3{ 1, 0, 0 };
+
+			if (pos.x >= Size.x)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 1, 0, 0 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ 0, pos.y, pos.z });
+			}
+
+			return getBlock(pos);
+		} break;
+		case BlockSide::South:
+		{
+			auto pos = blockPos + glm::ivec3{ 0, 0, 1 };
+
+			if (pos.z >= Size.z)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 0, 1 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ pos.x, pos.y, 0 });
+			}
+
+			return getBlock(pos);
+		} break;
+		case BlockSide::West:
+		{
+			auto pos = blockPos + glm::ivec3{ -1, 0, 0 };
+
+			if (pos.x < 0)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ -1, 0, 0 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ Size.x - 1, pos.y, pos.z });
+			}
+
+			return getBlock(pos);
+		} break;
+		case BlockSide::Top:
+		{
+			auto pos = blockPos + glm::ivec3{ 0, 1, 0 };
+
+			if (pos.y >= Size.y)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 1, 0 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ pos.x, 0, pos.z });
+			}
+
+			return getBlock(pos);
+		} break;
+		case BlockSide::Bottom:
+		{
+			auto pos = blockPos + glm::ivec3{ 0, -1, 0 };
+
+			if (pos.y < 0)
+			{
+				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, -1, 0 });
+
+				if (neighbour == nullptr)
+					return nullptr;
+
+				return neighbour->getBlock({ pos.x, Size.y + 1, pos.z });
+			}
+
+			return getBlock(pos);
+		} break;
+	}
+
+	return nullptr;
 }
 
 void Chunk::generateMesh(TextureMap& textureMap)
 {
+	std::vector<Vertex> data;
+	data.reserve(36 * _blockCount);
+
 	for (int x = 0; x < 16; x++)
 	{
 		for (int y = 0; y < 16; y++)
@@ -84,94 +195,19 @@ void Chunk::generateMesh(TextureMap& textureMap)
 						BlockSide::Top, 
 						BlockSide::Bottom>(textureMap);
 
-					_data.setVertices(block->getFlatPosition(), vertices.data(), vertices.size());
+					data.insert(data.end(), vertices.begin(), vertices.end());
 				}
 			}
 		}
 	}
 
+	printf("Predicted size: %d, Real size: %lld\n", 36 * _blockCount, data.size());
+	_data.resize(data.size());
+	_data.setVertices(0, data.data(), data.size());
 	_data.update();
 }
 
 void Chunk::draw(ShaderProgram& shaderProgram)
 {
 	_data.draw(shaderProgram);
-}
-
-void Chunk::setupNeighbourhood(Block* block, const glm::ivec3& pos)
-{
-	Block* neighbor = nullptr;
-
-	// north
-	if (pos.z < 15)
-	{
-		neighbor = _blocks[pos.x][pos.y][pos.z + 1].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::North);
-			block->setNeighbor(neighbor, BlockSide::South);
-		}
-	}
-
-	// south
-	if (pos.z > 0)
-	{
-		neighbor = _blocks[pos.x][pos.y][pos.z - 1].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::South);
-			block->setNeighbor(neighbor, BlockSide::North);
-		}
-	}
-
-	// east
-	if (pos.x < 15)
-	{
-		neighbor = _blocks[pos.x + 1][pos.y][pos.z].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::West);
-			block->setNeighbor(neighbor, BlockSide::East);
-		}
-
-	}
-
-	// west
-	if (pos.x > 0)
-	{
-		neighbor = _blocks[pos.x - 1][pos.y][pos.z].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::East);
-			block->setNeighbor(neighbor, BlockSide::West);
-		}
-	}
-
-	// top
-	if (pos.y < 15)
-	{
-		neighbor = _blocks[pos.x][pos.y + 1][pos.z].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::Bottom);
-			block->setNeighbor(neighbor, BlockSide::Top);
-		}
-	}
-
-	// bottom
-	if (pos.y > 0)
-	{
-		neighbor = _blocks[pos.x][pos.y - 1][pos.z].get();
-
-		if (neighbor != nullptr)
-		{
-			neighbor->setNeighbor(block, BlockSide::Top);
-			block->setNeighbor(neighbor, BlockSide::Bottom);
-		}
-	}
 }
