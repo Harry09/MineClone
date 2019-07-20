@@ -1,6 +1,6 @@
 #include "Block.hpp"
 
-#include "Chunk.hpp"
+#include "World/Chunk.hpp"
 
 Block::Block(Chunk& chunk, const glm::ivec3& pos, Blocks blockType) noexcept
 	: 

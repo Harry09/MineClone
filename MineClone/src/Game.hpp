@@ -7,8 +7,8 @@
 #include "Graphics/VertexBuffer.hpp"
 #include "Graphics/ShaderProgram.hpp"
 
-#include "World.hpp"
-#include "Player.hpp"
+#include "World/World.hpp"
+#include "World/Player.hpp"
 
 class Texture;
 struct GLFWwindow;
@@ -26,10 +26,9 @@ private:
 
 	Camera _camera;
 	Player _player;
+	World _world;
 
 	std::unique_ptr<ShaderProgram> _shaderProgram;
-
-	World _world;
 
 	glm::vec2 _lastCursorPos;
 

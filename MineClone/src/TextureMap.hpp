@@ -4,7 +4,7 @@
 
 #include "Graphics/Texture.hpp"
 
-#include "Blocks/Blocks.hpp"
+#include "World/Blocks/Blocks.hpp"
 
 enum Textures
 {

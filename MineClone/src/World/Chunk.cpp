@@ -201,7 +201,8 @@ void Chunk::generateMesh(TextureMap& textureMap)
 		}
 	}
 
-	printf("Predicted size: %d, Real size: %lld\n", 36 * _blockCount, data.size());
+	printf("Predicted size: %lld, Used size: %lld\n", data.capacity(), data.size());
+
 	_data.resize(data.size());
 	_data.setVertices(0, data.data(), data.size());
 	_data.update();
