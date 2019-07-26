@@ -1,11 +1,11 @@
-#include "TextureMap.hpp"
+#include "TextureAtlas.hpp"
 
-TextureMap::TextureMap(Texture& texture, unsigned singleTextureSize)
+TextureAtlas::TextureAtlas(Texture& texture, unsigned singleTextureSize)
 	: _texture(texture), _singleTextureSize(singleTextureSize)
 {
 }
 
-glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner corner) const
+glm::vec2 TextureAtlas::getTextureCoords(unsigned row, unsigned column, Corner corner) const
 {
 	glm::vec2 coords;
 
@@ -31,7 +31,7 @@ glm::vec2 TextureMap::getTextureCoords(unsigned row, unsigned column, Corner cor
 	return coords;
 }
 
-glm::vec2 TextureMap::getTextureCoords(Textures textureId, Corner corner) const
+glm::vec2 TextureAtlas::getTextureCoords(Textures textureId, Corner corner) const
 {
 	switch (textureId)
 	{

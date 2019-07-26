@@ -10,7 +10,7 @@ void World::init()
 {
 	_texture.loadFromFile("textures.jpg");
 
-	_textureMap = std::make_unique<TextureMap>(_texture, 16);
+	_textureAtlas = std::make_unique<TextureAtlas>(_texture, 16);
 
 	FastNoise noise;
 	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
@@ -44,7 +44,7 @@ void World::init()
 		{
 			for (int z = 0; z < ChunkCount; z++)
 			{
-				_chunks.push_back(std::make_unique<Chunk>(*this, glm::ivec3{ x, y - 1, z }, heightMap, *_textureMap));
+				_chunks.push_back(std::make_unique<Chunk>(*this, glm::ivec3{ x, y - 1, z }, heightMap, *_textureAtlas));
 				printf("%d %d\n", x, z);
 			}
 		}
@@ -54,7 +54,7 @@ void World::init()
 
 	for (auto& chunk : _chunks)
 	{
-		chunk->generateMesh(*_textureMap);
+		chunk->generateMesh(*_textureAtlas);
 	}
 }
 

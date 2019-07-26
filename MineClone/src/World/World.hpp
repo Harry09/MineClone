@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "Graphics/Texture.hpp"
-#include "TextureMap.hpp"
+#include "TextureAtlas.hpp"
 
 #include "Chunk.hpp"
 
@@ -12,7 +12,7 @@ class World
 {
 private:
 	Texture _texture;
-	std::unique_ptr<TextureMap> _textureMap;
+	std::unique_ptr<TextureAtlas> _textureAtlas;
 
 	std::vector<std::unique_ptr<Chunk>> _chunks;
 

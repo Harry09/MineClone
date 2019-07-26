@@ -14,7 +14,7 @@ enum Textures
 	Stone
 };
 
-class TextureMap
+class TextureAtlas
 {
 public:
 	enum Corner
@@ -31,7 +31,7 @@ private:
 	unsigned _singleTextureSize;
 
 public:
-	TextureMap(Texture& texture, unsigned singleTextureSize);
+	TextureAtlas(Texture& texture, unsigned singleTextureSize);
 
 	glm::vec2 getTextureCoords(unsigned row, unsigned column, Corner corner) const;
 	glm::vec2 getTextureCoords(Textures textureId, Corner corner) const;

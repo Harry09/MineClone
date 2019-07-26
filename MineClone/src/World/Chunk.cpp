@@ -9,14 +9,14 @@
 
 #include "World.hpp"
 
-Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap)
+Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas)
 	: _world(world), _pos(pos)
 {
 	auto mat = _data.getMatrix();
 	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
 	_data.setMatrix(mat);
 
-	_data.setTexture(textureMap.getTexture());
+	_data.setTexture(textureAtlas.getTexture());
 
 	auto yy = pos.y * Chunk::Size.y;
 
@@ -172,7 +172,7 @@ Block* Chunk::getNeighbourOfBlock(const Block* block, BlockSide side) const
 	return nullptr;
 }
 
-void Chunk::generateMesh(TextureMap& textureMap)
+void Chunk::generateMesh(TextureAtlas& textureAtlas)
 {
 	std::vector<Vertex> data;
 	data.reserve(36 * _blockCount);
@@ -193,7 +193,7 @@ void Chunk::generateMesh(TextureMap& textureMap)
 						BlockSide::South, 
 						BlockSide::West, 
 						BlockSide::Top, 
-						BlockSide::Bottom>(textureMap);
+						BlockSide::Bottom>(textureAtlas);
 
 					data.insert(data.end(), vertices.begin(), vertices.end());
 				}

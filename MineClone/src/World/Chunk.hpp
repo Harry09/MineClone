@@ -7,7 +7,7 @@
 
 #include "Graphics/VertexBuffer.hpp"
 
-#include "TextureMap.hpp"
+#include "TextureAtlas.hpp"
 
 class World;
 
@@ -27,7 +27,7 @@ private:
 	int _blockCount = 0;
 
 public:
-	Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureMap& textureMap);
+	Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas);
 	~Chunk() = default;
 
 	const auto getPos() const { return _pos; }
@@ -62,7 +62,7 @@ public:
 
 	Block* getNeighbourOfBlock(const Block* block, BlockSide side) const;
 
-	void generateMesh(TextureMap& textureMap);
+	void generateMesh(TextureAtlas& textureAtlas);
 
 	void draw(ShaderProgram& shaderProgram);
 };
