@@ -5,7 +5,6 @@
 
 ShaderProgram::ShaderProgram()
 {
-	_shaderProgram = glCreateProgram();
 }
 
 ShaderProgram::ShaderProgram(const ShaderProgram& other) noexcept
@@ -30,6 +29,11 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
 	_shaderProgram = std::move(other._shaderProgram);
 
 	return *this;
+}
+
+void ShaderProgram::create()
+{
+	_shaderProgram = glCreateProgram();
 }
 
 void ShaderProgram::use()

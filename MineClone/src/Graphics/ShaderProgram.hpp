@@ -18,6 +18,7 @@ private:
 	std::unordered_map<std::string, unsigned> _uniformLocations;
 
 public:
+	// remember to call create() method before linking shaders!
 	ShaderProgram();
 
 	ShaderProgram(const ShaderProgram& other) noexcept;
@@ -29,8 +30,11 @@ public:
 	template<typename... Ts>
 	ShaderProgram(Ts... ts) : ShaderProgram()
 	{
+		create();
 		linkShaders(ts...);
 	}
+
+	void create();
 
 	void use();
 	bool isValid();

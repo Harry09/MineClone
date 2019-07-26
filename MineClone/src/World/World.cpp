@@ -16,15 +16,15 @@ void World::init()
 	FastNoise noise;
 	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
 	noise.SetFrequency(0.01f);
-	
+
 	std::vector<std::vector<int>> heightMap;
 
-	const int ChunkCount = 10;
+	const int ChunkCount = 3;
 
 	const int Size = ChunkCount * 16;
 
 	heightMap.resize(Size);
-	
+
 	printf("Generating height map...\n");
 
 	for (int x = 0; x < Size; x++)
@@ -33,7 +33,7 @@ void World::init()
 
 		for (int y = 0; y < Size; y++)
 		{
-			heightMap[x][y] = static_cast<int>(noise.GetNoise(static_cast<float>(x), static_cast<float>(y)) * 16);
+			heightMap[x][y] = static_cast<int>(noise.GetNoise(static_cast<float>(x), static_cast<float>(y)) * 16 * 2);
 		}
 	}
 
@@ -45,7 +45,8 @@ void World::init()
 		{
 			for (int z = 0; z < ChunkCount; z++)
 			{
-				_chunks.push_back(std::make_unique<Chunk>(*this, glm::ivec3{ x, y - 1, z }, heightMap, *_textureAtlas));
+				_chunkManager.addChunk(glm::ivec3{ x, y, z }, heightMap, *_textureAtlas);
+
 				printf("%d %d\n", x, z);
 			}
 		}
@@ -53,19 +54,32 @@ void World::init()
 
 	printf("Generating mesh...\n");
 
-	for (auto& chunk : _chunks)
-	{
-		chunk->generateMesh(*_textureAtlas);
-	}
+	_chunkManager.updateMesh(*_textureAtlas);
 }
 
 Chunk* World::getChunk(const glm::ivec3& pos) const
 {
-	auto it = std::find_if(_chunks.begin(), _chunks.end(), [&](auto& it) { return it->getPos() == pos; });
+	return _chunkManager.getChunk(pos);
+}
 
-	if (it != _chunks.end())
+void World::removeBlock(const glm::ivec3& pos)
+{
+	auto chunk = getChunk(getChunkPos(pos));
+
+	if (chunk == nullptr)
+		return;
+	
+	chunk->removeBlock(glm::abs(pos % (Chunk::Size)));
+	chunk->generateMesh(*_textureAtlas);
+}
+
+Block* World::getBlock(const glm::ivec3& pos) const
+{
+	auto chunk = getChunk(getChunkPos(pos));
+
+	if (chunk != nullptr)
 	{
-		return (*it).get();
+		return chunk->getBlock(glm::abs(pos % (Chunk::Size)));
 	}
 
 	return nullptr;
@@ -74,4 +88,20 @@ Chunk* World::getChunk(const glm::ivec3& pos) const
 void World::draw(ShaderProgram& shaderProgram)
 {
 	_chunkManager.draw(shaderProgram);
+}
+
+glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
+{
+	auto chunkPos = worldPos / (Chunk::Size);
+
+	if (worldPos.x < 0)
+		chunkPos.x--;
+
+	if (worldPos.y < 0)
+		chunkPos.y--;
+
+	if (worldPos.z < 0)
+		chunkPos.z--;
+
+	return chunkPos;
 }

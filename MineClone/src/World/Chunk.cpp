@@ -65,111 +65,23 @@ Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<
 	}
 }
 
-Block* Chunk::getNeighbourOfBlock(const Block* block, BlockSide side) const
+
+Block* Chunk::getNeighborOfBlock(const Block* block, BlockSide side) const
 {
-	auto& blockPos = block->getPosition();
+	auto facingDirection = getBlockSideDirection(side);
 
-	switch (side)
+	auto localPos = block->getPosition() + facingDirection;
+
+	//printf("Current: %d %d %d \n", _pos.x, _pos.y, _pos.z);
+
+	if (outOfBound(localPos))
 	{
-		case BlockSide::North:
-		{
-			auto pos = blockPos + glm::ivec3{ 0, 0, -1 };
+		auto worldPos = block->getWorldPosition() + facingDirection;
 
-			if (pos.z < 0)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 0, -1 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ pos.x, pos.y, Size.z - 1 });
-			}
-
-			return getBlock(pos);
-		} break;
-		case BlockSide::East:
-		{
-			auto pos = blockPos + glm::ivec3{ 1, 0, 0 };
-
-			if (pos.x >= Size.x)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 1, 0, 0 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ 0, pos.y, pos.z });
-			}
-
-			return getBlock(pos);
-		} break;
-		case BlockSide::South:
-		{
-			auto pos = blockPos + glm::ivec3{ 0, 0, 1 };
-
-			if (pos.z >= Size.z)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 0, 1 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ pos.x, pos.y, 0 });
-			}
-
-			return getBlock(pos);
-		} break;
-		case BlockSide::West:
-		{
-			auto pos = blockPos + glm::ivec3{ -1, 0, 0 };
-
-			if (pos.x < 0)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ -1, 0, 0 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ Size.x - 1, pos.y, pos.z });
-			}
-
-			return getBlock(pos);
-		} break;
-		case BlockSide::Top:
-		{
-			auto pos = blockPos + glm::ivec3{ 0, 1, 0 };
-
-			if (pos.y >= Size.y)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, 1, 0 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ pos.x, 0, pos.z });
-			}
-
-			return getBlock(pos);
-		} break;
-		case BlockSide::Bottom:
-		{
-			auto pos = blockPos + glm::ivec3{ 0, -1, 0 };
-
-			if (pos.y < 0)
-			{
-				auto neighbour = _world.getChunk(_pos + glm::ivec3{ 0, -1, 0 });
-
-				if (neighbour == nullptr)
-					return nullptr;
-
-				return neighbour->getBlock({ pos.x, Size.y - 1, pos.z });
-			}
-
-			return getBlock(pos);
-		} break;
+		return _world.getBlock(worldPos);
 	}
 
-	return nullptr;
+	return getBlock(localPos);
 }
 
 void Chunk::generateMesh(TextureAtlas& textureAtlas)
@@ -211,4 +123,19 @@ void Chunk::generateMesh(TextureAtlas& textureAtlas)
 void Chunk::draw(ShaderProgram& shaderProgram)
 {
 	_data.draw(shaderProgram);
+}
+
+bool Chunk::outOfBound(const glm::ivec3& pos)
+{
+	if (pos.x < 0 ||
+		pos.x > Size.x - 1 ||
+		pos.y < 0 ||
+		pos.y > Size.y - 1 ||
+		pos.z < 0 ||
+		pos.z > Size.z - 1)
+	{
+		return true;
+	}
+
+	return false;
 }

@@ -2,33 +2,23 @@
 
 #include <memory>
 
-#include "Graphics/Camera.hpp"
-#include "Graphics/ShaderProgram.hpp"
-#include "Graphics/VertexBuffer.hpp"
-#include "Graphics/ShaderProgram.hpp"
+#include "Renderer.hpp"
 
 #include "World/World.hpp"
 #include "World/Player.hpp"
 
 class Texture;
-struct GLFWwindow;
 
 class Game
 {
-public:
-	static constexpr unsigned ScreenWidth = 1024;
-	static constexpr unsigned ScreenHeight = 768;
 
 private:
 	static Game* _inst;
 
-	GLFWwindow* _window = nullptr;
+	Renderer _renderer;
 
-	Camera _camera;
 	Player _player;
 	World _world;
-
-	std::unique_ptr<ShaderProgram> _shaderProgram;
 
 	glm::vec2 _lastCursorPos;
 
@@ -39,11 +29,7 @@ public:
 	bool init();
 	void run();
 
-	Camera& getCamera() { return _camera; }
-	const Camera& getCamera() const { return _camera; }
-
-	GLFWwindow* getWindow() { return _window; }
-	const GLFWwindow* getWindow() const { return _window; }
+	Renderer& getRenderer() { return _renderer; }
 
 	glm::vec2 getCursorOffset(const glm::vec2& pos) 
 	{ 
@@ -61,9 +47,9 @@ public:
 	}
 
 private:
-	bool initRenderer();
 	bool initGame();
 
 	void update();
-	void render();
+
+	void drawChunks();
 };

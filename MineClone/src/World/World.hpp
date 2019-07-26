@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <vector>
 #include <memory>
@@ -23,5 +23,11 @@ public:
 
 	Chunk* getChunk(const glm::ivec3& pos) const;
 
+	void removeBlock(const glm::ivec3& pos);
+	Block* getBlock(const glm::ivec3& pos) const;
+
 	void draw(ShaderProgram& shaderProgram);
+
+private:
+	static glm::ivec3 getChunkPos(const glm::ivec3& worldPos);
 };

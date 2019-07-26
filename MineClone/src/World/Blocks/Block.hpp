@@ -24,6 +24,8 @@ enum class BlockSide : unsigned
 	Size
 };
 
+glm::ivec3 getBlockSideDirection(BlockSide side);
+
 namespace detail
 {
 	template<BlockSide Side>
@@ -143,6 +145,7 @@ public:
 	~Block() = default;
 
 	const auto& getPosition() const { return _pos; }
+	glm::ivec3 getWorldPosition() const;
 
 	Block* getNeighbor(BlockSide side) const;
 
