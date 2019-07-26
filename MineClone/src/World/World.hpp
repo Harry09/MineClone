@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -6,7 +6,7 @@
 #include "Graphics/Texture.hpp"
 #include "TextureAtlas.hpp"
 
-#include "Chunk.hpp"
+#include "ChunkManager.hpp"
 
 class World
 {
@@ -14,7 +14,7 @@ private:
 	Texture _texture;
 	std::unique_ptr<TextureAtlas> _textureAtlas;
 
-	std::vector<std::unique_ptr<Chunk>> _chunks;
+	ChunkManager _chunkManager;
 
 public:
 	World();

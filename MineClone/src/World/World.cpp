@@ -3,6 +3,7 @@
 #include <FastNoise.h>
 
 World::World()
+	: _chunkManager(*this)
 {
 }
 
@@ -72,8 +73,5 @@ Chunk* World::getChunk(const glm::ivec3& pos) const
 
 void World::draw(ShaderProgram& shaderProgram)
 {
-	for (auto& chunk : _chunks)
-	{
-		chunk->draw(shaderProgram);
-	}
+	_chunkManager.draw(shaderProgram);
 }

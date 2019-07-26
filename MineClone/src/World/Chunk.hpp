@@ -35,12 +35,7 @@ public:
 	template<typename T>
 	Block* placeBlock(const glm::ivec3& pos)
 	{
-		if (pos.x < 0 ||
-			pos.x > Size.x - 1 ||
-			pos.y < 0 ||
-			pos.y > Size.y - 1 ||
-			pos.z < 0 ||
-			pos.z > Size.z - 1)
+		if (outOfBound(pos))
 		{
 			return nullptr;
 		}
@@ -60,9 +55,12 @@ public:
 
 	Block* getBlock(const glm::ivec3& pos) const { return _blocks[pos.x][pos.y][pos.z].get(); }
 
-	Block* getNeighbourOfBlock(const Block* block, BlockSide side) const;
+	Block* getNeighborOfBlock(const Block* block, BlockSide side) const;
 
 	void generateMesh(TextureAtlas& textureAtlas);
 
 	void draw(ShaderProgram& shaderProgram);
+
+private:
+	static bool outOfBound(const glm::ivec3& pos);
 };
