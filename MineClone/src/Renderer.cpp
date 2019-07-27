@@ -39,27 +39,14 @@ Renderer::Renderer()
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glfwSetCursorPos(_window, Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	auto vertexShader = Shader(ShaderType::Vertex, "chunk.vert");
-	auto fragmentShader = Shader(ShaderType::Fragment, "chunk.frag");
-
-	if (vertexShader.isValid() == false || fragmentShader.isValid() == false)
-	{
-		puts(vertexShader.getInfoLog().c_str());
-		puts(fragmentShader.getInfoLog().c_str());
-
-		throw std::exception("Cannot create shaders!");
-	}
-
-	_chunkShader.create();
-	_chunkShader.linkShaders(vertexShader, fragmentShader);
-
-	if (!_chunkShader.isValid())
-	{
-		throw std::exception("Cannot create shader program!");
-	}
+	loadShader("chunk", _chunkShader);
+	loadShader("hud", _hudShader);
 }
 
 Renderer::~Renderer()
@@ -73,4 +60,26 @@ Renderer::~Renderer()
 
 void Renderer::draw()
 {
+}
+
+void Renderer::loadShader(const std::string& shaderName, ShaderProgram& shaderProgram)
+{
+	auto vertexShader = Shader(ShaderType::Vertex, shaderName + ".vert");
+	auto fragmentShader = Shader(ShaderType::Fragment, shaderName + ".frag");
+
+	if (vertexShader.isValid() == false || fragmentShader.isValid() == false)
+	{
+		puts(vertexShader.getInfoLog().c_str());
+		puts(fragmentShader.getInfoLog().c_str());
+
+		throw std::exception("Cannot create shaders!");
+	}
+
+	shaderProgram.create();
+	shaderProgram.linkShaders(vertexShader, fragmentShader);
+
+	if (!shaderProgram.isValid())
+	{
+		throw std::exception("Cannot create shader program!");
+	}
 }

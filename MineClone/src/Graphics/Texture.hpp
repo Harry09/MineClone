@@ -13,7 +13,7 @@ private:
 
 public:
 	Texture() noexcept = default;
-	Texture(const std::string& filePath) noexcept;
+	Texture(const std::string& filePath, bool transparent = false) noexcept;
 	~Texture() noexcept;
 	
 	Texture(const Texture& other) noexcept;
@@ -22,7 +22,7 @@ public:
 	Texture(Texture&& other) noexcept;
 	Texture& operator=(Texture&& other) noexcept;
 
-	void loadFromFile(const std::string& filePath);
+	void loadFromFile(const std::string& filePath, bool transparent = false);
 
 	const glm::uvec2& getSize() const { return _size; }
 

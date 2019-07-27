@@ -4,9 +4,9 @@
 #include <glad/glad.h>
 
 
-Texture::Texture(const std::string& filePath) noexcept
+Texture::Texture(const std::string& filePath, bool transparent) noexcept
 {
-	loadFromFile(filePath);
+	loadFromFile(filePath, transparent);
 }
 
 Texture::~Texture() noexcept
@@ -49,11 +49,20 @@ Texture& Texture::operator=(Texture&& other) noexcept
 	return *this;
 }
 
-void Texture::loadFromFile(const std::string& filePath)
+void Texture::loadFromFile(const std::string& filePath, bool transparent)
 {
 	int width, height, channels;
 
-	auto data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+	int desiredChannels = STBI_rgb;
+	int format = GL_RGB;
+
+	if (transparent)
+	{
+		desiredChannels = STBI_rgb_alpha;
+		format = GL_RGBA;
+	}
+
+	auto data = stbi_load(filePath.c_str(), &width, &height, &channels, desiredChannels);
 
 	if (data == nullptr)
 	{
@@ -71,7 +80,7 @@ void Texture::loadFromFile(const std::string& filePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	stbi_image_free(data);

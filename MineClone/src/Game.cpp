@@ -16,7 +16,8 @@ Game* Game::_inst;
 Game::Game()
 	: 
 	_player(_world, _renderer.getCamera()),
-	_lastCursorPos{ Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f }
+	_lastCursorPos{ Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f },
+	_cursorTex("cursor.png", true)
 {
 	_inst = this;
 }
@@ -36,6 +37,8 @@ bool Game::init()
 	_world.init();
 	_player.init();
 
+	initCursor();
+
 	return true;
 }
 
@@ -49,14 +52,33 @@ void Game::run()
 
 		glClearColor(0.49f, 0.67f, 0.98f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
 		drawChunks();
+		drawHud();
 
 		glfwSwapBuffers(_renderer.getWindow());
 		glfwPollEvents();
 
 		std::this_thread::sleep_for(10ms);
 	}
+}
+
+void Game::initCursor()
+{
+	_cursor.setTexture(_cursorTex);
+
+	auto mat = _cursor.getMatrix();
+	mat = glm::scale(mat, glm::vec3{ 0.005f });
+	_cursor.setMatrix(mat);
+
+	_cursor[0] = Vertex{ glm::vec3 { -0.5f, -0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 0.f, 0.f } };
+	_cursor[1] = Vertex{ glm::vec3 { -0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 0.f, 1.f } };
+	_cursor[2] = Vertex{ glm::vec3 {  0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 1.f } };
+	_cursor[3] = Vertex{ glm::vec3 {  0.5f, -0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 0.f } };
+	_cursor.update();
+
+	_hudViewMatrix = glm::mat4(1.0f);
+	_hudViewMatrix = glm::translate(_hudViewMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
 }
 
 void Game::update()
@@ -81,4 +103,17 @@ void Game::drawChunks()
 
 	_player.draw(chunkShader);
 	_world.draw(chunkShader);
+}
+
+void Game::drawHud()
+{
+	auto& hudShader = _renderer.getHudShader();
+	auto& camera = _renderer.getCamera();
+
+	hudShader.use();
+
+	hudShader.setUniform("view", _hudViewMatrix);
+	hudShader.setUniform("projection", camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight }));
+
+	_cursor.draw(hudShader);
 }

@@ -20,6 +20,7 @@ private:
 	Camera _camera;
 
 	ShaderProgram _chunkShader;
+	ShaderProgram _hudShader;
 
 public:
 	Renderer();
@@ -31,4 +32,8 @@ public:
 	void draw();
 
 	ShaderProgram& getChunkShader() { return _chunkShader; }
+	ShaderProgram& getHudShader() { return _hudShader; }
+
+private:
+	void loadShader(const std::string& shaderName, ShaderProgram& shaderProgram);
 };
