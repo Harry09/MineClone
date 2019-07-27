@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <vector>
 #include <memory>
@@ -55,6 +55,7 @@ public:
 
 	void removeBlock(const glm::ivec3& pos) { _blocks[pos.x][pos.y][pos.z].reset(); }
 
+	Block* getBlock(const glm::ivec3& pos) { return _blocks[pos.x][pos.y][pos.z].get(); }
 	Block* getBlock(const glm::ivec3& pos) const { return _blocks[pos.x][pos.y][pos.z].get(); }
 
 	Block* getNeighborOfBlock(const Block* block, BlockSide side) const;

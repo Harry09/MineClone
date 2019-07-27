@@ -14,6 +14,6 @@ public:
 			BlockSide::South,
 			BlockSide::West,
 			BlockSide::Top,
-			BlockSide::Bottom>(Textures::Stone);
+			BlockSide::Bottom>(TextureId::Stone);
 	}
 };

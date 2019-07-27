@@ -14,6 +14,6 @@ public:
 			BlockSide::South,
 			BlockSide::West,
 			BlockSide::Top,
-			BlockSide::Bottom>(Textures::Dirt);
+			BlockSide::Bottom>(TextureId::Dirt);
 	}
 };

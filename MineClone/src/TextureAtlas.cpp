@@ -31,19 +31,21 @@ glm::vec2 TextureAtlas::getTextureCoords(unsigned row, unsigned column, Corner c
 	return coords;
 }
 
-glm::vec2 TextureAtlas::getTextureCoords(Textures textureId, Corner corner) const
+glm::vec2 TextureAtlas::getTextureCoords(TextureId textureId, Corner corner) const
 {
 	switch (textureId)
 	{
-		case Textures::Dirt:
+		case TextureId::Dirt:
 			return getTextureCoords(0, 0, corner);
-		case Textures::GrassSide:
+		case TextureId::GrassSide:
 			return getTextureCoords(1, 0, corner);
-		case Textures::GrassTop:
+		case TextureId::GrassTop:
 			return getTextureCoords(2, 0, corner);
-		case Textures::Stone:
+		case TextureId::Stone:
 			return getTextureCoords(3, 0, corner);
-	}
 
-	return getTextureCoords(15, 15, corner);
+		case TextureId::None:
+		default:
+			return getTextureCoords(15, 15, corner);
+	}
 }

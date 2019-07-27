@@ -7,11 +7,12 @@ class World;
 
 class Player
 {
+public:
+	static constexpr float PlayerSpeed = 0.1f;
+
 private:
 	World& _world;
 	Camera& _camera;
-
-	static constexpr float PlayerSpeed = 0.1f;
 
 public:
 	Player(World& world, Camera& camera);

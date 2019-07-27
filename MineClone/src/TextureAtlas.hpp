@@ -6,12 +6,14 @@
 
 #include "World/Blocks/Blocks.hpp"
 
-enum Textures
+enum TextureId
 {
 	Dirt,
 	GrassSide,
 	GrassTop,
-	Stone
+	Stone,
+
+	None 
 };
 
 class TextureAtlas
@@ -34,7 +36,7 @@ public:
 	TextureAtlas(Texture& texture, unsigned singleTextureSize);
 
 	glm::vec2 getTextureCoords(unsigned row, unsigned column, Corner corner) const;
-	glm::vec2 getTextureCoords(Textures textureId, Corner corner) const;
+	glm::vec2 getTextureCoords(TextureId textureId, Corner corner) const;
 
 	auto& getTexture() { return _texture; }
 };

@@ -12,9 +12,9 @@ public:
 			BlockSide::North,
 			BlockSide::East,
 			BlockSide::South,
-			BlockSide::West>(Textures::GrassSide);
+			BlockSide::West>(TextureId::GrassSide);
 
-		setTexture<BlockSide::Top>(Textures::GrassTop);
-		setTexture<BlockSide::Bottom>(Textures::Dirt);
+		setTexture<BlockSide::Top>(TextureId::GrassTop);
+		setTexture<BlockSide::Bottom>(TextureId::Dirt);
 	}
 };
