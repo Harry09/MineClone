@@ -33,8 +33,8 @@ bool Game::init()
 
 	_renderer.getCamera().setPosition({ -3.f, 0.f, 3.f });
 
-	_player.init();
 	_world.init();
+	_player.init();
 
 	return true;
 }
@@ -79,5 +79,6 @@ void Game::drawChunks()
 	chunkShader.setUniform("view", camera.getViewMatrix());
 	chunkShader.setUniform("projection", camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight }));
 
+	_player.draw(chunkShader);
 	_world.draw(chunkShader);
 }

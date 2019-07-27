@@ -69,7 +69,7 @@ private:
 		{
 			unsigned sideValue = static_cast<unsigned>(Side);
 
-			std::array<Vertex, 6> mesh = getBlockMesh<Side>(_pos, _faceTexture[sideValue], textureAtlas);
+			std::array<Vertex, 6> mesh = getSingleBlockMesh<Side>(_pos, _faceTexture[sideValue], textureAtlas);
 
 			vertices.reserve(vertices.size() + 6);
 

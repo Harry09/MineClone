@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Graphics/VertexBuffer.hpp"
+
 struct GLFWwindow;
 
 class Camera;
@@ -14,10 +16,18 @@ private:
 	World& _world;
 	Camera& _camera;
 
+	glm::vec3 _highlighterPos{ 0.f };
+
+
+	bool _drawHighlighter = false;
+	VertexBuffer _highlighter{ 0, PrimitiveType::Triangles };
+
 public:
 	Player(World& world, Camera& camera);
 
 	void init();
 
 	void update(GLFWwindow* window);
+
+	void draw(ShaderProgram& shaderProgram);
 };

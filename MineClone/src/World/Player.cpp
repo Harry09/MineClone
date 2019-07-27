@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Graphics/Camera.hpp"
+#include "Graphics/ShaderProgram.hpp"
+#include "Blocks/BlockMesh.hpp"
 #include "Ray.hpp"
 
 Player::Player(World& world, Camera& camera)
@@ -25,53 +27,60 @@ void Player::init()
 
 		camera.rotate(offset);
 	});
+
+	auto blockMesh = getBlockMesh<
+		BlockSide::North, 
+		BlockSide::East,
+		BlockSide::South,
+		BlockSide::West,
+		BlockSide::Top,
+		BlockSide::Bottom>(glm::vec3 { 0.f }, TextureId::None, _world.getTextureAtlas());
+
+	auto mat = _highlighter.getMatrix();
+	mat = glm::translate(mat, _highlighterPos);
+	_highlighter.setMatrix(mat);
+
+	_highlighter.resize(blockMesh.size());
+
+	_highlighter.setTexture(_world.getTextureAtlas().getTexture());
+	_highlighter.setVertices(0, blockMesh.data(), blockMesh.size());
+	_highlighter.update();
 }
 
 void Player::update(GLFWwindow* window)
 {
+	_drawHighlighter = false;
+
+	Ray ray(_camera.getPosition(), _camera.getRotation());
+
+	while (ray.length() < 6)
+	{
+		ray.step(0.1f);
+
+		auto pos = glm::ivec3(glm::round(ray.getEnd()));
+
+		auto block = _world.getBlock(pos);
+
+		if (block != nullptr)
+		{
+			auto offset = glm::vec3(pos) - _highlighterPos;
+
+			auto mat = _highlighter.getMatrix();
+			mat = glm::translate(mat, offset);
+			_highlighter.setMatrix(mat);
+
+			_highlighterPos = pos;
+
+			_drawHighlighter = true;
+
+			break;
+		}
+	}
+
 	auto rotation = glm::radians(_camera.getRotation());
 	auto _cos = cos(rotation.x) * PlayerSpeed;
 	auto _tan = tan(rotation.y) * PlayerSpeed;
 	auto _sin = sin(rotation.x) * PlayerSpeed;
-
-	static bool clicked = false;
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS)
-	{
-		if (!clicked)
-		{
-			Ray ray(_camera.getPosition(), _camera.getRotation());
-
-			while (ray.length() < 6)
-			{
-				ray.step(0.1f);
-
-				auto pos = glm::ivec3(ray.getEnd());
-
-				auto block = _world.getBlock(pos);
-
-				if (block != nullptr)
-				{
-					_world.removeBlock(block->getWorldPosition());
-					printf("End %d %d %d\n", pos.x, pos.y, pos.z);
-					break;
-				}
-
-			}
-
-			printf("\n");
-
-			clicked = true;
-		}
-	}
-
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE)
-	{
-		if (clicked)
-		{
-			clicked = false;
-		}
-	}
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		_camera.move({  _cos, _tan,  _sin });
@@ -86,4 +95,12 @@ void Player::update(GLFWwindow* window)
 		_camera.move({ 0.f,  PlayerSpeed, 0.f });
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
 		_camera.move({ 0.f, -PlayerSpeed, 0.f });
+}
+
+void Player::draw(ShaderProgram& shaderProgram)
+{
+	if (_drawHighlighter)
+	{
+		_highlighter.draw(shaderProgram);
+	}
 }

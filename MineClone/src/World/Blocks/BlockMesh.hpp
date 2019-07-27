@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <array>
+#include <vector>
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
@@ -37,7 +38,7 @@ namespace detail
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
-													    
+
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     }
@@ -51,7 +52,7 @@ namespace detail
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
-													    
+
 			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 {  0.5f,  0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     }
@@ -65,7 +66,7 @@ namespace detail
 			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
-													   
+
 			Vertex{ glm::vec3 {  0.5f, -0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 {  0.5f,  0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    }
@@ -79,7 +80,7 @@ namespace detail
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
-													    
+
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 { -0.5f,  0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 { -0.5f,  0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    }
@@ -93,7 +94,7 @@ namespace detail
 			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
-													   
+
 			Vertex{ glm::vec3 {  0.5f, 0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 {  0.5f, 0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    },
 			Vertex{ glm::vec3 { -0.5f, 0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     }
@@ -107,7 +108,7 @@ namespace detail
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
-													    
+
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightBottom) },
 			Vertex{ glm::vec3 { -0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftTop)     },
 			Vertex{ glm::vec3 {  0.5f, -0.5f,  0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::RightTop)    }
@@ -116,7 +117,29 @@ namespace detail
 }
 
 template<BlockSide Side>
-inline std::array<Vertex, 6> getBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+inline std::array<Vertex, 6> getSingleBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 {
 	return detail::getMesh<Side>(pos, textureId, textureAtlas);
+}
+
+template<BlockSide... Side>
+inline std::vector<Vertex> getBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+{
+	std::vector<Vertex> result;
+
+	constexpr auto argumentCount = sizeof...(Side);
+
+	result.reserve(argumentCount * 6);
+
+	(getBlockMeshImp<Side>(result, pos, textureId, textureAtlas), ...);
+
+	return result;
+}
+
+template<BlockSide Side>
+inline void getBlockMeshImp(std::vector<Vertex>& data, const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+{
+	auto mesh = detail::getMesh<Side>(pos, textureId, textureAtlas);
+
+	data.insert(data.end(), mesh.begin(), mesh.end());
 }

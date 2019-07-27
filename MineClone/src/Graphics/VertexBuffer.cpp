@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "Texture.hpp"
+#include "ShaderProgram.hpp"
 
 VertexBuffer::VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType) noexcept
 	: 
@@ -165,7 +165,7 @@ void VertexBuffer::update()
 
 		if (_needReallocate)
 		{
-			glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), GL_DYNAMIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), _drawType);
 
 			_needReallocate = false;
 		}
@@ -209,7 +209,7 @@ void VertexBuffer::init()
 
 	bind();
 
-	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), _drawType); // TODO: Add more draw type
+	glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex_t), _vertices.data(), _drawType);
 
 	if (_ebo != 0)
 	{
