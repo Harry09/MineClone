@@ -25,8 +25,6 @@ public:
 	Renderer();
 	~Renderer();
 
-	bool init();
-
 	GLFWwindow* getWindow() { return _window; }
 	Camera& getCamera() { return _camera; }
 

@@ -3,16 +3,15 @@
 #include <FastNoise.h>
 
 World::World()
-	: _chunkManager(*this)
+	: 
+	_texture("textures.jpg"),
+	_textureAtlas(_texture, 16),
+	_chunkManager(*this)
 {
 }
 
 void World::init()
 {
-	_texture.loadFromFile("textures.jpg");
-
-	_textureAtlas = std::make_unique<TextureAtlas>(_texture, 16);
-
 	FastNoise noise;
 	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
 	noise.SetFrequency(0.01f);
@@ -45,7 +44,7 @@ void World::init()
 		{
 			for (int z = 0; z < ChunkCount; z++)
 			{
-				_chunkManager.addChunk(glm::ivec3{ x, y, z }, heightMap, *_textureAtlas);
+				_chunkManager.addChunk(glm::ivec3{ x, y, z }, heightMap, _textureAtlas);
 
 				printf("%d %d\n", x, z);
 			}
@@ -54,7 +53,7 @@ void World::init()
 
 	printf("Generating mesh...\n");
 
-	_chunkManager.updateMesh(*_textureAtlas);
+	_chunkManager.updateMesh(_textureAtlas);
 }
 
 Chunk* World::getChunk(const glm::ivec3& pos) const
@@ -70,7 +69,7 @@ void World::removeBlock(const glm::ivec3& pos)
 		return;
 	
 	chunk->removeBlock(glm::abs(pos % (Chunk::Size)));
-	chunk->generateMesh(*_textureAtlas);
+	chunk->generateMesh(_textureAtlas);
 }
 
 Block* World::getBlock(const glm::ivec3& pos) const

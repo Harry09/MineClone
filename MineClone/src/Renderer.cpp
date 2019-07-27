@@ -10,20 +10,10 @@
 
 Renderer::Renderer()
 {
-}
-
-Renderer::~Renderer()
-{
-	if (_window != nullptr)
-	{
-		glfwTerminate();
-	}
-}
-
-bool Renderer::init()
-{
 	if (!glfwInit())
-		return false;
+	{
+		throw std::exception("Cannot init glfw!");
+	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -33,16 +23,14 @@ bool Renderer::init()
 
 	if (!_window)
 	{
-		std::cout << "Cannot create window!" << std::endl;
-		return false;
+		throw std::exception("Cannot create window!");
 	}
 
 	glfwMakeContextCurrent(_window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return false;
+		throw std::exception("Failed to initialize GLAD");
 	}
 
 	glEnable(GL_DEPTH_TEST);
@@ -62,8 +50,7 @@ bool Renderer::init()
 		puts(vertexShader.getInfoLog().c_str());
 		puts(fragmentShader.getInfoLog().c_str());
 
-		puts("Cannot create shaders!");
-		return false;
+		throw std::exception("Cannot create shaders!");
 	}
 
 	_chunkShader.create();
@@ -71,12 +58,18 @@ bool Renderer::init()
 
 	if (!_chunkShader.isValid())
 	{
-		puts("Cannot create shader program!");
-		return false;
+		throw std::exception("Cannot create shader program!");
 	}
-
-	return true;
 }
+
+Renderer::~Renderer()
+{
+	if (_window != nullptr)
+	{
+		glfwTerminate();
+	}
+}
+
 
 void Renderer::draw()
 {

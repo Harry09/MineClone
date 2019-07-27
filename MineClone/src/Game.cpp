@@ -27,11 +27,14 @@ Game::~Game()
 
 bool Game::init()
 {
-	if (_renderer.init() == false)
-		return false;
+	glfwSetFramebufferSizeCallback(_renderer.getWindow(), [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
+		});
 
-	if (initGame() == false)
-		return false;
+	_renderer.getCamera().setPosition({ -3.f, 0.f, 3.f });
+
+	_player.init();
+	_world.init();
 
 	return true;
 }
@@ -54,20 +57,6 @@ void Game::run()
 
 		std::this_thread::sleep_for(10ms);
 	}
-}
-
-bool Game::initGame()
-{
-	glfwSetFramebufferSizeCallback(_renderer.getWindow(), [](GLFWwindow* window, int width, int height) {
-		glViewport(0, 0, width, height);
-	});
-
-	_renderer.getCamera().setPosition({ -3.f, 0.f, 3.f });
-
-	_player.init();
-	_world.init();
-
-	return true;
 }
 
 void Game::update()

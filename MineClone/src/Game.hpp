@@ -47,8 +47,6 @@ public:
 	}
 
 private:
-	bool initGame();
-
 	void update();
 
 	void drawChunks();

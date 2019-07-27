@@ -12,7 +12,7 @@ class World
 {
 private:
 	Texture _texture;
-	std::unique_ptr<TextureAtlas> _textureAtlas;
+	TextureAtlas _textureAtlas;
 
 	ChunkManager _chunkManager;
 
@@ -25,6 +25,9 @@ public:
 
 	void removeBlock(const glm::ivec3& pos);
 	Block* getBlock(const glm::ivec3& pos) const;
+
+	TextureAtlas& getTextureAtlas() { return _textureAtlas; }
+	const TextureAtlas& getTextureAtlas() const { return _textureAtlas; }
 
 	void draw(ShaderProgram& shaderProgram);
 
