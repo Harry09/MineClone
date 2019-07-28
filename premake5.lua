@@ -62,3 +62,13 @@ project "MineClone"
     links { "glad", "glfw3", "FastNoise" }
 
     files { "MineClone/src/**.hpp", "MineClone/src/**.cpp" }
+
+project "tests"
+    kind "ConsoleApp"
+    targetdir "tests/%{cfg.buildcfg}"
+    includedirs { "MineClone/src", "vendor/googletest/googletest/include", "vendor/glad/include", "vendor/glfw/include", "vendor/glm", "vendor/stb", "vendor/FastNoise" }
+    
+    libdirs { "vendor/glfw/src/%{cfg.longname}" }
+    links { "MineClone", "googletest", "glad", "glfw3", "FastNoise" }
+
+    files { "MineClone/tests/**.hpp", "MineClone/tests/**.cpp" }
