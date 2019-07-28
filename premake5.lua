@@ -8,7 +8,7 @@ workspace "MineClone"
     startproject "MineClone"
     cppdialect "C++17"
 
-    objdir "obj/%{prj.name}/%{cfg.buildcfg}"
+    objdir "obj/%{cfg.buildcfg}/%{prj.name}"
 
     filter "configurations:Debug"
         defines { "DEBUG" }
@@ -19,28 +19,46 @@ workspace "MineClone"
         optimize "On"
 
 ----------------- libs -----------------
------------ glad ----------- 
-project "glad"
-    kind "StaticLib"
-    targetdir "lib/%{cfg.buildcfg}"
-    includedirs { "vendor/glad/include" }
+group "vendor"
+    ----------- glad ----------- 
+    project "glad"
+        kind "StaticLib"
+        targetdir "lib/%{cfg.buildcfg}/%{prj.name}"
+        includedirs { "vendor/glad/include" }
 
-    files { "vendor/glad/include/**.h", "vendor/glad/src/**.c" }
+        files { "vendor/glad/include/**.h", "vendor/glad/src/**.c" }
 
-project "FastNoise"
-    kind "StaticLib"
-    targetdir "lib/%{cfg.buildcfg}"
+    ----------- FastNoise ----------- 
+    project "FastNoise"
+        kind "StaticLib"
+        targetdir "lib/%{cfg.buildcfg}/%{prj.name}"
 
-    files { "vendor/FastNoise/**.h", "vendor/FastNoise/**.cpp" }
+        files { "vendor/FastNoise/**.h", "vendor/FastNoise/**.cpp" }
+
+    ----------- Google Test ----------- 
+    project "googletest"
+        kind "StaticLib"
+        targetdir "lib/%{cfg.buildcfg}/%{prj.name}"
+        includedirs 
+        { 
+            "vendor/googletest/googletest",
+            "vendor/googletest/googletest/include", 
+            "googletest/googletest/include/internal"
+        }
+
+        files { "vendor/googletest/googletest/include/**.h", "vendor/googletest/googletest/src/**.cc" }
+
+        excludes { "vendor/googletest/googletest/src/gtest-all.cc" }
 
 ----------------- Main project -----------------
+group ""
 project "MineClone"
     kind "ConsoleApp"
     targetdir "bin/%{cfg.buildcfg}"
-    includedirs { "MineClone/src", "vendor/glad/include", "vendor/glfw3/include", "vendor/glm", "vendor/stb", "vendor/FastNoise" }
+    includedirs { "MineClone/src", "vendor/glad/include", "vendor/glfw/include", "vendor/glm", "vendor/stb", "vendor/FastNoise" }
     debugdir "MineClone/assets"
 
-    libdirs { "vendor/glfw3/src/%{cfg.longname}" }
+    libdirs { "vendor/glfw/src/%{cfg.longname}" }
     links { "glad", "glfw3", "FastNoise" }
 
     files { "MineClone/src/**.hpp", "MineClone/src/**.cpp" }

@@ -10,3 +10,6 @@
 [submodule "vendor/FastNoise"]
 	path = vendor/FastNoise
 	url = https://github.com/Auburns/FastNoise.git
+[submodule "vendor/googletest"]
+	path = vendor/googletest
+	url = https://github.com/google/googletest.git
