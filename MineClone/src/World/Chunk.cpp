@@ -117,7 +117,6 @@ void Chunk::generateMesh(TextureAtlas& textureAtlas)
 
 	_data.resize(data.size());
 	_data.setVertices(0, data.data(), data.size());
-	_data.update();
 }
 
 void Chunk::draw(ShaderProgram& shaderProgram)

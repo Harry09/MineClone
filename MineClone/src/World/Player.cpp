@@ -44,7 +44,6 @@ void Player::init()
 
 	_highlighter.setTexture(_world.getTextureAtlas().getTexture());
 	_highlighter.setVertices(0, blockMesh.data(), blockMesh.size());
-	_highlighter.update();
 }
 
 void Player::update(GLFWwindow* window)
@@ -52,6 +51,8 @@ void Player::update(GLFWwindow* window)
 	_drawHighlighter = false;
 
 	Ray ray(_camera.getPosition(), _camera.getRotation());
+
+	static bool mouseClicked = false;
 
 	while (ray.length() < 6)
 	{
@@ -73,7 +74,24 @@ void Player::update(GLFWwindow* window)
 
 			_drawHighlighter = true;
 
+			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS)
+			{
+				if (_blockRemoving == false)
+				{
+					_blockRemoving = true;
+					_world.removeBlock(pos);
+				}
+			}
+
 			break;
+		}
+	}
+
+	if (_blockRemoving == true)
+	{
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE)
+		{
+			_blockRemoving = false;
 		}
 	}
 

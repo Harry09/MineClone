@@ -175,17 +175,19 @@ void VertexBuffer::update()
 			auto size = (_updateRange.y - _updateRange.x + 1) * sizeof(Vertex);
 
 			glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
-			unbind();
 		}
 
 		_updateRange = { 0, -1 };
 		
 		_needUpdate = false;
+		unbind();
 	}
 }
 
 void VertexBuffer::draw(ShaderProgram& shaderProgram)
 {
+	update();
+
 	shaderProgram.setUniform("model", _mat);
 
 	bind();

@@ -18,9 +18,10 @@ private:
 
 	glm::vec3 _highlighterPos{ 0.f };
 
-
 	bool _drawHighlighter = false;
 	VertexBuffer _highlighter{ 0, PrimitiveType::Triangles };
+
+	bool _blockRemoving = false;
 
 public:
 	Player(World& world, Camera& camera);

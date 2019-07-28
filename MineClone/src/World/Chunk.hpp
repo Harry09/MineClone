@@ -21,7 +21,7 @@ private:
 
 	glm::ivec3 _pos;
 
-	VertexBuffer _data{ 0, PrimitiveType::Triangles };
+	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
 	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
 
 	int _blockCount = 0;

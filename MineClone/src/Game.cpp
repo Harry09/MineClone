@@ -75,7 +75,6 @@ void Game::initCursor()
 	_cursor[1] = Vertex{ glm::vec3 { -0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 0.f, 1.f } };
 	_cursor[2] = Vertex{ glm::vec3 {  0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 1.f } };
 	_cursor[3] = Vertex{ glm::vec3 {  0.5f, -0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 0.f } };
-	_cursor.update();
 
 	_hudViewMatrix = glm::mat4(1.0f);
 	_hudViewMatrix = glm::translate(_hudViewMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
