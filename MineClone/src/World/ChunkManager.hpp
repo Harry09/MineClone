@@ -20,5 +20,6 @@ public:
 
 	void updateMesh(TextureAtlas& textureAtlas);
 
-	void draw(ShaderProgram& shaderProgram);
+	void drawChunks(ShaderProgram& shaderProgram);
+	void drawGrid(ShaderProgram& shaderProgram);
 };

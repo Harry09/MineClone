@@ -29,7 +29,8 @@ public:
 	TextureAtlas& getTextureAtlas() { return _textureAtlas; }
 	const TextureAtlas& getTextureAtlas() const { return _textureAtlas; }
 
-	void draw(ShaderProgram& shaderProgram);
+	void drawChunks(ShaderProgram& shaderProgram);
+	void drawGrid(ShaderProgram& shaderProgram);
 
 public:
 	static glm::ivec3 getChunkPos(const glm::ivec3& worldPos);

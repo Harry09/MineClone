@@ -24,6 +24,8 @@ private:
 	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
 	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
 
+	VertexBuffer _outline{ 24, PrimitiveType::Lines };
+
 	int _blockCount = 0;
 
 public:
@@ -62,8 +64,11 @@ public:
 
 	void generateMesh(TextureAtlas& textureAtlas);
 
-	void draw(ShaderProgram& shaderProgram);
+	void drawChunks(ShaderProgram& shaderProgram);
+	void drawGrid(ShaderProgram& shaderProgram);
 
 private:
 	static bool outOfBound(const glm::ivec3& pos);
+
+	void initOutline();
 };

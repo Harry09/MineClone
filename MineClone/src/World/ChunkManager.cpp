@@ -34,10 +34,18 @@ void ChunkManager::updateMesh(TextureAtlas& textureAtlas)
 	}
 }
 
-void ChunkManager::draw(ShaderProgram& shaderProgram)
+void ChunkManager::drawChunks(ShaderProgram& shaderProgram)
 {
 	for (auto& chunk : _chunks)
 	{
-		chunk->draw(shaderProgram);
+		chunk->drawChunks(shaderProgram);
+	}
+}
+
+void ChunkManager::drawGrid(ShaderProgram& shaderProgram)
+{
+	for (auto& chunk : _chunks)
+	{
+		chunk->drawGrid(shaderProgram);
 	}
 }

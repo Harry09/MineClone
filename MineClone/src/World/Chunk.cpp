@@ -63,8 +63,9 @@ Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<
 			}
 		}
 	}
-}
 
+	initOutline();
+}
 
 Block* Chunk::getNeighborOfBlock(const Block* block, BlockSide side) const
 {
@@ -119,9 +120,14 @@ void Chunk::generateMesh(TextureAtlas& textureAtlas)
 	_data.setVertices(0, data.data(), data.size());
 }
 
-void Chunk::draw(ShaderProgram& shaderProgram)
+void Chunk::drawChunks(ShaderProgram& shaderProgram)
 {
 	_data.draw(shaderProgram);
+}
+
+void Chunk::drawGrid(ShaderProgram& shaderProgram)
+{
+	_outline.draw(shaderProgram);
 }
 
 bool Chunk::outOfBound(const glm::ivec3& pos)
@@ -137,4 +143,50 @@ bool Chunk::outOfBound(const glm::ivec3& pos)
 	}
 
 	return false;
+}
+
+void Chunk::initOutline()
+{
+	auto mat = _outline.getMatrix();
+	mat = glm::translate(mat, glm::vec3(Chunk::Size * _pos));
+	_outline.setMatrix(mat);
+
+	// top
+	_outline[0] =  Vertex{ { -0.5f, 15.5f, -0.5f } };
+	_outline[1] =  Vertex{ { 15.5f, 15.5f, -0.5f } };
+				   
+	_outline[2] =  Vertex{ { 15.5f, 15.5f, -0.5f } };
+	_outline[3] =  Vertex{ { 15.5f, 15.5f, 15.5f } };
+				   
+	_outline[4] =  Vertex{ { 15.5f, 15.5f, 15.5f } };
+	_outline[5] =  Vertex{ { -0.5f, 15.5f, 15.5f } };
+				   
+	_outline[6] =  Vertex{ { -0.5f, 15.5f, 15.5f } };
+	_outline[7] =  Vertex{ { -0.5f, 15.5f, -0.5f } };
+				   
+	// bottom
+	_outline[8] =  Vertex{ { -0.5f, -0.5f, -0.5f } };
+	_outline[9] =  Vertex{ { 15.5f, -0.5f, -0.5f } };
+
+	_outline[10] = Vertex{ { 15.5f, -0.5f, -0.5f } };
+	_outline[11] = Vertex{ { 15.5f, -0.5f, 15.5f } };
+
+	_outline[12] = Vertex{ { 15.5f, -0.5f, 15.5f } };
+	_outline[13] = Vertex{ { -0.5f, -0.5f, 15.5f } };
+
+	_outline[14] = Vertex{ { -0.5f, -0.5f, 15.5f } };
+	_outline[15] = Vertex{ { -0.5f, -0.5f, -0.5f } };
+
+	// poles
+	_outline[16] = Vertex{ { -0.5f, -0.5f, -0.5f } };
+	_outline[17] = Vertex{ { -0.5f, 15.5f, -0.5f } };
+
+	_outline[18] = Vertex{ { 15.5f, -0.5f, -0.5f } };
+	_outline[19] = Vertex{ { 15.5f, 15.5f, -0.5f } };
+
+	_outline[20] = Vertex{ { 15.5f, -0.5f, 15.5f } };
+	_outline[21] = Vertex{ { 15.5f, 15.5f, 15.5f } };
+
+	_outline[22] = Vertex{ { -0.5f, -0.5f, 15.5f } };
+	_outline[23] = Vertex{ { -0.5f, 15.5f, 15.5f } };
 }

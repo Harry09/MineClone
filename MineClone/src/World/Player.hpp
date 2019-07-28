@@ -30,5 +30,5 @@ public:
 
 	void update(GLFWwindow* window);
 
-	void draw(ShaderProgram& shaderProgram);
+	void drawGrid(ShaderProgram& shaderProgram);
 };

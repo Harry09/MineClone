@@ -106,7 +106,7 @@ void Game::drawChunks(const glm::mat4& viewMatrix, const glm::mat4& projectionMa
 	chunkShader.setUniform("view", viewMatrix);
 	chunkShader.setUniform("projection", projectionMatrix);
 
-	_world.draw(chunkShader);
+	_world.drawChunks(chunkShader);
 }
 
 void Game::drawHud(const glm::mat4& projectionMatrix)
@@ -132,5 +132,8 @@ void Game::drawGrid(const glm::mat4& viewMatrix, const glm::mat4& projectionMatr
 	gridShader.setUniform("view", viewMatrix);
 	gridShader.setUniform("projection", projectionMatrix);
 
-	_player.draw(gridShader);
+	_player.drawGrid(gridShader);
+
+	glLineWidth(1.f);
+	_world.drawGrid(gridShader);
 }

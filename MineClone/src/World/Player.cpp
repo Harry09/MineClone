@@ -141,7 +141,7 @@ void Player::update(GLFWwindow* window)
 		_camera.move({ 0.f, -PlayerSpeed, 0.f });
 }
 
-void Player::draw(ShaderProgram& shaderProgram)
+void Player::drawGrid(ShaderProgram& shaderProgram)
 {
 	if (_drawHighlighter)
 	{

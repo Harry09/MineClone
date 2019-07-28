@@ -40,7 +40,7 @@ void World::init()
 
 	for (int x = 0; x < ChunkCount; x++)
 	{
-		for (int y = 0; y < 3; y++)
+		for (int y = 0; y < 2; y++)
 		{
 			for (int z = 0; z < ChunkCount; z++)
 			{
@@ -84,9 +84,14 @@ Block* World::getBlock(const glm::ivec3& pos) const
 	return nullptr;
 }
 
-void World::draw(ShaderProgram& shaderProgram)
+void World::drawChunks(ShaderProgram& shaderProgram)
 {
-	_chunkManager.draw(shaderProgram);
+	_chunkManager.drawChunks(shaderProgram);
+}
+
+void World::drawGrid(ShaderProgram& shaderProgram)
+{
+	_chunkManager.drawGrid(shaderProgram);
 }
 
 glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
