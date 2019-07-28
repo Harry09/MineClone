@@ -68,7 +68,7 @@ void World::removeBlock(const glm::ivec3& pos)
 	if (chunk == nullptr)
 		return;
 	
-	chunk->removeBlock(glm::abs(pos % (Chunk::Size)));
+	chunk->removeBlock(getLocalPos(pos));
 	chunk->generateMesh(_textureAtlas);
 }
 
@@ -78,7 +78,7 @@ Block* World::getBlock(const glm::ivec3& pos) const
 
 	if (chunk != nullptr)
 	{
-		return chunk->getBlock(glm::abs(pos % (Chunk::Size)));
+		return chunk->getBlock(getLocalPos(pos));
 	}
 
 	return nullptr;
@@ -91,7 +91,7 @@ void World::draw(ShaderProgram& shaderProgram)
 
 glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
 {
-	auto chunkPos = worldPos / (Chunk::Size);
+	auto chunkPos = worldPos / Chunk::Size;
 
 	if (worldPos.x < 0)
 		chunkPos.x--;
@@ -103,4 +103,15 @@ glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
 		chunkPos.z--;
 
 	return chunkPos;
+}
+
+glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
+{
+	auto pos = glm::abs(worldPos % Chunk::Size);
+	return pos;
+}
+
+glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
+{
+	return chunkPos * Chunk::Size + localPos;
 }

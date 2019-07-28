@@ -1,7 +1,7 @@
 #include "Block.hpp"
 
+#include "World/World.hpp"
 #include "World/Chunk.hpp"
-
 
 Block::Block(Chunk& chunk, const glm::ivec3& pos, Blocks blockType) noexcept
 	: 
@@ -47,7 +47,7 @@ Block& Block::operator=(Block&& other) noexcept
 
 glm::ivec3 Block::getWorldPosition() const
 {
-	return _chunk.getPos() * (Chunk::Size - 1) + _pos;
+	return World::getWorldPos(_pos, _chunk.getPos());
 }
 
 Block* Block::getNeighbor(BlockSide side) const

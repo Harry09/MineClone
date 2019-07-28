@@ -31,6 +31,8 @@ public:
 
 	void draw(ShaderProgram& shaderProgram);
 
-private:
+public:
 	static glm::ivec3 getChunkPos(const glm::ivec3& worldPos);
+	static glm::ivec3 getLocalPos(const glm::ivec3& worldPos);
+	static glm::ivec3 getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos);
 };
