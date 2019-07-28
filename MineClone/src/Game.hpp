@@ -22,7 +22,7 @@ private:
 
 	// todo: move to other class
 	Texture _cursorTex;
-	VertexBuffer _cursor{ 4, PrimitiveType::TriangleFan };
+	VertexBuffer _cursor{ 4, PrimitiveType::Lines };
 	glm::mat4 _hudViewMatrix;
 
 	glm::vec2 _lastCursorPos;

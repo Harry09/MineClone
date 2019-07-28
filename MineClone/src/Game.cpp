@@ -77,10 +77,10 @@ void Game::initCursor()
 	mat = glm::scale(mat, glm::vec3{ 0.005f });
 	_cursor.setMatrix(mat);
 
-	_cursor[0] = Vertex{ glm::vec3 { -0.5f, -0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 0.f, 0.f } };
-	_cursor[1] = Vertex{ glm::vec3 { -0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 0.f, 1.f } };
-	_cursor[2] = Vertex{ glm::vec3 {  0.5f,  0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 1.f } };
-	_cursor[3] = Vertex{ glm::vec3 {  0.5f, -0.5f, 0.f }, glm::vec3 { 1.f }, glm::vec2 { 1.f, 0.f } };
+	_cursor[0] = Vertex{ glm::vec3 { -0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };
+	_cursor[1] = Vertex{ glm::vec3 {  0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };
+	_cursor[2] = Vertex{ glm::vec3 {  0.f,  0.5f, 0.f }, glm::vec3 { 1.f } };
+	_cursor[3] = Vertex{ glm::vec3 {  0.f, -0.5f, 0.f }, glm::vec3 { 1.f } };
 
 	_hudViewMatrix = glm::mat4(1.0f);
 	_hudViewMatrix = glm::translate(_hudViewMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
@@ -119,7 +119,10 @@ void Game::drawHud(const glm::mat4& projectionMatrix)
 	hudShader.setUniform("view", _hudViewMatrix);
 	hudShader.setUniform("projection", projectionMatrix);
 
+	glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+	glLineWidth(2.f);
 	_cursor.draw(hudShader);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Game::drawGrid(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
