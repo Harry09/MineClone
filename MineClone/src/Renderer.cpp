@@ -47,6 +47,7 @@ Renderer::Renderer()
 
 	loadShader("chunk", _chunkShader);
 	loadShader("hud", _hudShader);
+	loadShader("grid", _gridShader);
 }
 
 Renderer::~Renderer()

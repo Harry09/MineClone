@@ -33,8 +33,8 @@ public:
 	Camera() = default;
 	~Camera() = default;
 
-	glm::mat4 getViewMatrix();
-	glm::mat4 getProjectionMatrix(const glm::vec2& targetSize);
+	const glm::mat4& getViewMatrix();
+	const glm::mat4& getProjectionMatrix(const glm::vec2& targetSize);
 
 	void setAspectRatio(float aspect) { _aspectRatio = aspect; _projectionNeedUpdate = true; }
 

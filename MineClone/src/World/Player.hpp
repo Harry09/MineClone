@@ -19,7 +19,7 @@ private:
 	glm::vec3 _highlighterPos{ 0.f };
 
 	bool _drawHighlighter = false;
-	VertexBuffer _highlighter{ 0, PrimitiveType::Triangles };
+	VertexBuffer _highlighter{ 24, PrimitiveType::Lines };
 
 	bool _blockRemoving = false;
 

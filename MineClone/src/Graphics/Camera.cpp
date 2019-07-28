@@ -2,7 +2,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-glm::mat4 Camera::getViewMatrix()
+const glm::mat4& Camera::getViewMatrix()
 {
 	if (_viewNeedUpdate)
 	{
@@ -29,7 +29,7 @@ glm::mat4 Camera::getViewMatrix()
 	return _viewMatrix;
 }
 
-glm::mat4 Camera::getProjectionMatrix(const glm::vec2& targetSize)
+const glm::mat4& Camera::getProjectionMatrix(const glm::vec2& targetSize)
 {
 	if (_projectionNeedUpdate)
 	{

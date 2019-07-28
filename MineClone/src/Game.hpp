@@ -56,6 +56,7 @@ private:
 
 	void update();
 
-	void drawChunks();
-	void drawHud();
+	void drawChunks(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+	void drawHud(const glm::mat4& projectionMatrix);
+	void drawGrid(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 };

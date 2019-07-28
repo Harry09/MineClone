@@ -53,7 +53,7 @@ public:
 		return blockPtr;
 	}
 
-	void removeBlock(const glm::ivec3& pos) { _blocks[pos.x][pos.y][pos.z].reset(); }
+	void removeBlock(const glm::ivec3& pos) { _blocks[pos.x][pos.y][pos.z].reset(); _blockCount--; }
 
 	Block* getBlock(const glm::ivec3& pos) { return _blocks[pos.x][pos.y][pos.z].get(); }
 	Block* getBlock(const glm::ivec3& pos) const { return _blocks[pos.x][pos.y][pos.z].get(); }

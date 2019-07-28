@@ -53,8 +53,14 @@ void Game::run()
 		glClearColor(0.49f, 0.67f, 0.98f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		drawChunks();
-		drawHud();
+		auto& camera = _renderer.getCamera();
+		auto& viewMatrix = camera.getViewMatrix();
+		auto& projectionMatrix = camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight });
+
+
+		drawChunks(viewMatrix, projectionMatrix);
+		drawHud(projectionMatrix);
+		drawGrid(viewMatrix, projectionMatrix);
 
 		glfwSwapBuffers(_renderer.getWindow());
 		glfwPollEvents();
@@ -90,21 +96,20 @@ void Game::update()
 	_player.update(_renderer.getWindow());
 }
 
-void Game::drawChunks()
+void Game::drawChunks(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
 {
 	auto& chunkShader = _renderer.getChunkShader();
 	auto& camera = _renderer.getCamera();
 
 	chunkShader.use();
 
-	chunkShader.setUniform("view", camera.getViewMatrix());
-	chunkShader.setUniform("projection", camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight }));
+	chunkShader.setUniform("view", viewMatrix);
+	chunkShader.setUniform("projection", projectionMatrix);
 
-	_player.draw(chunkShader);
 	_world.draw(chunkShader);
 }
 
-void Game::drawHud()
+void Game::drawHud(const glm::mat4& projectionMatrix)
 {
 	auto& hudShader = _renderer.getHudShader();
 	auto& camera = _renderer.getCamera();
@@ -112,7 +117,20 @@ void Game::drawHud()
 	hudShader.use();
 
 	hudShader.setUniform("view", _hudViewMatrix);
-	hudShader.setUniform("projection", camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight }));
+	hudShader.setUniform("projection", projectionMatrix);
 
 	_cursor.draw(hudShader);
+}
+
+void Game::drawGrid(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
+{
+	auto& gridShader = _renderer.getGridShader();
+	auto& camera = _renderer.getCamera();
+
+	gridShader.use();
+
+	gridShader.setUniform("view", viewMatrix);
+	gridShader.setUniform("projection", projectionMatrix);
+
+	_player.draw(gridShader);
 }

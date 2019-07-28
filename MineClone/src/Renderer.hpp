@@ -21,6 +21,7 @@ private:
 
 	ShaderProgram _chunkShader;
 	ShaderProgram _hudShader;
+	ShaderProgram _gridShader;
 
 public:
 	Renderer();
@@ -33,6 +34,7 @@ public:
 
 	ShaderProgram& getChunkShader() { return _chunkShader; }
 	ShaderProgram& getHudShader() { return _hudShader; }
+	ShaderProgram& getGridShader() { return _gridShader; }
 
 private:
 	void loadShader(const std::string& shaderName, ShaderProgram& shaderProgram);

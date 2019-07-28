@@ -177,7 +177,7 @@ void VertexBuffer::update()
 			glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
 		}
 
-		_updateRange = { 0, -1 };
+		_updateRange = { -1, 0 };
 		
 		_needUpdate = false;
 		unbind();
@@ -191,7 +191,13 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 	shaderProgram.setUniform("model", _mat);
 
 	bind();
-	glBindTexture(GL_TEXTURE_2D, _texture.getNativeHandle());
+
+	auto _textureNativeHandle = _texture.getNativeHandle();
+
+	if (_textureNativeHandle != 0)
+	{
+		glBindTexture(GL_TEXTURE_2D, _textureNativeHandle);
+	}
 
 	if (_ebo != 0)
 	{
