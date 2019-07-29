@@ -181,7 +181,7 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 {
 	update();
 
-	shaderProgram.setUniform("model", _matrix);
+	shaderProgram.setUniform("model", getMatrix());
 
 	bind();
 
