@@ -73,9 +73,7 @@ void Game::initCursor()
 {
 	_cursor.setTexture(_cursorTex);
 
-	auto mat = _cursor.getMatrix();
-	mat = glm::scale(mat, glm::vec3{ 0.005f });
-	_cursor.setMatrix(mat);
+	_cursor.scale(glm::vec3{ 0.005f });
 
 	_cursor[0] = Vertex{ glm::vec3 { -0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };
 	_cursor[1] = Vertex{ glm::vec3 {  0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };

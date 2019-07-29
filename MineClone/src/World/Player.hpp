@@ -16,8 +16,6 @@ private:
 	World& _world;
 	Camera& _camera;
 
-	glm::vec3 _highlighterPos{ 0.f };
-
 	bool _drawHighlighter = false;
 	VertexBuffer _highlighter{ 24, PrimitiveType::Lines };
 

@@ -50,8 +50,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
 	_drawType(std::move(other._drawType)),
 	_texture(std::move(other._texture)),
 	_needUpdate(std::move(other._needUpdate)),
-	_updateRange(std::move(other._updateRange)),
-	_mat(std::move(other._mat))
+	_updateRange(std::move(other._updateRange))
 {
 }
 
@@ -71,7 +70,6 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept
 		_texture = std::move(other._texture);
 		_needUpdate = std::move(other._needUpdate);
 		_updateRange = std::move(other._updateRange);
-		_mat = std::move(other._mat);
 	}
 
 	return *this;
@@ -139,11 +137,6 @@ void VertexBuffer::setTexture(Texture& texture)
 	_texture = texture;
 }
 
-void VertexBuffer::setMatrix(const glm::mat4x4& mat)
-{
-	_mat = mat;
-}
-
 void VertexBuffer::resize(size_t size)
 {
 	if (getSize() != size)
@@ -188,7 +181,7 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 {
 	update();
 
-	shaderProgram.setUniform("model", _mat);
+	shaderProgram.setUniform("model", _matrix);
 
 	bind();
 

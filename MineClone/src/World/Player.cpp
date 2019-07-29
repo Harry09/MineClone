@@ -90,13 +90,7 @@ void Player::update(GLFWwindow* window)
 
 		if (block != nullptr)
 		{
-			auto offset = glm::vec3(pos) - _highlighterPos;
-
-			auto mat = _highlighter.getMatrix();
-			mat = glm::translate(mat, offset);
-			_highlighter.setMatrix(mat);
-
-			_highlighterPos = pos;
+			_highlighter.setPos(pos);
 
 			_drawHighlighter = true;
 
