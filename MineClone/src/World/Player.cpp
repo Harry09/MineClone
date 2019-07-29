@@ -27,11 +27,6 @@ void Player::init()
 		camera.rotate(offset);
 	});
 
-	auto mat = _highlighter.getMatrix();
-	mat = glm::translate(mat, _highlighterPos);
-	_highlighter.setMatrix(mat);
-
-
 	// top
 	_highlighter[0] =  Vertex{ { -0.501f, 0.501f, -0.501f } };
 	_highlighter[1] =  Vertex{ {  0.501f, 0.501f, -0.501f } };
