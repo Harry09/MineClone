@@ -120,7 +120,7 @@ void Game::drawHud(const glm::mat4& projectionMatrix)
 	hudShader.setUniform("projection", projectionMatrix);
 
 	glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-	glLineWidth(2.f);
+	glLineWidth(3.f);
 	_cursor.draw(hudShader);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
