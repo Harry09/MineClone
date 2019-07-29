@@ -115,7 +115,7 @@ void VertexBuffer::setVertex(size_t index, const Vertex_t& vertex)
 void VertexBuffer::setVertices(size_t offset, const Vertex_t* start, size_t size)
 {
 	_updateRange.x = std::min(_updateRange.x, offset);
-	_updateRange.y = std::max(_updateRange.y, offset + size);
+	_updateRange.y = std::max(_updateRange.y, offset + size) - 1;
 
 	std::copy(start, start + size, _vertices.begin() + offset);
 
@@ -142,7 +142,7 @@ void VertexBuffer::resize(size_t size)
 	if (getSize() != size)
 	{
 		_needUpdate = true;
-		_needReallocate = _vertices.capacity() < size;
+		_needReallocate = _vertices.size() < size;
 
 		_updateRange = { 0, size - 1 };
 
