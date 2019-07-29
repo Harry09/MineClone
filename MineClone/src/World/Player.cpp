@@ -73,7 +73,7 @@ void Player::update(GLFWwindow* window)
 
 	Ray ray(_camera.getPosition(), _camera.getRotation());
 
-	static bool mouseClicked = false;
+	glm::ivec3 lastBlockPos{ INT_MIN };
 
 	while (ray.length() < 6)
 	{
@@ -81,10 +81,15 @@ void Player::update(GLFWwindow* window)
 
 		auto pos = glm::ivec3(glm::round(ray.getEnd()));
 
+		if (lastBlockPos == pos)
+			continue;
+
 		auto block = _world.getBlock(pos);
 
 		if (block != nullptr)
 		{
+			lastBlockPos = pos;
+
 			_highlighter.setPos(pos);
 
 			_drawHighlighter = true;
