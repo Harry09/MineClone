@@ -36,4 +36,6 @@ public:
 	static glm::ivec3 getChunkPos(const glm::ivec3& worldPos);
 	static glm::ivec3 getLocalPos(const glm::ivec3& worldPos);
 	static glm::ivec3 getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos);
+
+	std::vector<glm::ivec3> getNeighborIfOnBound(const glm::ivec3& worldPos);
 };

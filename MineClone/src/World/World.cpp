@@ -32,7 +32,7 @@ void World::init()
 
 		for (int y = 0; y < Size; y++)
 		{
-			heightMap[x][y] = static_cast<int>(noise.GetNoise(static_cast<float>(x), static_cast<float>(y)) * 16 * 2);
+			heightMap[x][y] = static_cast<int>((noise.GetNoise(static_cast<float>(x), static_cast<float>(y)) + 0.8f) * 16);
 		}
 	}
 
@@ -63,13 +63,30 @@ Chunk* World::getChunk(const glm::ivec3& pos) const
 
 void World::removeBlock(const glm::ivec3& pos)
 {
-	auto chunk = getChunk(getChunkPos(pos));
+	auto chunkPos = getChunkPos(pos);
+
+	auto chunk = getChunk(chunkPos);
 
 	if (chunk == nullptr)
 		return;
 	
 	chunk->removeBlock(getLocalPos(pos));
 	chunk->generateMesh(_textureAtlas);
+
+	auto neighbors = getNeighborIfOnBound(pos);
+
+	for (auto& neighbor : neighbors)
+	{
+		auto neighborChunk = getChunk(chunkPos + neighbor);
+
+		if (neighborChunk == nullptr)
+			continue;
+
+		if (neighborChunk->getBlock(getLocalPos(pos + neighbor)) != nullptr)
+		{
+			neighborChunk->generateMesh(_textureAtlas);
+		}
+	}
 }
 
 Block* World::getBlock(const glm::ivec3& pos) const
@@ -119,4 +136,28 @@ glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
 glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
 {
 	return chunkPos * Chunk::Size + localPos;
+}
+
+std::vector<glm::ivec3> World::getNeighborIfOnBound(const glm::ivec3& worldPos)
+{
+	std::vector<glm::ivec3> result;
+
+	auto localPos = getLocalPos(worldPos);
+
+	if (localPos.x == 0)
+		result.push_back(glm::ivec3{ -1, 0, 0 });
+	else if (localPos.x == 15)
+		result.push_back(glm::ivec3{ 1, 0, 0 });
+	
+	if (localPos.y == 0)
+		result.push_back(glm::ivec3{ 0, -1, 0 });
+	else if (localPos.y == 15)
+		result.push_back(glm::ivec3{ 0, 1, 0 });
+
+	if (localPos.z == 0)
+		result.push_back(glm::ivec3{ 0, 0, -1 });
+	else if (localPos.z == 15)
+		result.push_back(glm::ivec3{ 0, 0, 1 });
+
+	return result;
 }
