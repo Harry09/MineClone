@@ -8,6 +8,8 @@
 #include "Graphics/Shader.hpp"
 #include "Graphics/ShaderProgram.hpp"
 
+#include "Game.hpp"
+
 Renderer::Renderer()
 {
 	if (!glfwInit())
@@ -19,7 +21,7 @@ Renderer::Renderer()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	_window = glfwCreateWindow(Renderer::ScreenWidth, Renderer::ScreenHeight, "Hello World", nullptr, nullptr);
+	_window = glfwCreateWindow(_canvasSize.x, _canvasSize.y, "Hello World", nullptr, nullptr);
 
 	if (!_window)
 	{
@@ -42,7 +44,13 @@ Renderer::Renderer()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glfwSetCursorPos(_window, Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f);
+	glfwSetFramebufferSizeCallback(_window, [](GLFWwindow* window, int width, int height) {
+		Game::get()->getRenderer().updateCanvasSize({ width, height });
+	});
+
+	updateCanvasSize(_canvasSize);
+
+	glfwSetCursorPos(_window, _canvasSize.x / 2.0, _canvasSize.y / 2.0);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	loadShader("shaders/chunk", _chunkShader);
@@ -58,9 +66,15 @@ Renderer::~Renderer()
 	}
 }
 
-
 void Renderer::draw()
 {
+}
+
+void Renderer::updateCanvasSize(const glm::uvec2& size)
+{
+	_canvasSize = size;
+	_camera.setTargetSize(size);
+	glViewport(0, 0, size.x, size.y);
 }
 
 void Renderer::loadShader(const std::string& shaderName, ShaderProgram& shaderProgram)

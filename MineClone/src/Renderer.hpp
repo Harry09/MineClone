@@ -11,9 +11,6 @@ class ShaderProgram;
 class Renderer
 {
 public:
-	static constexpr unsigned ScreenWidth = 1024;
-	static constexpr unsigned ScreenHeight = 768;
-
 private:
 	GLFWwindow* _window = nullptr;
 
@@ -22,6 +19,8 @@ private:
 	ShaderProgram _chunkShader;
 	ShaderProgram _hudShader;
 	ShaderProgram _gridShader;
+
+	glm::uvec2 _canvasSize = { 1024, 768 };
 
 public:
 	Renderer();
@@ -35,6 +34,10 @@ public:
 	ShaderProgram& getChunkShader() { return _chunkShader; }
 	ShaderProgram& getHudShader() { return _hudShader; }
 	ShaderProgram& getGridShader() { return _gridShader; }
+
+	const glm::uvec2& getCanvasSize() const { return _canvasSize; }
+
+	void updateCanvasSize(const glm::uvec2& size);
 
 private:
 	void loadShader(const std::string& shaderName, ShaderProgram& shaderProgram);

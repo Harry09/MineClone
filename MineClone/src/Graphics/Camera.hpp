@@ -17,6 +17,8 @@ private:
 	glm::vec3 _target{ 0.f, 0.f, 0.f };
 	glm::vec2 _rotation{ -90.f, 0.f };
 
+	glm::uvec2 _targetSize;
+
 	Mode _mode = Mode::Rotation;
 
 	glm::mat4 _viewMatrix{ 1.f };
@@ -33,8 +35,10 @@ public:
 	Camera() = default;
 	~Camera() = default;
 
+	void setTargetSize(const glm::uvec2& targetSize) { _targetSize = targetSize; _projectionNeedUpdate = true; }
+
 	const glm::mat4& getViewMatrix();
-	const glm::mat4& getProjectionMatrix(const glm::vec2& targetSize);
+	const glm::mat4& getProjectionMatrix();
 
 	void setAspectRatio(float aspect) { _aspectRatio = aspect; _projectionNeedUpdate = true; }
 

@@ -16,7 +16,7 @@ Game* Game::_inst;
 Game::Game()
 	: 
 	_player(_world, _renderer.getCamera()),
-	_lastCursorPos{ Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f },
+	_lastCursorPos{ _renderer.getCanvasSize() / 2u },
 	_cursorTex("cursor.png", true)
 {
 	_inst = this;
@@ -28,10 +28,6 @@ Game::~Game()
 
 bool Game::init()
 {
-	glfwSetFramebufferSizeCallback(_renderer.getWindow(), [](GLFWwindow* window, int width, int height) {
-		glViewport(0, 0, width, height);
-		});
-
 	_renderer.getCamera().setPosition({ -3.f, 0.f, 3.f });
 
 	_world.init();
@@ -55,7 +51,7 @@ void Game::run()
 
 		auto& camera = _renderer.getCamera();
 		auto& viewMatrix = camera.getViewMatrix();
-		auto& projectionMatrix = camera.getProjectionMatrix({ Renderer::ScreenWidth, Renderer::ScreenHeight });
+		auto& projectionMatrix = camera.getProjectionMatrix();
 
 
 		drawChunks(viewMatrix, projectionMatrix);

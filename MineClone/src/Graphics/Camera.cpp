@@ -29,11 +29,11 @@ const glm::mat4& Camera::getViewMatrix()
 	return _viewMatrix;
 }
 
-const glm::mat4& Camera::getProjectionMatrix(const glm::vec2& targetSize)
+const glm::mat4& Camera::getProjectionMatrix()
 {
 	if (_projectionNeedUpdate)
 	{
-		_projectionMatrix = glm::perspective(glm::radians(_fov), targetSize.x / targetSize.y, 0.1f, 100.0f);
+		_projectionMatrix = glm::perspective(glm::radians(_fov), static_cast<float>(_targetSize.x) / _targetSize.y, 0.1f, 100.0f);
 
 		_projectionNeedUpdate = false;
 	}
