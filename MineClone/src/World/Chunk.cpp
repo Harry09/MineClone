@@ -12,10 +12,7 @@
 Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas)
 	: _world(world), _pos(pos)
 {
-	auto mat = _data.getMatrix();
-	mat = glm::translate(mat, glm::vec3(pos * Chunk::Size));
-	_data.setMatrix(mat);
-
+	_data.move(glm::vec3(pos * Chunk::Size));
 	_data.setTexture(textureAtlas.getTexture());
 
 	auto yy = pos.y * Chunk::Size.y;

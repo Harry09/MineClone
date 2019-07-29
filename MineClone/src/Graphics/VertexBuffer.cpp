@@ -50,8 +50,7 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
 	_drawType(std::move(other._drawType)),
 	_texture(std::move(other._texture)),
 	_needUpdate(std::move(other._needUpdate)),
-	_updateRange(std::move(other._updateRange)),
-	_mat(std::move(other._mat))
+	_updateRange(std::move(other._updateRange))
 {
 }
 
@@ -71,7 +70,6 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept
 		_texture = std::move(other._texture);
 		_needUpdate = std::move(other._needUpdate);
 		_updateRange = std::move(other._updateRange);
-		_mat = std::move(other._mat);
 	}
 
 	return *this;
@@ -122,6 +120,7 @@ void VertexBuffer::setVertices(size_t offset, const Vertex_t* start, size_t size
 	std::copy(start, start + size, _vertices.begin() + offset);
 
 	_needUpdate = true;
+	_needReallocate = true;
 }
 
 VertexBuffer::Vertex_t& VertexBuffer::operator[](size_t index)
@@ -137,11 +136,6 @@ VertexBuffer::Vertex_t& VertexBuffer::operator[](size_t index)
 void VertexBuffer::setTexture(Texture& texture)
 {
 	_texture = texture;
-}
-
-void VertexBuffer::setMatrix(const glm::mat4x4& mat)
-{
-	_mat = mat;
 }
 
 void VertexBuffer::resize(size_t size)
@@ -172,12 +166,12 @@ void VertexBuffer::update()
 		else
 		{
 			auto offset = _updateRange.x * sizeof(Vertex);
-			auto size = (_updateRange.y - _updateRange.x + 1) * sizeof(Vertex);
+			auto size = (_updateRange.y - _updateRange.x) * sizeof(Vertex);
 
 			glBufferSubData(GL_ARRAY_BUFFER, offset, size, _vertices.data() + _updateRange.x);
 		}
 
-		_updateRange = { 0, -1 };
+		_updateRange = { -1, 0 };
 		
 		_needUpdate = false;
 		unbind();
@@ -188,7 +182,7 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 {
 	update();
 
-	shaderProgram.setUniform("model", _mat);
+	shaderProgram.setUniform("model", _matrix);
 
 	bind();
 	glBindTexture(GL_TEXTURE_2D, _texture.getNativeHandle());

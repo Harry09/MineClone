@@ -8,10 +8,11 @@
 #include "Vertex.hpp"
 #include "PrimitiveType.hpp"
 #include "Texture.hpp"
+#include "Transformable.hpp"
 
 class ShaderProgram;
 
-class VertexBuffer
+class VertexBuffer : public Transformable
 {
 public:
 	enum DrawType
@@ -45,14 +46,6 @@ private:
 	bool _needReallocate = false;
 	ullvec2 _updateRange{ -1, 0 };
 
-	glm::mat4x4 _mat = 
-						{ 
-							1.f, 0.f, 0.f, 0.f,
-							0.f, 1.f, 0.f, 0.f,
-							0.f, 0.f, 1.f, 0.f,
-							0.f, 0.f, 0.f, 1.f
-						};
-
 public:
 	VertexBuffer() noexcept = default;
 	VertexBuffer(size_t size, PrimitiveType primitiveType, DrawType drawType = DrawType::Static) noexcept;
@@ -76,8 +69,6 @@ public:
 	Vertex_t& operator[](size_t index);
 
 	void setTexture(Texture& texture);
-	void setMatrix(const glm::mat4x4& mat);
-	const glm::mat4x4& getMatrix() const { return _mat; }
 
 	PrimitiveType getPrimitiveType() const { return _primitiveType; }
 
