@@ -45,9 +45,9 @@ Renderer::Renderer()
 	glfwSetCursorPos(_window, Renderer::ScreenWidth / 2.f, Renderer::ScreenHeight / 2.f);
 	glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	loadShader("chunk", _chunkShader);
-	loadShader("hud", _hudShader);
-	loadShader("grid", _gridShader);
+	loadShader("shaders/chunk", _chunkShader);
+	loadShader("shaders/hud", _hudShader);
+	loadShader("shaders/grid", _gridShader);
 }
 
 Renderer::~Renderer()
