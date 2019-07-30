@@ -2,10 +2,10 @@
 
 #include "World/World.hpp"
 
-Block::Block(ChunkSegment& chunk, const glm::ivec3& pos, Blocks blockType) noexcept
+Block::Block(ChunkSegment& chunk, const coords::LocalPos& localPos, Blocks blockType) noexcept
 	: 
 	_chunk(chunk),
-	_pos(pos),
+	_localPos(localPos),
 	_blockType(blockType)
 {
 }
@@ -13,7 +13,7 @@ Block::Block(ChunkSegment& chunk, const glm::ivec3& pos, Blocks blockType) noexc
 Block::Block(const Block& other) noexcept
 	:
 	_chunk(other._chunk),
-	_pos(other._pos),
+	_localPos(other._localPos),
 	_blockType(other._blockType)
 {
 
@@ -21,7 +21,7 @@ Block::Block(const Block& other) noexcept
 
 Block& Block::operator=(const Block& other) noexcept
 {
-	_pos = other._pos;
+	_localPos = other._localPos;
 	_blockType = other._blockType;
 
 	return *this;
@@ -30,7 +30,7 @@ Block& Block::operator=(const Block& other) noexcept
 Block::Block(Block&& other) noexcept
 	:
 	_chunk(other._chunk),
-	_pos(std::move(other._pos)),
+	_localPos(std::move(other._localPos)),
 	_blockType(std::move(other._blockType))
 {
 
@@ -38,15 +38,15 @@ Block::Block(Block&& other) noexcept
 
 Block& Block::operator=(Block&& other) noexcept
 {
-	_pos = std::move(other._pos);
+	_localPos = std::move(other._localPos);
 	_blockType = std::move(other._blockType);
 
 	return *this;
 }
 
-glm::ivec3 Block::getWorldPosition() const
+coords::WorldPos Block::getWorldPos() const
 {
-	return World::getWorldPos(_pos, _chunk.getPos());
+	return World::getWorldPos(_localPos, _chunk.getPos());
 }
 
 Block* Block::getNeighbor(BlockSide side) const

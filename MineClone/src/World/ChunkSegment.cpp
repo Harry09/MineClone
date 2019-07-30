@@ -9,19 +9,18 @@
 
 #include "World.hpp"
 
-ChunkSegment::ChunkSegment(World& world, const glm::ivec3& pos, const HeightMapType& heightMap, TextureAtlas& textureAtlas)
-	: _world(world), _pos(pos)
+ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas)
+	: _world(world), _chunkSegmentPos(chunkSegmentPos)
 {
-	_data.move(glm::vec3(pos * ChunkSegment::Size));
+	_data.move(glm::vec3(chunkSegmentPos * ChunkSegment::Size));
 	_data.setTexture(textureAtlas.getTexture());
 
-	auto yy = _pos.y * ChunkSegment::Size;
+	auto yy = _chunkSegmentPos.y * ChunkSegment::Size;
 
 	for (int x = 0; x < 16; x++)
 	{
 		for (int z = 0; z < 16; z++)
 		{
-			auto worldPos = glm::vec3(World::getWorldPos({ x, 0, z }, _pos));
 			auto height = heightMap[x][z];
 			auto height_ = height;
 
@@ -36,7 +35,7 @@ ChunkSegment::ChunkSegment(World& world, const glm::ivec3& pos, const HeightMapT
 			{
 				height_ = height - yy;
 
-				placeBlock<GrassBlock>(glm::ivec3{ x, height_, z });
+				placeBlock<GrassBlock>(coords::LocalPos{ x, height_, z });
 			}
 			else // is above chunk
 			{
@@ -49,11 +48,11 @@ ChunkSegment::ChunkSegment(World& world, const glm::ivec3& pos, const HeightMapT
 				// if current block is at least 4 block beneath the top
 				if (height - (y + yy) > 4)
 				{
-					placeBlock<StoneBlock>(glm::ivec3{ x, y, z });
+					placeBlock<StoneBlock>(coords::LocalPos{ x, y, z });
 				}
 				else
 				{
-					placeBlock<DirtBlock>(glm::ivec3{ x, y, z });
+					placeBlock<DirtBlock>(coords::LocalPos{ x, y, z });
 				}
 			}
 		}
@@ -67,13 +66,13 @@ Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockSide side) cons
 {
 	auto facingDirection = getBlockSideDirection(side);
 
-	auto localPos = block->getPosition() + facingDirection;
+	auto localPos = block->getLocalPos() + facingDirection;
 
 	//printf("Current: %d %d %d \n", _pos.x, _pos.y, _pos.z);
 
 	if (outOfBound(localPos))
 	{
-		auto worldPos = block->getWorldPosition() + facingDirection;
+		auto worldPos = block->getWorldPos() + facingDirection;
 
 		return _world.getBlock(worldPos);
 	}
@@ -126,14 +125,14 @@ void ChunkSegment::drawGrid(ShaderProgram& shaderProgram)
 	_outline.draw(shaderProgram);
 }
 
-bool ChunkSegment::outOfBound(const glm::ivec3& pos)
+bool ChunkSegment::outOfBound(const coords::LocalPos& localPos)
 {
-	if (pos.x < 0 ||
-		pos.x > Size - 1 ||
-		pos.y < 0 ||
-		pos.y > Size - 1 ||
-		pos.z < 0 ||
-		pos.z > Size - 1)
+	if (localPos.x < 0 ||
+		localPos.x > Size - 1 ||
+		localPos.y < 0 ||
+		localPos.y > Size - 1 ||
+		localPos.z < 0 ||
+		localPos.z > Size - 1)
 	{
 		return true;
 	}
@@ -144,7 +143,7 @@ bool ChunkSegment::outOfBound(const glm::ivec3& pos)
 void ChunkSegment::initOutline()
 {
 	auto mat = _outline.getMatrix();
-	mat = glm::translate(mat, glm::vec3(ChunkSegment::Size * _pos));
+	mat = glm::translate(mat, glm::vec3(ChunkSegment::Size * _chunkSegmentPos));
 	_outline.setMatrix(mat);
 
 	// top

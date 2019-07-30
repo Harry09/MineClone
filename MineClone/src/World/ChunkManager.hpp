@@ -19,9 +19,9 @@ public:
 	ChunkManager(World& world);
 	~ChunkManager();
 
-	Chunk* getChunk(const glm::ivec3& chunkPos) const;
-	ChunkSegment* getChunkSegment(const glm::ivec3& chunkPos) const;
-	void addChunk(const glm::ivec2& posXZ, FastNoise& noise, TextureAtlas& textureAtlas);
+	Chunk* getChunk(const coords::ChunkPos& chunkPos) const;
+	ChunkSegment* getChunkSegment(const coords::ChunkSegmentPos& chunkSegmentPos) const;
+	void addChunk(const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas);
 
 	void updateMesh(TextureAtlas& textureAtlas);
 

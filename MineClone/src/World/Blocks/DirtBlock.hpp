@@ -5,8 +5,8 @@
 class DirtBlock : public Block
 {
 public:
-	DirtBlock(ChunkSegment& chunk, const glm::ivec3& pos) noexcept
-		: Block(chunk, pos, Blocks::Dirt)
+	DirtBlock(ChunkSegment& chunk, const coords::LocalPos& localPos) noexcept
+		: Block(chunk, localPos, Blocks::Dirt)
 	{
 		setTexture<
 			BlockSide::North,

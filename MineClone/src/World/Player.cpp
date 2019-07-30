@@ -74,13 +74,13 @@ void Player::update(GLFWwindow* window)
 
 	Ray ray(_camera.getPosition(), _camera.getRotation());
 
-	glm::ivec3 lastBlockPos{ _camera.getPosition() };
+	coords::WorldPos lastBlockPos{ _camera.getPosition() };
 
 	while (ray.length() < 6)
 	{
 		ray.step(0.1f);
 
-		auto pos = glm::ivec3(glm::round(ray.getEnd()));
+		auto pos = coords::WorldPos(glm::round(ray.getEnd()));
 
 		if (lastBlockPos == pos)
 			continue;

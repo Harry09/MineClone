@@ -5,8 +5,8 @@
 class GrassBlock : public Block
 {
 public:
-	GrassBlock(ChunkSegment& chunk, const glm::ivec3& pos) noexcept
-		: Block(chunk, pos, Blocks::Grass)
+	GrassBlock(ChunkSegment& chunk, const coords::LocalPos& localPos) noexcept
+		: Block(chunk, localPos, Blocks::Grass)
 	{
 		setTexture<
 			BlockSide::North,

@@ -3,11 +3,11 @@
 #include <vector>
 #include <memory>
 
-#include "Blocks/Block.hpp"
-
 #include "Graphics/VertexBuffer.hpp"
 
+#include "Blocks/Block.hpp"
 #include "TextureAtlas.hpp"
+#include "Types.hpp"
 
 class World;
 class FastNoise;
@@ -23,7 +23,7 @@ private:
 private:
 	World& _world;
 
-	glm::ivec3 _pos;
+	coords::ChunkSegmentPos _chunkSegmentPos;
 
 	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
 	std::unique_ptr<Block> _blocks[Size][Size][Size];
@@ -33,13 +33,13 @@ private:
 	int _blockCount = 0;
 
 public:
-	ChunkSegment(World& world, const glm::ivec3& pos, const HeightMapType& heightMap, TextureAtlas& textureAtlas);
+	ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas);
 	~ChunkSegment() = default;
 
-	const auto getPos() const { return _pos; }
+	const coords::ChunkSegmentPos& getChunkSegmentPos() const { return _chunkSegmentPos; }
 
 	template<typename T>
-	Block* placeBlock(const glm::ivec3& pos)
+	Block* placeBlock(const coords::LocalPos& localPos)
 	{
 		if (outOfBound(pos))
 		{
@@ -48,21 +48,30 @@ public:
 
 		static_assert(std::is_base_of_v<Block, T>, "T must inherits Block!");
 
-		auto block = std::make_unique<T>(*this, pos);
+		auto block = std::make_unique<T>(*this, localPos);
 
 		auto blockPtr = block.get();
 
-		_blocks[pos.x][pos.y][pos.z] = std::move(block);
+		_blocks[localPos.x][localPos.y][localPos.z] = std::move(block);
 
 		_blockCount++;
 
 		return blockPtr;
 	}
 
-	void removeBlock(const glm::ivec3& pos) { _blocks[pos.x][pos.y][pos.z].reset(); _blockCount--; }
+	void removeBlock(const coords::LocalPos& localPos)
+	{
+		auto& block = _blocks[localPos.x][localPos.y][localPos.z];
 
-	Block* getBlock(const glm::ivec3& pos) { return _blocks[pos.x][pos.y][pos.z].get(); }
-	Block* getBlock(const glm::ivec3& pos) const { return _blocks[pos.x][pos.y][pos.z].get(); }
+		if (block != nullptr)
+		{
+			block.reset();
+			_blockCount--; 
+		}
+	}
+
+	Block* getBlock(const coords::LocalPos& localPos) { return _blocks[localPos.x][localPos.y][localPos.z].get(); }
+	Block* getBlock(const coords::LocalPos& localPos) const { return _blocks[localPos.x][localPos.y][localPos.z].get(); }
 
 	Block* getNeighborOfBlock(const Block* block, BlockSide side) const;
 
@@ -72,7 +81,7 @@ public:
 	void drawGrid(ShaderProgram& shaderProgram);
 
 private:
-	static bool outOfBound(const glm::ivec3& pos);
+	static bool outOfBound(const coords::LocalPos& localPos);
 
 	void initOutline();
 };

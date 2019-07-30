@@ -11,11 +11,9 @@ ChunkManager::~ChunkManager()
 {
 }
 
-Chunk* ChunkManager::getChunk(const glm::ivec3& chunkPos) const
+Chunk* ChunkManager::getChunk(const coords::ChunkPos& chunkPos) const
 {
-	auto posXZ = glm::ivec2{ chunkPos.x, chunkPos.z };
-
-	auto it = std::find_if(_chunks.begin(), _chunks.end(), [&](auto& it) { return it->getPosXZ() == posXZ; });
+	auto it = std::find_if(_chunks.begin(), _chunks.end(), [&](auto& it) { return it->getChunkPos() == chunkPos; });
 
 	if (it != _chunks.end())
 	{
@@ -25,19 +23,19 @@ Chunk* ChunkManager::getChunk(const glm::ivec3& chunkPos) const
 	return nullptr;
 }
 
-ChunkSegment* ChunkManager::getChunkSegment(const glm::ivec3& chunkPos) const
+ChunkSegment* ChunkManager::getChunkSegment(const coords::ChunkSegmentPos& chunkSegmentPos) const
 {
-	auto chunk = getChunk(chunkPos);
+	auto chunk = getChunk(coords::ChunkPos { chunkSegmentPos.x, chunkSegmentPos.z });
 
 	if (chunk == nullptr)
 		return nullptr;
 
-	return chunk->getChunkSegment(chunkPos.y);
+	return chunk->getChunkSegment(chunkSegmentPos.y);
 }
 
-void ChunkManager::addChunk(const glm::ivec2& posXZ, FastNoise& noise, TextureAtlas& textureAtlas)
+void ChunkManager::addChunk(const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas)
 {
-	_chunks.push_back(std::make_unique<Chunk>(_world, posXZ, noise, textureAtlas));
+	_chunks.push_back(std::make_unique<Chunk>(_world, chunkPos, noise, textureAtlas));
 }
 
 void ChunkManager::updateMesh(TextureAtlas& textureAtlas)
@@ -54,7 +52,7 @@ void ChunkManager::drawChunks(ShaderProgram& shaderProgram)
 
 	for (auto& chunk : _chunks)
 	{
-		auto posXYZ = glm::ivec3 { chunk->getPosXZ().x * ChunkSegment::Size, 0, chunk->getPosXZ().y * ChunkSegment::Size };
+		auto posXYZ = coords::WorldPos { chunk->getChunkPos().x * ChunkSegment::Size, 0, chunk->getChunkPos().y * ChunkSegment::Size };
 
 		if (frustumView.isBoxInFOV(posXYZ, glm::ivec3 { ChunkSegment::Size, 0, ChunkSegment::Size }))
 		{

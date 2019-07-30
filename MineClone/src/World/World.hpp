@@ -30,13 +30,13 @@ public:
 
 	void init();
 
-	Chunk* getChunk(const glm::ivec3& chunkPos) const;
-	ChunkSegment* getChunkSegment(const glm::ivec3& chunkPos) const;
+	Chunk* getChunk(const coords::ChunkPos& chunkPos) const;
+	ChunkSegment* getChunkSegment(const coords::ChunkSegmentPos& chunkSegmentPos) const;
 
 	template<typename T>
-	void placeBlock(const glm::ivec3& worldPos)
+	void placeBlock(const coords::WorldPos& worldPos)
 	{
-		auto chunkPos = getChunkPos(worldPos);
+		auto chunkPos = getChunkSegmentPos(worldPos);
 
 		auto chunk = getChunkSegment(chunkPos);
 
@@ -49,8 +49,8 @@ public:
 		tryUpdateNearChunks(worldPos, chunkPos);
 	}
 
-	void removeBlock(const glm::ivec3& worldPos);
-	Block* getBlock(const glm::ivec3& worldPos) const;
+	void removeBlock(const coords::WorldPos& worldPos);
+	Block* getBlock(const coords::WorldPos& worldPos) const;
 
 	TextureAtlas& getTextureAtlas() { return _textureAtlas; }
 	const TextureAtlas& getTextureAtlas() const { return _textureAtlas; }
@@ -62,10 +62,11 @@ public:
 	void drawGrid(ShaderProgram& shaderProgram);
 
 public:
-	static glm::ivec3 getChunkPos(const glm::ivec3& worldPos);
-	static glm::ivec3 getLocalPos(const glm::ivec3& worldPos);
-	static glm::ivec3 getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos);
+	static coords::ChunkPos getChunkPos(const coords::WorldPos& worldPos);
+	static coords::ChunkSegmentPos getChunkSegmentPos(const coords::WorldPos& worldPos);
+	static coords::LocalPos getLocalPos(const coords::WorldPos& worldPos);
+	static coords::WorldPos getWorldPos(const coords::LocalPos& localPos, const coords::ChunkSegmentPos& chunkSegmentPos);
 
-	void tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& chunkPos);
-	std::vector<glm::ivec3> getNeighborIfOnBound(const glm::ivec3& worldPos);
+	void tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos);
+	std::vector<glm::ivec3> getNeighborIfOnBound(const coords::WorldPos& worldPos);
 };

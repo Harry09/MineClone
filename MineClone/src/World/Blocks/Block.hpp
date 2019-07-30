@@ -7,6 +7,7 @@
 #include <glm/vec3.hpp>
 
 #include "BlockMesh.hpp"
+#include "Types.hpp"
 
 class ChunkSegment;
 
@@ -18,14 +19,14 @@ public:
 protected:
 	ChunkSegment& _chunk;
 
-	glm::ivec3 _pos = { 0.f, 0.f, 0.f };
+	coords::LocalPos _localPos = { 0.f, 0.f, 0.f };
 
 	Blocks _blockType;
 
 	TextureId _faceTexture[BlockSideSize] = { TextureId::None };
 
 public:
-	Block(ChunkSegment& chunk, const glm::ivec3& pos, Blocks blockType) noexcept;
+	Block(ChunkSegment& chunk, const coords::LocalPos& localPos, Blocks blockType) noexcept;
 
 	Block(const Block& other) noexcept;
 	Block& operator=(const Block& other) noexcept;
@@ -35,8 +36,8 @@ public:
 
 	~Block() = default;
 
-	const auto& getPosition() const { return _pos; }
-	glm::ivec3 getWorldPosition() const;
+	const coords::LocalPos& getLocalPos() const { return _localPos; }
+	coords::WorldPos getWorldPos() const;
 
 	Block* getNeighbor(BlockSide side) const;
 
@@ -69,7 +70,7 @@ private:
 		{
 			unsigned sideValue = static_cast<unsigned>(Side);
 
-			std::array<Vertex, 6> mesh = getSingleBlockMesh<Side>(_pos, _faceTexture[sideValue], textureAtlas);
+			std::array<Vertex, 6> mesh = getSingleBlockMesh<Side>(_localPos, _faceTexture[sideValue], textureAtlas);
 
 			vertices.reserve(vertices.size() + 6);
 

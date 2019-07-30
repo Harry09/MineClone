@@ -23,15 +23,15 @@ void FrustumView::update()
 
 }
 
-bool FrustumView::isPointInFOV(const glm::ivec3& pos) const
+bool FrustumView::isPointInFOV(const coords::WorldPos& worldPos) const
 {
-	if (glm::distance(glm::vec2{ pos.x, pos.z }, _spherePos) < (Game::MaxChunkDrawDistance * ChunkSegment::Size) / 2.f)
+	if (glm::distance(glm::vec2{ worldPos.x, worldPos.z }, _spherePos) < (Game::MaxChunkDrawDistance * ChunkSegment::Size) / 2.f)
 		return true;
 
 	return false;
 }
 
-bool FrustumView::isBoxInFOV(const glm::ivec3& start, const glm::ivec3& size) const
+bool FrustumView::isBoxInFOV(const coords::WorldPos& start, const glm::ivec3& size) const
 {
 	if (isPointInFOV(start))
 		return true;

@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include "Types.hpp"
 
 class Camera;
 
@@ -16,6 +15,6 @@ public:
 
 	void update();
 
-	bool isPointInFOV(const glm::ivec3& pos) const;
-	bool isBoxInFOV(const glm::ivec3& start, const glm::ivec3& size) const;
+	bool isPointInFOV(const coords::WorldPos& worldPos) const;
+	bool isBoxInFOV(const coords::WorldPos& start, const glm::ivec3& size) const;
 };

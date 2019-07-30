@@ -33,7 +33,7 @@ void World::init()
 	{
 		for (int z = -ChunkCount; z < ChunkCount; z++)
 		{
-			_chunkManager.addChunk(glm::ivec2{ x, z }, noise, _textureAtlas);
+			_chunkManager.addChunk(coords::ChunkPos{ x, z }, noise, _textureAtlas);
 
 			printf("%d %d\n", x, z);
 		}
@@ -44,19 +44,19 @@ void World::init()
 	_chunkManager.updateMesh(_textureAtlas);
 }
 
-Chunk* World::getChunk(const glm::ivec3& chunkPos) const
+Chunk* World::getChunk(const coords::ChunkPos& chunkPos) const
 {
 	return _chunkManager.getChunk(chunkPos);
 }
 
-ChunkSegment* World::getChunkSegment(const glm::ivec3& chunkPos) const
+ChunkSegment* World::getChunkSegment(const coords::ChunkSegmentPos& chunkSegmentPos) const
 {
-	return _chunkManager.getChunkSegment(chunkPos);
+	return _chunkManager.getChunkSegment(chunkSegmentPos);
 }
 
-void World::removeBlock(const glm::ivec3& worldPos)
+void World::removeBlock(const coords::WorldPos& worldPos)
 {
-	auto chunkPos = getChunkPos(worldPos);
+	auto chunkPos = getChunkSegmentPos(worldPos);
 
 	auto chunk = getChunkSegment(chunkPos);
 
@@ -69,13 +69,13 @@ void World::removeBlock(const glm::ivec3& worldPos)
 	tryUpdateNearChunks(worldPos, chunkPos);
 }
 
-Block* World::getBlock(const glm::ivec3& pos) const
+Block* World::getBlock(const coords::WorldPos& worldPos) const
 {
-	auto chunk = getChunkSegment(getChunkPos(pos));
+	auto chunk = getChunkSegment(getChunkSegmentPos(worldPos));
 
 	if (chunk != nullptr)
 	{
-		return chunk->getBlock(getLocalPos(pos));
+		return chunk->getBlock(getLocalPos(worldPos));
 	}
 
 	return nullptr;
@@ -96,29 +96,48 @@ void World::drawGrid(ShaderProgram& shaderProgram)
 	_chunkManager.drawGrid(shaderProgram);
 }
 
-glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
+coords::ChunkPos World::getChunkPos(const coords::WorldPos& worldPos)
 {
-	glm::ivec3 chunkPos = worldPos;
+	coords::ChunkPos chunkPos = { worldPos.x, worldPos.z };
 
+	// x
 	if (worldPos.x < 0)
 		chunkPos.x = (chunkPos.x + 1) / (ChunkSegment::Size) - 1;
 	else
 		chunkPos.x /= ChunkSegment::Size;
 
-	if (worldPos.y < 0)
+	// z
+	if (worldPos.z < 0)
 		chunkPos.y = (chunkPos.y + 1) / (ChunkSegment::Size) - 1;
 	else
 		chunkPos.y /= ChunkSegment::Size;
 
-	if (worldPos.z < 0)
-		chunkPos.z = (chunkPos.z + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkPos.z /= ChunkSegment::Size;
-
 	return chunkPos;
 }
 
-glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
+coords::ChunkSegmentPos World::getChunkSegmentPos(const coords::WorldPos& worldPos)
+{
+	coords::ChunkSegmentPos chunkSegmentPos = worldPos;
+
+	if (worldPos.x < 0)
+		chunkSegmentPos.x = (chunkSegmentPos.x + 1) / (ChunkSegment::Size) - 1;
+	else
+		chunkSegmentPos.x /= ChunkSegment::Size;
+
+	if (worldPos.y < 0)
+		chunkSegmentPos.y = (chunkSegmentPos.y + 1) / (ChunkSegment::Size) - 1;
+	else
+		chunkSegmentPos.y /= ChunkSegment::Size;
+
+	if (worldPos.z < 0)
+		chunkSegmentPos.z = (chunkSegmentPos.z + 1) / (ChunkSegment::Size) - 1;
+	else
+		chunkSegmentPos.z /= ChunkSegment::Size;
+
+	return chunkSegmentPos;
+}
+
+coords::LocalPos World::getLocalPos(const coords::WorldPos& worldPos)
 {
 	auto localPos = glm::abs(worldPos);
 
@@ -140,18 +159,18 @@ glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
 	return localPos;
 }
 
-glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
+coords::WorldPos World::getWorldPos(const coords::LocalPos& localPos, const coords::ChunkSegmentPos& chunkSegmentPos)
 {
-	return chunkPos * ChunkSegment::Size + localPos;
+	return chunkSegmentPos * ChunkSegment::Size + localPos;
 }
 
-void World::tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& chunkPos)
+void World::tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos)
 {
 	auto neighbors = getNeighborIfOnBound(worldPos);
 
 	for (auto& neighbor : neighbors)
 	{
-		auto neighborChunk = getChunkSegment(chunkPos + neighbor);
+		auto neighborChunk = getChunkSegment(chunkSegmentPos + neighbor);
 
 		if (neighborChunk == nullptr)
 			continue;
@@ -163,7 +182,7 @@ void World::tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& ch
 	}
 }
 
-std::vector<glm::ivec3> World::getNeighborIfOnBound(const glm::ivec3& worldPos)
+std::vector<glm::ivec3> World::getNeighborIfOnBound(const coords::WorldPos& worldPos)
 {
 	std::vector<glm::ivec3> result;
 

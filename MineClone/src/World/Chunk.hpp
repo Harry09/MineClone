@@ -11,12 +11,12 @@ public:
 
 private:
 	std::vector<std::unique_ptr<ChunkSegment>> _segments;
-	glm::ivec2 _posXZ{ 0 };
+	coords::ChunkPos _chunkPos{ 0 };
 
 public:
-	Chunk(World& world, const glm::ivec2& posXZ, FastNoise& noise, TextureAtlas& textureAtlas);
+	Chunk(World& world, const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas);
 
-	const glm::ivec2& getPosXZ() const { return _posXZ; }
+	const coords::ChunkPos& getChunkPos() const { return _chunkPos; }
 
 	ChunkSegment* getChunkSegment(int posZ);
 
