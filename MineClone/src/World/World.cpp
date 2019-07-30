@@ -113,24 +113,46 @@ void World::drawGrid(ShaderProgram& shaderProgram)
 
 glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
 {
-	auto chunkPos = worldPos / Chunk::Size;
+	glm::ivec3 chunkPos = worldPos;
 
 	if (worldPos.x < 0)
-		chunkPos.x--;
+		chunkPos.x = (chunkPos.x + 1) / (Chunk::Size) - 1;
+	else
+		chunkPos.x /= Chunk::Size;
 
 	if (worldPos.y < 0)
-		chunkPos.y--;
+		chunkPos.y = (chunkPos.y + 1) / (Chunk::Size) - 1;
+	else
+		chunkPos.y /= Chunk::Size;
 
 	if (worldPos.z < 0)
-		chunkPos.z--;
+		chunkPos.z = (chunkPos.z + 1) / (Chunk::Size) - 1;
+	else
+		chunkPos.z /= Chunk::Size;
 
 	return chunkPos;
 }
 
 glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
 {
-	auto pos = glm::abs(worldPos % Chunk::Size);
-	return pos;
+	auto localPos = glm::abs(worldPos);
+
+	if (worldPos.x < 0)
+		localPos.x = Chunk::Size - ((localPos.x - 1) % (Chunk::Size) + 1);
+	else
+		localPos.x %= Chunk::Size;
+
+	if (worldPos.y < 0)
+		localPos.y = Chunk::Size - ((localPos.y - 1) % (Chunk::Size) + 1);
+	else
+		localPos.y %= Chunk::Size;
+
+	if (worldPos.z < 0)
+		localPos.z = Chunk::Size - ((localPos.z - 1) % (Chunk::Size) + 1);
+	else
+		localPos.z %= Chunk::Size;
+
+	return localPos;
 }
 
 glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
