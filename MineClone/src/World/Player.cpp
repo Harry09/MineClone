@@ -7,7 +7,7 @@
 
 #include "Graphics/Camera.hpp"
 #include "Graphics/ShaderProgram.hpp"
-#include "Ray.hpp"
+#include "Maths/Ray.hpp"
 #include "Blocks/GrassBlock.hpp"
 
 Player::Player(World& world, Camera& camera)

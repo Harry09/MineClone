@@ -38,9 +38,11 @@ void ChunkManager::updateMesh(TextureAtlas& textureAtlas)
 
 void ChunkManager::drawChunks(ShaderProgram& shaderProgram)
 {
+	auto& frustumView = _world.getFrustumView();
+
 	for (auto& chunk : _chunks)
 	{
-		if (_world.isPointInBoundingSphere(chunk->getPos() * Chunk::Size + Chunk::Size / 2))
+		if (frustumView.isBoxInFOV(chunk->getPos() * Chunk::Size, { Chunk::Size, 0, Chunk::Size }))
 		{
 			chunk->drawChunks(shaderProgram);
 		}

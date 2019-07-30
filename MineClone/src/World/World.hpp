@@ -4,9 +4,10 @@
 #include <memory>
 
 #include "Graphics/Texture.hpp"
-#include "TextureAtlas.hpp"
 
+#include "TextureAtlas.hpp"
 #include "ChunkManager.hpp"
+#include "Maths/FrustumView.hpp"
 
 class Camera;
 
@@ -14,6 +15,8 @@ class World
 {
 private:
 	Camera& _camera;
+
+	FrustumView _frustumView;
 
 	Texture _texture;
 	TextureAtlas _textureAtlas;
@@ -51,7 +54,7 @@ public:
 	TextureAtlas& getTextureAtlas() { return _textureAtlas; }
 	const TextureAtlas& getTextureAtlas() const { return _textureAtlas; }
 
-	bool isPointInBoundingSphere(const glm::vec3& pos);
+	const FrustumView& getFrustumView() const { return _frustumView; }
 
 	void update();
 	void drawChunks(ShaderProgram& shaderProgram);

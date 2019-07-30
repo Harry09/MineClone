@@ -10,6 +10,7 @@
 World::World(Camera& camera)
 	: 
 	_camera(camera),
+	_frustumView(camera),
 	_texture("textures.jpg"),
 	_textureAtlas(_texture, 16),
 	_chunkManager(*this)
@@ -82,23 +83,9 @@ Block* World::getBlock(const glm::ivec3& pos) const
 	return nullptr;
 }
 
-bool World::isPointInBoundingSphere(const glm::vec3& pos)
-{
-	if (glm::distance(glm::vec2 { pos.x, pos.z }, glm::vec2 { _boundingSpherePos.x, _boundingSpherePos.z }) < (Game::MaxChunkDrawDistance * Chunk::Size) / 2.f)
-		return true;
-
-	return false;
-}
-
 void World::update()
 {
-	auto& cameraPos = _camera.getPosition();
-	auto& cameraDir = glm::radians(_camera.getRotation());
-
-	auto distance = ((Game::MaxChunkDrawDistance * Chunk::Size) / 2.f) * 0.8f;
-
-	_boundingSpherePos.x = cameraPos.x + cos(cameraDir.x) * distance;
-	_boundingSpherePos.z = cameraPos.z + sin(cameraDir.x) * distance;
+	_frustumView.update();
 }
 
 void World::drawChunks(ShaderProgram& shaderProgram)
