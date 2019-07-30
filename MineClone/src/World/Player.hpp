@@ -9,6 +9,14 @@ class World;
 
 class Player
 {
+private:
+	enum BlockAction
+	{
+		None,
+		Placing,
+		Removing
+	};
+
 public:
 	static constexpr float PlayerSpeed = 0.1f;
 
@@ -19,7 +27,7 @@ private:
 	bool _drawHighlighter = false;
 	VertexBuffer _highlighter{ 24, PrimitiveType::Lines };
 
-	bool _blockRemoving = false;
+	BlockAction _blockAction = None;
 
 public:
 	Player(World& world, Camera& camera);

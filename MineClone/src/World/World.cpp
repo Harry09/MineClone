@@ -44,37 +44,24 @@ void World::init()
 	_chunkManager.updateMesh(_textureAtlas);
 }
 
-Chunk* World::getChunk(const glm::ivec3& pos) const
+Chunk* World::getChunk(const glm::ivec3& chunkPos) const
 {
-	return _chunkManager.getChunk(pos);
+	return _chunkManager.getChunk(chunkPos);
 }
 
-void World::removeBlock(const glm::ivec3& pos)
+void World::removeBlock(const glm::ivec3& worldPos)
 {
-	auto chunkPos = getChunkPos(pos);
+	auto chunkPos = getChunkPos(worldPos);
 
 	auto chunk = getChunk(chunkPos);
 
 	if (chunk == nullptr)
 		return;
 	
-	chunk->removeBlock(getLocalPos(pos));
+	chunk->removeBlock(getLocalPos(worldPos));
 	chunk->generateMesh(_textureAtlas);
 
-	auto neighbors = getNeighborIfOnBound(pos);
-
-	for (auto& neighbor : neighbors)
-	{
-		auto neighborChunk = getChunk(chunkPos + neighbor);
-
-		if (neighborChunk == nullptr)
-			continue;
-
-		if (neighborChunk->getBlock(getLocalPos(pos + neighbor)) != nullptr)
-		{
-			neighborChunk->generateMesh(_textureAtlas);
-		}
-	}
+	tryUpdateNearChunks(worldPos, chunkPos);
 }
 
 Block* World::getBlock(const glm::ivec3& pos) const
@@ -146,6 +133,24 @@ glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
 glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
 {
 	return chunkPos * Chunk::Size + localPos;
+}
+
+void World::tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& chunkPos)
+{
+	auto neighbors = getNeighborIfOnBound(worldPos);
+
+	for (auto& neighbor : neighbors)
+	{
+		auto neighborChunk = getChunk(chunkPos + neighbor);
+
+		if (neighborChunk == nullptr)
+			continue;
+
+		if (neighborChunk->getBlock(getLocalPos(worldPos + neighbor)) != nullptr)
+		{
+			neighborChunk->generateMesh(_textureAtlas);
+		}
+	}
 }
 
 std::vector<glm::ivec3> World::getNeighborIfOnBound(const glm::ivec3& worldPos)

@@ -8,6 +8,7 @@
 #include "Graphics/Camera.hpp"
 #include "Graphics/ShaderProgram.hpp"
 #include "Ray.hpp"
+#include "Blocks/GrassBlock.hpp"
 
 Player::Player(World& world, Camera& camera)
 	: _world(world), _camera(camera)
@@ -73,7 +74,7 @@ void Player::update(GLFWwindow* window)
 
 	Ray ray(_camera.getPosition(), _camera.getRotation());
 
-	glm::ivec3 lastBlockPos{ INT_MIN };
+	glm::ivec3 lastBlockPos{ _camera.getPosition() };
 
 	while (ray.length() < 6)
 	{
@@ -88,30 +89,38 @@ void Player::update(GLFWwindow* window)
 
 		if (block != nullptr)
 		{
-			lastBlockPos = pos;
-
 			_highlighter.setPos(pos);
 
 			_drawHighlighter = true;
 
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS)
 			{
-				if (_blockRemoving == false)
+				if (_blockAction == None)
 				{
-					_blockRemoving = true;
+					_blockAction = Removing;
 					_world.removeBlock(pos);
+				}
+			}
+			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS)
+			{
+				if (_blockAction == None)
+				{
+					_blockAction = Placing;
+					_world.placeBlock<GrassBlock>(lastBlockPos);
 				}
 			}
 
 			break;
 		}
+
+		lastBlockPos = pos;
 	}
 
-	if (_blockRemoving == true)
+	if (_blockAction != None)
 	{
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE)
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_RELEASE && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_RELEASE)
 		{
-			_blockRemoving = false;
+			_blockAction = None;
 		}
 	}
 
