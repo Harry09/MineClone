@@ -84,7 +84,7 @@ Block* World::getBlock(const glm::ivec3& pos) const
 
 bool World::isPointInBoundingSphere(const glm::vec3& pos)
 {
-	if (glm::distance(glm::vec3 { pos.x, 0.f, pos.z }, glm::vec3 { _boundingSpherePos.x, 0.f, _boundingSpherePos.z }) < (Game::MaxChunkDrawDistance * Chunk::Size) / 2.f)
+	if (glm::distance(glm::vec2 { pos.x, pos.z }, glm::vec2 { _boundingSpherePos.x, _boundingSpherePos.z }) < (Game::MaxChunkDrawDistance * Chunk::Size) / 2.f)
 		return true;
 
 	return false;
