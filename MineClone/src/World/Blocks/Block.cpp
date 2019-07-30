@@ -46,7 +46,7 @@ Block& Block::operator=(Block&& other) noexcept
 
 coords::WorldPos Block::getWorldPos() const
 {
-	return World::getWorldPos(_localPos, _chunk.getPos());
+	return coords::getWorldPos(_localPos, _chunk.getChunkSegmentPos());
 }
 
 Block* Block::getNeighbor(BlockSide side) const

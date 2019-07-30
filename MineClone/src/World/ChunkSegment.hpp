@@ -7,7 +7,6 @@
 
 #include "Blocks/Block.hpp"
 #include "TextureAtlas.hpp"
-#include "Types.hpp"
 
 class World;
 class FastNoise;
@@ -41,7 +40,7 @@ public:
 	template<typename T>
 	Block* placeBlock(const coords::LocalPos& localPos)
 	{
-		if (outOfBound(pos))
+		if (outOfBound(localPos))
 		{
 			return nullptr;
 		}

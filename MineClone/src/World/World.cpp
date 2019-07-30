@@ -56,14 +56,14 @@ ChunkSegment* World::getChunkSegment(const coords::ChunkSegmentPos& chunkSegment
 
 void World::removeBlock(const coords::WorldPos& worldPos)
 {
-	auto chunkPos = getChunkSegmentPos(worldPos);
+	auto chunkPos = coords::getChunkSegmentPos(worldPos);
 
 	auto chunk = getChunkSegment(chunkPos);
 
 	if (chunk == nullptr)
 		return;
 	
-	chunk->removeBlock(getLocalPos(worldPos));
+	chunk->removeBlock(coords::getLocalPos(worldPos));
 	chunk->generateMesh(_textureAtlas);
 
 	tryUpdateNearChunks(worldPos, chunkPos);
@@ -71,11 +71,11 @@ void World::removeBlock(const coords::WorldPos& worldPos)
 
 Block* World::getBlock(const coords::WorldPos& worldPos) const
 {
-	auto chunk = getChunkSegment(getChunkSegmentPos(worldPos));
+	auto chunk = getChunkSegment(coords::getChunkSegmentPos(worldPos));
 
 	if (chunk != nullptr)
 	{
-		return chunk->getBlock(getLocalPos(worldPos));
+		return chunk->getBlock(coords::getLocalPos(worldPos));
 	}
 
 	return nullptr;
@@ -96,74 +96,6 @@ void World::drawGrid(ShaderProgram& shaderProgram)
 	_chunkManager.drawGrid(shaderProgram);
 }
 
-coords::ChunkPos World::getChunkPos(const coords::WorldPos& worldPos)
-{
-	coords::ChunkPos chunkPos = { worldPos.x, worldPos.z };
-
-	// x
-	if (worldPos.x < 0)
-		chunkPos.x = (chunkPos.x + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkPos.x /= ChunkSegment::Size;
-
-	// z
-	if (worldPos.z < 0)
-		chunkPos.y = (chunkPos.y + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkPos.y /= ChunkSegment::Size;
-
-	return chunkPos;
-}
-
-coords::ChunkSegmentPos World::getChunkSegmentPos(const coords::WorldPos& worldPos)
-{
-	coords::ChunkSegmentPos chunkSegmentPos = worldPos;
-
-	if (worldPos.x < 0)
-		chunkSegmentPos.x = (chunkSegmentPos.x + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkSegmentPos.x /= ChunkSegment::Size;
-
-	if (worldPos.y < 0)
-		chunkSegmentPos.y = (chunkSegmentPos.y + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkSegmentPos.y /= ChunkSegment::Size;
-
-	if (worldPos.z < 0)
-		chunkSegmentPos.z = (chunkSegmentPos.z + 1) / (ChunkSegment::Size) - 1;
-	else
-		chunkSegmentPos.z /= ChunkSegment::Size;
-
-	return chunkSegmentPos;
-}
-
-coords::LocalPos World::getLocalPos(const coords::WorldPos& worldPos)
-{
-	auto localPos = glm::abs(worldPos);
-
-	if (worldPos.x < 0)
-		localPos.x = ChunkSegment::Size - ((localPos.x - 1) % (ChunkSegment::Size) + 1);
-	else
-		localPos.x %= ChunkSegment::Size;
-
-	if (worldPos.y < 0)
-		localPos.y = ChunkSegment::Size - ((localPos.y - 1) % (ChunkSegment::Size) + 1);
-	else
-		localPos.y %= ChunkSegment::Size;
-
-	if (worldPos.z < 0)
-		localPos.z = ChunkSegment::Size - ((localPos.z - 1) % (ChunkSegment::Size) + 1);
-	else
-		localPos.z %= ChunkSegment::Size;
-
-	return localPos;
-}
-
-coords::WorldPos World::getWorldPos(const coords::LocalPos& localPos, const coords::ChunkSegmentPos& chunkSegmentPos)
-{
-	return chunkSegmentPos * ChunkSegment::Size + localPos;
-}
-
 void World::tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos)
 {
 	auto neighbors = getNeighborIfOnBound(worldPos);
@@ -175,7 +107,7 @@ void World::tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::
 		if (neighborChunk == nullptr)
 			continue;
 
-		if (neighborChunk->getBlock(getLocalPos(worldPos + neighbor)) != nullptr)
+		if (neighborChunk->getBlock(coords::getLocalPos(worldPos + neighbor)) != nullptr)
 		{
 			neighborChunk->generateMesh(_textureAtlas);
 		}
@@ -186,7 +118,7 @@ std::vector<glm::ivec3> World::getNeighborIfOnBound(const coords::WorldPos& worl
 {
 	std::vector<glm::ivec3> result;
 
-	auto localPos = getLocalPos(worldPos);
+	auto localPos = coords::getLocalPos(worldPos);
 
 	if (localPos.x == 0)
 		result.push_back(glm::ivec3{ -1, 0, 0 });

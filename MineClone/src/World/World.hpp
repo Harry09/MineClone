@@ -36,17 +36,17 @@ public:
 	template<typename T>
 	void placeBlock(const coords::WorldPos& worldPos)
 	{
-		auto chunkPos = getChunkSegmentPos(worldPos);
+		auto chunkSegmentPos = coords::getChunkSegmentPos(worldPos);
 
-		auto chunk = getChunkSegment(chunkPos);
+		auto chunk = getChunkSegment(chunkSegmentPos);
 
 		if (chunk == nullptr)
 			return;
 
-		chunk->placeBlock<T>(getLocalPos(worldPos));
+		chunk->placeBlock<T>(coords::getLocalPos(worldPos));
 		chunk->generateMesh(_textureAtlas);
 
-		tryUpdateNearChunks(worldPos, chunkPos);
+		tryUpdateNearChunks(worldPos, chunkSegmentPos);
 	}
 
 	void removeBlock(const coords::WorldPos& worldPos);
@@ -62,11 +62,6 @@ public:
 	void drawGrid(ShaderProgram& shaderProgram);
 
 public:
-	static coords::ChunkPos getChunkPos(const coords::WorldPos& worldPos);
-	static coords::ChunkSegmentPos getChunkSegmentPos(const coords::WorldPos& worldPos);
-	static coords::LocalPos getLocalPos(const coords::WorldPos& worldPos);
-	static coords::WorldPos getWorldPos(const coords::LocalPos& localPos, const coords::ChunkSegmentPos& chunkSegmentPos);
-
 	void tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos);
 	std::vector<glm::ivec3> getNeighborIfOnBound(const coords::WorldPos& worldPos);
 };

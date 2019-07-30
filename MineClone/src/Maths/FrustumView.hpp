@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Types.hpp"
+#include "Coords.hpp"
 
 class Camera;
 

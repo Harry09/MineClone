@@ -7,7 +7,7 @@
 #include <glm/vec3.hpp>
 
 #include "BlockMesh.hpp"
-#include "Types.hpp"
+#include "Maths/Coords.hpp"
 
 class ChunkSegment;
 

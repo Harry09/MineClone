@@ -16,4 +16,9 @@ namespace coords
 
 	// Block's pos in world
 	using WorldPos = glm::ivec3;
+
+	coords::ChunkPos getChunkPos(const coords::WorldPos& worldPos);
+	coords::ChunkSegmentPos getChunkSegmentPos(const coords::WorldPos& worldPos);
+	coords::LocalPos getLocalPos(const coords::WorldPos& worldPos);
+	coords::WorldPos getWorldPos(const coords::LocalPos& localPos, const coords::ChunkSegmentPos& chunkSegmentPos);
 }
