@@ -1,5 +1,7 @@
 #include "ChunkManager.hpp"
 
+#include "World.hpp"
+
 ChunkManager::ChunkManager(World& world)
 	: _world(world)
 {
@@ -38,7 +40,10 @@ void ChunkManager::drawChunks(ShaderProgram& shaderProgram)
 {
 	for (auto& chunk : _chunks)
 	{
-		chunk->drawChunks(shaderProgram);
+		if (_world.isPointInBoundingSphere(chunk->getPos() * Chunk::Size + Chunk::Size / 2))
+		{
+			chunk->drawChunks(shaderProgram);
+		}
 	}
 }
 

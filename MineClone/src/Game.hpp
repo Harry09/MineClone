@@ -11,6 +11,8 @@ class Texture;
 
 class Game
 {
+public:
+	constexpr static int MaxChunkDrawDistance = 8;
 
 private:
 	static Game* _inst;
@@ -23,7 +25,7 @@ private:
 	// todo: move to other class
 	Texture _cursorTex;
 	VertexBuffer _cursor{ 4, PrimitiveType::Lines };
-	glm::mat4 _hudViewMatrix;
+	glm::mat4 _hudViewMatrix{ 1.f };
 
 	glm::vec2 _lastCursorPos;
 

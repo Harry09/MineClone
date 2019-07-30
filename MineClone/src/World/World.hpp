@@ -8,16 +8,22 @@
 
 #include "ChunkManager.hpp"
 
+class Camera;
+
 class World
 {
 private:
+	Camera& _camera;
+
 	Texture _texture;
 	TextureAtlas _textureAtlas;
 
 	ChunkManager _chunkManager;
 
+	glm::vec3 _boundingSpherePos{ 0.f };
+
 public:
-	World();
+	World(Camera& camera);
 
 	void init();
 
@@ -45,6 +51,9 @@ public:
 	TextureAtlas& getTextureAtlas() { return _textureAtlas; }
 	const TextureAtlas& getTextureAtlas() const { return _textureAtlas; }
 
+	bool isPointInBoundingSphere(const glm::vec3& pos);
+
+	void update();
 	void drawChunks(ShaderProgram& shaderProgram);
 	void drawGrid(ShaderProgram& shaderProgram);
 

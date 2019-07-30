@@ -16,6 +16,7 @@ Game* Game::_inst;
 Game::Game()
 	: 
 	_player(_world, _renderer.getCamera()),
+	_world(_renderer.getCamera()),
 	_lastCursorPos{ _renderer.getCanvasSize() / 2u },
 	_cursorTex("cursor.png", true)
 {
@@ -88,6 +89,7 @@ void Game::update()
 	}
 
 	_player.update(_renderer.getWindow());
+	_world.update();
 }
 
 void Game::drawChunks(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)

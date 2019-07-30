@@ -1,9 +1,15 @@
 #include "World.hpp"
 
 #include <FastNoise.h>
+#include <glm/gtc/matrix_transform.hpp>
 
-World::World()
+#include "Graphics/Camera.hpp"
+#include "Game.hpp"
+
+
+World::World(Camera& camera)
 	: 
+	_camera(camera),
 	_texture("textures.jpg"),
 	_textureAtlas(_texture, 16),
 	_chunkManager(*this)
@@ -18,7 +24,7 @@ void World::init()
 
 	std::vector<std::vector<int>> heightMap;
 
-	const int ChunkCount = 2;
+	const int ChunkCount = 4;
 
 	const int Size = ChunkCount * 16;
 
@@ -74,6 +80,25 @@ Block* World::getBlock(const glm::ivec3& pos) const
 	}
 
 	return nullptr;
+}
+
+bool World::isPointInBoundingSphere(const glm::vec3& pos)
+{
+	if (glm::distance(glm::vec3 { pos.x, 0.f, pos.z }, glm::vec3 { _boundingSpherePos.x, 0.f, _boundingSpherePos.z }) < (Game::MaxChunkDrawDistance * Chunk::Size) / 2.f)
+		return true;
+
+	return false;
+}
+
+void World::update()
+{
+	auto& cameraPos = _camera.getPosition();
+	auto& cameraDir = glm::radians(_camera.getRotation());
+
+	auto distance = ((Game::MaxChunkDrawDistance * Chunk::Size) / 2.f) * 0.8f;
+
+	_boundingSpherePos.x = cameraPos.x + cos(cameraDir.x) * distance;
+	_boundingSpherePos.z = cameraPos.z + sin(cameraDir.x) * distance;
 }
 
 void World::drawChunks(ShaderProgram& shaderProgram)
