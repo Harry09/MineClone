@@ -5,7 +5,7 @@
 class GrassBlock : public Block
 {
 public:
-	GrassBlock(Chunk& chunk, const glm::ivec3& pos) noexcept
+	GrassBlock(ChunkSegment& chunk, const glm::ivec3& pos) noexcept
 		: Block(chunk, pos, Blocks::Grass)
 	{
 		setTexture<

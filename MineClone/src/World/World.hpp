@@ -31,13 +31,14 @@ public:
 	void init();
 
 	Chunk* getChunk(const glm::ivec3& chunkPos) const;
+	ChunkSegment* getChunkSegment(const glm::ivec3& chunkPos) const;
 
 	template<typename T>
 	void placeBlock(const glm::ivec3& worldPos)
 	{
 		auto chunkPos = getChunkPos(worldPos);
 
-		auto chunk = getChunk(chunkPos);
+		auto chunk = getChunkSegment(chunkPos);
 
 		if (chunk == nullptr)
 			return;

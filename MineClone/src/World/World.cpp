@@ -23,26 +23,19 @@ void World::init()
 	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
 	noise.SetFrequency(0.01f);
 
-	std::vector<std::vector<int>> heightMap;
-
 	const int ChunkCount = 4;
 
 	const int Size = ChunkCount * 16;
-
-	heightMap.resize(Size);
 
 	printf("Generating world...\n");
 
 	for (int x = -ChunkCount; x < ChunkCount; x++)
 	{
-		for (int y = 0; y < 2; y++)
+		for (int z = -ChunkCount; z < ChunkCount; z++)
 		{
-			for (int z = -ChunkCount; z < ChunkCount; z++)
-			{
-				_chunkManager.addChunk(glm::ivec3{ x, y, z }, noise, _textureAtlas);
+			_chunkManager.addChunk(glm::ivec2{ x, z }, noise, _textureAtlas);
 
-				printf("%d %d\n", x, z);
-			}
+			printf("%d %d\n", x, z);
 		}
 	}
 
@@ -56,11 +49,16 @@ Chunk* World::getChunk(const glm::ivec3& chunkPos) const
 	return _chunkManager.getChunk(chunkPos);
 }
 
+ChunkSegment* World::getChunkSegment(const glm::ivec3& chunkPos) const
+{
+	return _chunkManager.getChunkSegment(chunkPos);
+}
+
 void World::removeBlock(const glm::ivec3& worldPos)
 {
 	auto chunkPos = getChunkPos(worldPos);
 
-	auto chunk = getChunk(chunkPos);
+	auto chunk = getChunkSegment(chunkPos);
 
 	if (chunk == nullptr)
 		return;
@@ -73,7 +71,7 @@ void World::removeBlock(const glm::ivec3& worldPos)
 
 Block* World::getBlock(const glm::ivec3& pos) const
 {
-	auto chunk = getChunk(getChunkPos(pos));
+	auto chunk = getChunkSegment(getChunkPos(pos));
 
 	if (chunk != nullptr)
 	{
@@ -103,19 +101,19 @@ glm::ivec3 World::getChunkPos(const glm::ivec3& worldPos)
 	glm::ivec3 chunkPos = worldPos;
 
 	if (worldPos.x < 0)
-		chunkPos.x = (chunkPos.x + 1) / (Chunk::Size) - 1;
+		chunkPos.x = (chunkPos.x + 1) / (ChunkSegment::Size) - 1;
 	else
-		chunkPos.x /= Chunk::Size;
+		chunkPos.x /= ChunkSegment::Size;
 
 	if (worldPos.y < 0)
-		chunkPos.y = (chunkPos.y + 1) / (Chunk::Size) - 1;
+		chunkPos.y = (chunkPos.y + 1) / (ChunkSegment::Size) - 1;
 	else
-		chunkPos.y /= Chunk::Size;
+		chunkPos.y /= ChunkSegment::Size;
 
 	if (worldPos.z < 0)
-		chunkPos.z = (chunkPos.z + 1) / (Chunk::Size) - 1;
+		chunkPos.z = (chunkPos.z + 1) / (ChunkSegment::Size) - 1;
 	else
-		chunkPos.z /= Chunk::Size;
+		chunkPos.z /= ChunkSegment::Size;
 
 	return chunkPos;
 }
@@ -125,26 +123,26 @@ glm::ivec3 World::getLocalPos(const glm::ivec3& worldPos)
 	auto localPos = glm::abs(worldPos);
 
 	if (worldPos.x < 0)
-		localPos.x = Chunk::Size - ((localPos.x - 1) % (Chunk::Size) + 1);
+		localPos.x = ChunkSegment::Size - ((localPos.x - 1) % (ChunkSegment::Size) + 1);
 	else
-		localPos.x %= Chunk::Size;
+		localPos.x %= ChunkSegment::Size;
 
 	if (worldPos.y < 0)
-		localPos.y = Chunk::Size - ((localPos.y - 1) % (Chunk::Size) + 1);
+		localPos.y = ChunkSegment::Size - ((localPos.y - 1) % (ChunkSegment::Size) + 1);
 	else
-		localPos.y %= Chunk::Size;
+		localPos.y %= ChunkSegment::Size;
 
 	if (worldPos.z < 0)
-		localPos.z = Chunk::Size - ((localPos.z - 1) % (Chunk::Size) + 1);
+		localPos.z = ChunkSegment::Size - ((localPos.z - 1) % (ChunkSegment::Size) + 1);
 	else
-		localPos.z %= Chunk::Size;
+		localPos.z %= ChunkSegment::Size;
 
 	return localPos;
 }
 
 glm::ivec3 World::getWorldPos(const glm::ivec3& localPos, const glm::ivec3& chunkPos)
 {
-	return chunkPos * Chunk::Size + localPos;
+	return chunkPos * ChunkSegment::Size + localPos;
 }
 
 void World::tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& chunkPos)
@@ -153,7 +151,7 @@ void World::tryUpdateNearChunks(const glm::ivec3& worldPos, const glm::ivec3& ch
 
 	for (auto& neighbor : neighbors)
 	{
-		auto neighborChunk = getChunk(chunkPos + neighbor);
+		auto neighborChunk = getChunkSegment(chunkPos + neighbor);
 
 		if (neighborChunk == nullptr)
 			continue;

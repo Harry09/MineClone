@@ -16,7 +16,7 @@ void FrustumView::update()
 	auto& cameraPos = _camera.getPosition();
 	auto& cameraDir = glm::radians(_camera.getRotation());
 
-	auto distance = ((Game::MaxChunkDrawDistance * Chunk::Size) / 2.f) * 0.8f;
+	auto distance = ((Game::MaxChunkDrawDistance * ChunkSegment::Size) / 2.f) * 0.8f;
 
 	_spherePos.x = cameraPos.x + cos(cameraDir.x) * distance;
 	_spherePos.y = cameraPos.z + sin(cameraDir.x) * distance;
@@ -25,7 +25,7 @@ void FrustumView::update()
 
 bool FrustumView::isPointInFOV(const glm::ivec3& pos) const
 {
-	if (glm::distance(glm::vec2{ pos.x, pos.z }, _spherePos) < (Game::MaxChunkDrawDistance * Chunk::Size) / 2.f)
+	if (glm::distance(glm::vec2{ pos.x, pos.z }, _spherePos) < (Game::MaxChunkDrawDistance * ChunkSegment::Size) / 2.f)
 		return true;
 
 	return false;

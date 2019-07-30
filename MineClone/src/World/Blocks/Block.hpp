@@ -8,7 +8,7 @@
 
 #include "BlockMesh.hpp"
 
-class Chunk;
+class ChunkSegment;
 
 class Block
 {
@@ -16,7 +16,7 @@ public:
 	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
 
 protected:
-	Chunk& _chunk;
+	ChunkSegment& _chunk;
 
 	glm::ivec3 _pos = { 0.f, 0.f, 0.f };
 
@@ -25,7 +25,7 @@ protected:
 	TextureId _faceTexture[BlockSideSize] = { TextureId::None };
 
 public:
-	Block(Chunk& chunk, const glm::ivec3& pos, Blocks blockType) noexcept;
+	Block(ChunkSegment& chunk, const glm::ivec3& pos, Blocks blockType) noexcept;
 
 	Block(const Block& other) noexcept;
 	Block& operator=(const Block& other) noexcept;
