@@ -21,9 +21,9 @@ Chunk* ChunkManager::getChunk(const glm::ivec3& pos) const
 	return nullptr;
 }
 
-void ChunkManager::addChunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas)
+void ChunkManager::addChunk(const glm::ivec3& pos, FastNoise& noise, TextureAtlas& textureAtlas)
 {
-	_chunks.push_back(std::make_unique<Chunk>(_world, pos, heightMap, textureAtlas));
+	_chunks.push_back(std::make_unique<Chunk>(_world, pos, noise, textureAtlas));
 }
 
 void ChunkManager::updateMesh(TextureAtlas& textureAtlas)

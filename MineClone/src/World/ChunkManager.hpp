@@ -4,6 +4,8 @@
 #include <memory>
 #include "Chunk.hpp"
 
+class FastNoise;
+
 class ChunkManager
 {
 private:
@@ -16,7 +18,7 @@ public:
 	~ChunkManager();
 
 	Chunk* getChunk(const glm::ivec3& pos) const;
-	void addChunk(const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas);
+	void addChunk(const glm::ivec3& pos, FastNoise& noise, TextureAtlas& textureAtlas);
 
 	void updateMesh(TextureAtlas& textureAtlas);
 

@@ -9,22 +9,20 @@
 
 #include "World.hpp"
 
-Chunk::Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas)
+Chunk::Chunk(World& world, const glm::ivec3& pos, FastNoise& noise, TextureAtlas& textureAtlas)
 	: _world(world), _pos(pos)
 {
 	_data.move(glm::vec3(pos * Chunk::Size));
 	_data.setTexture(textureAtlas.getTexture());
 
-	auto yy = pos.y * Chunk::Size.y;
+	auto yy = pos.y * Chunk::Size;
 
 	for (int x = 0; x < 16; x++)
 	{
 		for (int z = 0; z < 16; z++)
 		{
-			auto xx = x + pos.x * Chunk::Size.x;
-			auto zz = z + pos.z * Chunk::Size.z;
-
-			auto height = heightMap[xx][zz];
+			auto worldPos = glm::vec3(World::getWorldPos({ x, 0, z }, _pos));
+			auto height = static_cast<int>((noise.GetNoise(worldPos.x, worldPos.z) + 0.8f) * 16);
 			auto height_ = height;
 
 			// is under chunk
@@ -130,11 +128,11 @@ void Chunk::drawGrid(ShaderProgram& shaderProgram)
 bool Chunk::outOfBound(const glm::ivec3& pos)
 {
 	if (pos.x < 0 ||
-		pos.x > Size.x - 1 ||
+		pos.x > Size - 1 ||
 		pos.y < 0 ||
-		pos.y > Size.y - 1 ||
+		pos.y > Size - 1 ||
 		pos.z < 0 ||
-		pos.z > Size.z - 1)
+		pos.z > Size - 1)
 	{
 		return true;
 	}

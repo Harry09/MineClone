@@ -18,33 +18,21 @@ void World::init()
 
 	std::vector<std::vector<int>> heightMap;
 
-	const int ChunkCount = 3;
+	const int ChunkCount = 2;
 
 	const int Size = ChunkCount * 16;
 
 	heightMap.resize(Size);
 
-	printf("Generating height map...\n");
-
-	for (int x = 0; x < Size; x++)
-	{
-		heightMap[x].resize(Size);
-
-		for (int y = 0; y < Size; y++)
-		{
-			heightMap[x][y] = static_cast<int>((noise.GetNoise(static_cast<float>(x), static_cast<float>(y)) + 0.8f) * 16);
-		}
-	}
-
 	printf("Generating world...\n");
 
-	for (int x = 0; x < ChunkCount; x++)
+	for (int x = -ChunkCount; x < ChunkCount; x++)
 	{
 		for (int y = 0; y < 2; y++)
 		{
-			for (int z = 0; z < ChunkCount; z++)
+			for (int z = -ChunkCount; z < ChunkCount; z++)
 			{
-				_chunkManager.addChunk(glm::ivec3{ x, y, z }, heightMap, _textureAtlas);
+				_chunkManager.addChunk(glm::ivec3{ x, y, z }, noise, _textureAtlas);
 
 				printf("%d %d\n", x, z);
 			}

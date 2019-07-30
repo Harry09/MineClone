@@ -10,11 +10,12 @@
 #include "TextureAtlas.hpp"
 
 class World;
+class FastNoise;
 
 class Chunk
 {
 public:
-	static constexpr glm::ivec3 Size = { 16, 16, 16 };
+	static constexpr int Size = 16;
 
 private:
 	World& _world;
@@ -22,14 +23,14 @@ private:
 	glm::ivec3 _pos;
 
 	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
-	std::unique_ptr<Block> _blocks[Size.x][Size.y][Size.z];
+	std::unique_ptr<Block> _blocks[Size][Size][Size];
 
 	VertexBuffer _outline{ 24, PrimitiveType::Lines };
 
 	int _blockCount = 0;
 
 public:
-	Chunk(World& world, const glm::ivec3& pos, const std::vector<std::vector<int>>& heightMap, TextureAtlas& textureAtlas);
+	Chunk(World& world, const glm::ivec3& pos, FastNoise& noise, TextureAtlas& textureAtlas);
 	~Chunk() = default;
 
 	const auto getPos() const { return _pos; }
