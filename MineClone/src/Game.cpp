@@ -17,8 +17,7 @@ Game::Game()
 	: 
 	_player(_world, _renderer.getCamera()),
 	_world(_renderer.getCamera()),
-	_lastCursorPos{ _renderer.getCanvasSize() / 2u },
-	_cursorTex("cursor.png", true)
+	_lastCursorPos{ _renderer.getCanvasSize() / 2u }
 {
 	_inst = this;
 }
@@ -34,7 +33,7 @@ bool Game::init()
 	_world.init();
 	_player.init();
 
-	initCursor();
+	initHud();
 
 	return true;
 }
@@ -66,21 +65,6 @@ void Game::run()
 	}
 }
 
-void Game::initCursor()
-{
-	_cursor.setTexture(_cursorTex);
-
-	_cursor.scale(glm::vec3{ 0.005f });
-
-	_cursor[0] = Vertex{ glm::vec3 { -0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };
-	_cursor[1] = Vertex{ glm::vec3 {  0.5f, 0.f, 0.f }, glm::vec3 { 1.f } };
-	_cursor[2] = Vertex{ glm::vec3 {  0.f,  0.5f, 0.f }, glm::vec3 { 1.f } };
-	_cursor[3] = Vertex{ glm::vec3 {  0.f, -0.5f, 0.f }, glm::vec3 { 1.f } };
-
-	_hudViewMatrix = glm::mat4(1.0f);
-	_hudViewMatrix = glm::translate(_hudViewMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
-}
-
 void Game::update()
 {
 	if (glfwGetKey(_renderer.getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -90,6 +74,14 @@ void Game::update()
 
 	_player.update(_renderer.getWindow());
 	_world.update();
+}
+
+void Game::initHud()
+{
+	_cursor.init();
+
+	_hudViewMatrix = glm::mat4(1.0f);
+	_hudViewMatrix = glm::translate(_hudViewMatrix, glm::vec3(0.0f, 0.0f, -0.1f));
 }
 
 void Game::drawChunks(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)
@@ -115,10 +107,7 @@ void Game::drawHud(const glm::mat4& projectionMatrix)
 	hudShader.setUniform("view", _hudViewMatrix);
 	hudShader.setUniform("projection", projectionMatrix);
 
-	glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-	glLineWidth(3.f);
-	_cursor.draw(hudShader);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	_cursor.drawHud(hudShader);
 }
 
 void Game::drawGrid(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix)

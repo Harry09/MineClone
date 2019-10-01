@@ -7,6 +7,8 @@
 #include "World/World.hpp"
 #include "World/Player.hpp"
 
+#include "Hud/Cursor.hpp"
+
 class Texture;
 
 class Game
@@ -22,9 +24,8 @@ private:
 	Player _player;
 	World _world;
 
-	// todo: move to other class
-	Texture _cursorTex;
-	VertexBuffer _cursor{ 4, PrimitiveType::Lines };
+	Cursor _cursor;
+
 	glm::mat4 _hudViewMatrix{ 1.f };
 
 	glm::vec2 _lastCursorPos;
@@ -54,7 +55,7 @@ public:
 	}
 
 private:
-	void initCursor();
+	void initHud();
 
 	void update();
 
