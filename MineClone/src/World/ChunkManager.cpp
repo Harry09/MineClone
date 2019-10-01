@@ -1,5 +1,7 @@
 #include "ChunkManager.hpp"
 
+#include <algorithm>
+
 #include "World.hpp"
 
 ChunkManager::ChunkManager(World& world)

@@ -122,6 +122,14 @@ inline std::array<Vertex, 6> getSingleBlockMesh(const glm::vec3& pos, TextureId 
 	return detail::getMesh<Side>(pos, textureId, textureAtlas);
 }
 
+template<BlockSide Side>
+inline void getBlockMeshImp(std::vector<Vertex>& data, const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+{
+	auto mesh = detail::getMesh<Side>(pos, textureId, textureAtlas);
+
+	data.insert(data.end(), mesh.begin(), mesh.end());
+}
+
 template<BlockSide... Side>
 inline std::vector<Vertex> getBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 {
@@ -134,12 +142,4 @@ inline std::vector<Vertex> getBlockMesh(const glm::vec3& pos, TextureId textureI
 	(getBlockMeshImp<Side>(result, pos, textureId, textureAtlas), ...);
 
 	return result;
-}
-
-template<BlockSide Side>
-inline void getBlockMeshImp(std::vector<Vertex>& data, const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
-{
-	auto mesh = detail::getMesh<Side>(pos, textureId, textureAtlas);
-
-	data.insert(data.end(), mesh.begin(), mesh.end());
 }

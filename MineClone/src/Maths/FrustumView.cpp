@@ -14,7 +14,7 @@ FrustumView::FrustumView(Camera& camera)
 void FrustumView::update()
 {
 	auto& cameraPos = _camera.getPosition();
-	auto& cameraDir = glm::radians(_camera.getRotation());
+	auto cameraDir = glm::radians(_camera.getRotation());
 
 	auto distance = ((Game::MaxChunkDrawDistance * ChunkSegment::Size) / 2.f) * 0.8f;
 
