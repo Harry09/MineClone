@@ -24,6 +24,8 @@ private:
 
 	coords::ChunkSegmentPos _chunkSegmentPos;
 
+	Texture& _textureAtlas;
+
 	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
 	std::unique_ptr<Block> _blocks[Size][Size][Size];
 

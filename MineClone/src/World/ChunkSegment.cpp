@@ -10,10 +10,9 @@
 #include "World.hpp"
 
 ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas)
-	: _world(world), _chunkSegmentPos(chunkSegmentPos)
+	: _world(world), _chunkSegmentPos(chunkSegmentPos), _textureAtlas(textureAtlas.getTexture())
 {
 	_data.move(glm::vec3(chunkSegmentPos * ChunkSegment::Size));
-	_data.setTexture(textureAtlas.getTexture());
 
 	auto yy = _chunkSegmentPos.y * ChunkSegment::Size;
 
@@ -117,7 +116,7 @@ void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 
 void ChunkSegment::drawChunks(ShaderProgram& shaderProgram)
 {
-	_data.draw(shaderProgram);
+	_data.draw(_textureAtlas, shaderProgram);
 }
 
 void ChunkSegment::drawGrid(ShaderProgram& shaderProgram)
