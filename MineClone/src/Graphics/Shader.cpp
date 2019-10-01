@@ -1,6 +1,7 @@
 #include "Shader.hpp"
 
 #include <fstream>
+#include <filesystem>
 
 std::string loadFileToString(const std::string& filePath) noexcept
 {
@@ -19,6 +20,11 @@ std::string loadFileToString(const std::string& filePath) noexcept
 Shader::Shader(ShaderType shaderType, const std::string& shaderPath)
 	: _shaderType(shaderType)
 {
+	if (!std::filesystem::exists(shaderPath))
+	{
+		throw std::exception("Cannot find shader!");
+	}
+
 	_shader = glCreateShader(static_cast<GLenum>(shaderType));
 
 	auto file = loadFileToString(shaderPath);
