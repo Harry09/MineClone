@@ -48,7 +48,6 @@ VertexBuffer::VertexBuffer(VertexBuffer&& other) noexcept
 	_indices(std::move(other._indices)),
 	_primitiveType(std::move(other._primitiveType)),
 	_drawType(std::move(other._drawType)),
-	_texture(std::move(other._texture)),
 	_needUpdate(std::move(other._needUpdate)),
 	_updateRange(std::move(other._updateRange))
 {
@@ -67,7 +66,6 @@ VertexBuffer& VertexBuffer::operator=(VertexBuffer&& other) noexcept
 		_indices = std::move(other._indices);
 		_primitiveType = std::move(other._primitiveType);
 		_drawType = std::move(other._drawType);
-		_texture = std::move(other._texture);
 		_needUpdate = std::move(other._needUpdate);
 		_updateRange = std::move(other._updateRange);
 	}
@@ -132,11 +130,6 @@ VertexBuffer::Vertex_t& VertexBuffer::operator[](size_t index)
 	return _vertices[index];
 }
 
-void VertexBuffer::setTexture(Texture& texture)
-{
-	_texture = texture;
-}
-
 void VertexBuffer::resize(size_t size)
 {
 	if (getSize() != size)
@@ -177,6 +170,7 @@ void VertexBuffer::update()
 	}
 }
 
+
 void VertexBuffer::draw(ShaderProgram& shaderProgram)
 {
 	update();
@@ -184,8 +178,26 @@ void VertexBuffer::draw(ShaderProgram& shaderProgram)
 	shaderProgram.setUniform("model", getMatrix());
 
 	bind();
+	if (_ebo != 0)
+	{
+		glDrawElements(static_cast<GLenum>(_primitiveType), static_cast<GLsizei>(_indices.size()), GL_UNSIGNED_INT, 0);
+	}
+	else
+	{
+		glDrawArrays(static_cast<GLenum>(_primitiveType), 0, static_cast<GLsizei>(getSize()));
+	}
+	unbind();
+}
 
-	auto _textureNativeHandle = _texture.getNativeHandle();
+void VertexBuffer::draw(Texture& texture, ShaderProgram& shaderProgram)
+{
+	update();
+
+	shaderProgram.setUniform("model", getMatrix());
+
+	bind();
+
+	auto _textureNativeHandle = texture.getNativeHandle();
 
 	if (_textureNativeHandle != 0)
 	{

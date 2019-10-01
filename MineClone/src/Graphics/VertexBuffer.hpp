@@ -40,8 +40,6 @@ private:
 	PrimitiveType _primitiveType = PrimitiveType::Triangles;
 	DrawType _drawType = DrawType::Static;
 
-	Texture _texture;
-
 	bool _needUpdate = false;
 	bool _needReallocate = false;
 	ullvec2 _updateRange{ -1, 0 };
@@ -68,8 +66,6 @@ public:
 
 	Vertex_t& operator[](size_t index);
 
-	void setTexture(Texture& texture);
-
 	PrimitiveType getPrimitiveType() const { return _primitiveType; }
 
 	void resize(size_t size);
@@ -77,6 +73,7 @@ public:
 
 	void update();
 	void draw(ShaderProgram& shaderProgram);
+	void draw(Texture& texture, ShaderProgram& shaderProgram);
 
 private:
 	void init();
