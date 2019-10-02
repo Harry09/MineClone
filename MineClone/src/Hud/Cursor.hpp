@@ -7,11 +7,10 @@ class ShaderProgram;
 class Cursor
 {
 private:
-	Texture _cursorTex;
 	VertexBuffer _cursor{ 4, PrimitiveType::Lines };
     
 public:
-    Cursor();
+    Cursor() = default;
 	~Cursor() = default;
 
 	void init();
