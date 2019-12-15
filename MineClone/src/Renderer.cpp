@@ -14,7 +14,7 @@ Renderer::Renderer()
 {
 	if (!glfwInit())
 	{
-		throw std::exception("Cannot init glfw!");
+		throw std::runtime_error("Cannot init glfw!");
 	}
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -25,14 +25,14 @@ Renderer::Renderer()
 
 	if (!_window)
 	{
-		throw std::exception("Cannot create window!");
+		throw std::runtime_error("Cannot create window!");
 	}
 
 	glfwMakeContextCurrent(_window);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		throw std::exception("Failed to initialize GLAD");
+		throw std::runtime_error("Failed to initialize GLAD");
 	}
 
 	glEnable(GL_DEPTH_TEST);
@@ -87,7 +87,7 @@ void Renderer::loadShader(const std::string& shaderName, ShaderProgram& shaderPr
 		puts(vertexShader.getInfoLog().c_str());
 		puts(fragmentShader.getInfoLog().c_str());
 
-		throw std::exception("Cannot create shaders!");
+		throw std::runtime_error("Cannot create shaders!");
 	}
 
 	shaderProgram.create();
@@ -95,6 +95,6 @@ void Renderer::loadShader(const std::string& shaderName, ShaderProgram& shaderPr
 
 	if (!shaderProgram.isValid())
 	{
-		throw std::exception("Cannot create shader program!");
+		throw std::runtime_error("Cannot create shader program!");
 	}
 }

@@ -22,7 +22,7 @@ Shader::Shader(ShaderType shaderType, const std::string& shaderPath)
 {
 	if (!std::filesystem::exists(shaderPath))
 	{
-		throw std::exception("Cannot find shader!");
+		throw std::runtime_error("Cannot find shader!");
 	}
 
 	_shader = glCreateShader(static_cast<GLenum>(shaderType));
