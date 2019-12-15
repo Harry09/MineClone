@@ -6,8 +6,8 @@ add_subdirectory(vendor)
 
 file(
     GLOB_RECURSE MineClone_src
-    "${CMAKE_SOURCE_DIR}/Mineclone/src/*.cpp"
-    "${CMAKE_SOURCE_DIR}/Mineclone/src/*.hpp"
+    "${CMAKE_SOURCE_DIR}/MineClone/src/*.cpp"
+    "${CMAKE_SOURCE_DIR}/MineClone/src/*.hpp"
     )
 
 add_executable(MineClone ${MineClone_src})
@@ -16,14 +16,11 @@ if (MSVC)
     set_property(TARGET MineClone PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/MineClone/assets")
 endif()
 
-find_library(GLFW_LIBRARY 
-            NAMES glfw glfw3 
-            HINTS "${CMAKE_SOURCE_DIR}/vendor/glfw"
-            PATH_SUFFIXES src src/Debug src/Release
-            )
+add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/glfw)
 
+find_package(PkgConfig REQUIRED)
 
-target_link_libraries(MineClone PUBLIC glad FastNoise ${GLFW_LIBRARY})
+target_link_libraries(MineClone PUBLIC glad glfw ${GLFW_LIBRARIES} FastNoise pthread ${CMAKE_DL_LIBS})
 target_include_directories(MineClone PUBLIC 
                             "${CMAKE_SOURCE_DIR}/MineClone/src"
                             "${CMAKE_SOURCE_DIR}/vendor/glm"
