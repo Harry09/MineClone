@@ -18,7 +18,9 @@ endif()
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/vendor/glfw)
 
-find_package(PkgConfig REQUIRED)
+if (UNIX AND NOT APPLE)
+    find_package(PkgConfig REQUIRED)
+endif()
 
 target_link_libraries(MineClone PUBLIC glad glfw ${GLFW_LIBRARIES} FastNoise pthread ${CMAKE_DL_LIBS})
 target_include_directories(MineClone PUBLIC 
