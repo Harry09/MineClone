@@ -18,8 +18,8 @@ private:
 public:
 	Shader(ShaderType shaderType, const std::string& shaderPath);
 
-	Shader(Shader& other) noexcept;
-	Shader& operator=(Shader& other) noexcept;
+	Shader(const Shader& other) noexcept;
+	Shader& operator=(const Shader& other) noexcept;
 
 	Shader(Shader&& other) noexcept;
 	Shader& operator=(Shader&& other) noexcept;

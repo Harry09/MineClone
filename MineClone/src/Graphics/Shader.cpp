@@ -35,14 +35,14 @@ Shader::Shader(ShaderType shaderType, const std::string& shaderPath)
 	glCompileShader(_shader);
 }
 
-Shader::Shader(Shader& other) noexcept
+Shader::Shader(const Shader& other) noexcept
 	: 
 	_shader(other._shader),
 	_shaderType(other._shaderType)
 {
 }
 
-Shader& Shader::operator=(Shader& other) noexcept
+Shader& Shader::operator=(const Shader& other) noexcept
 {
 	_shader = other._shader;
 	_shaderType = other._shaderType;
