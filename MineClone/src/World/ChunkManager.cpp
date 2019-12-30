@@ -40,7 +40,7 @@ void ChunkManager::addChunk(const coords::ChunkPos& chunkPos, FastNoise& noise, 
 	_chunks.push_back(std::make_unique<Chunk>(_world, chunkPos, noise, textureAtlas));
 }
 
-void ChunkManager::updateMesh(TextureAtlas& textureAtlas)
+void ChunkManager::updateMeshes(TextureAtlas& textureAtlas)
 {
 	for (auto& chunk : _chunks)
 	{

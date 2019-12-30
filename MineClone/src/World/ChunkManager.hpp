@@ -23,7 +23,7 @@ public:
 	ChunkSegment* getChunkSegment(const coords::ChunkSegmentPos& chunkSegmentPos) const;
 	void addChunk(const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas);
 
-	void updateMesh(TextureAtlas& textureAtlas);
+	void updateMeshes(TextureAtlas& textureAtlas);
 
 	void drawChunks(ShaderProgram& shaderProgram);
 	void drawGrid(ShaderProgram& shaderProgram);

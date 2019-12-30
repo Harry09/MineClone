@@ -41,7 +41,7 @@ void World::init()
 
 	printf("Generating mesh...\n");
 
-	_chunkManager.updateMesh(_textureAtlas);
+	_chunkManager.updateMeshes(_textureAtlas);
 }
 
 Chunk* World::getChunk(const coords::ChunkPos& chunkPos) const
