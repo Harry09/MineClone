@@ -9,12 +9,12 @@ public:
 		: Block(chunk, localPos, Blocks::Grass)
 	{
 		setTexture<
-			BlockSide::North,
-			BlockSide::East,
-			BlockSide::South,
-			BlockSide::West>(TextureId::GrassSide);
+			BlockFace::North,
+			BlockFace::East,
+			BlockFace::South,
+			BlockFace::West>(TextureId::GrassSide);
 
-		setTexture<BlockSide::Top>(TextureId::GrassTop);
-		setTexture<BlockSide::Bottom>(TextureId::Dirt);
+		setTexture<BlockFace::Top>(TextureId::GrassTop);
+		setTexture<BlockFace::Bottom>(TextureId::Dirt);
 	}
 };

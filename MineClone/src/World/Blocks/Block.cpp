@@ -49,7 +49,7 @@ coords::WorldPos Block::getWorldPos() const
 	return coords::getWorldPos(_localPos, _chunk.getChunkSegmentPos());
 }
 
-Block* Block::getNeighbor(BlockSide side) const
+Block* Block::getNeighbor(BlockFace face) const
 {
-	return _chunk.getNeighborOfBlock(this, side);
+	return _chunk.getNeighborOfBlock(this, face);
 }

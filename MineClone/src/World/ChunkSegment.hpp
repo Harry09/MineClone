@@ -74,7 +74,7 @@ public:
 	Block* getBlock(const coords::LocalPos& localPos) { return _blocks[localPos.x][localPos.y][localPos.z].get(); }
 	Block* getBlock(const coords::LocalPos& localPos) const { return _blocks[localPos.x][localPos.y][localPos.z].get(); }
 
-	Block* getNeighborOfBlock(const Block* block, BlockSide side) const;
+	Block* getNeighborOfBlock(const Block* block, BlockFace face) const;
 
 	void generateMesh(TextureAtlas& textureAtlas);
 

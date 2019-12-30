@@ -61,9 +61,9 @@ ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSeg
 
 }
 
-Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockSide side) const
+Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockFace face) const
 {
-	auto facingDirection = getBlockSideDirection(side);
+	auto facingDirection = getBlockFaceVec(face);
 
 	auto localPos = block->getLocalPos() + facingDirection;
 
@@ -95,12 +95,12 @@ void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 				if (block != nullptr)
 				{
 					auto vertices = block->getVertices<
-						BlockSide::North, 
-						BlockSide::East, 
-						BlockSide::South, 
-						BlockSide::West, 
-						BlockSide::Top, 
-						BlockSide::Bottom>(textureAtlas);
+						BlockFace::North, 
+						BlockFace::East, 
+						BlockFace::South, 
+						BlockFace::West, 
+						BlockFace::Top, 
+						BlockFace::Bottom>(textureAtlas);
 
 					data.insert(data.end(), vertices.begin(), vertices.end());
 				}

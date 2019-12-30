@@ -1,20 +1,20 @@
 #include "BlockMesh.hpp"
 
-glm::ivec3 getBlockSideDirection(BlockSide side)
+glm::ivec3 getBlockFaceVec(BlockFace face)
 {
-	switch (side)
+	switch (face)
 	{
-	case BlockSide::North:
+	case BlockFace::North:
 		return { 0, 0, -1 };
-	case BlockSide::East:
+	case BlockFace::East:
 		return { 1, 0, 0 };
-	case BlockSide::South:
+	case BlockFace::South:
 		return { 0, 0, 1 };
-	case BlockSide::West:
+	case BlockFace::West:
 		return { -1, 0, 0 };
-	case BlockSide::Top:
+	case BlockFace::Top:
 		return { 0, 1, 0 };
-	case BlockSide::Bottom:
+	case BlockFace::Bottom:
 		return { 0, -1, 0 };
 	}
 

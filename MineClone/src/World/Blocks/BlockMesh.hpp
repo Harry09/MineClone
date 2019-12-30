@@ -10,7 +10,7 @@
 #include "Graphics/Vertex.hpp"
 
 
-enum class BlockSide : unsigned
+enum class BlockFace : unsigned
 {
 	North = 0,
 	East,
@@ -21,18 +21,18 @@ enum class BlockSide : unsigned
 	Size
 };
 
-glm::ivec3 getBlockSideDirection(BlockSide side);
+glm::ivec3 getBlockFaceVec(BlockFace Face);
 
 namespace detail
 {
-	template<BlockSide Side>
+	template<BlockFace Face>
 	inline auto getMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::North>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::North>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -46,7 +46,7 @@ namespace detail
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::East>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::East>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 {  0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -60,7 +60,7 @@ namespace detail
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::South>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::South>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, 0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -74,7 +74,7 @@ namespace detail
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::West>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::West>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -88,7 +88,7 @@ namespace detail
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::Top>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::Top>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 { -0.5f, 0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -102,7 +102,7 @@ namespace detail
 	}
 
 	template<>
-	inline auto getMesh<BlockSide::Bottom>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
+	inline auto getMesh<BlockFace::Bottom>(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 	{
 		return std::array{
 			Vertex{ glm::vec3 { -0.5f, -0.5f, -0.5f } + pos, glm::vec3 { 1.f }, textureAtlas.getTextureCoords(textureId, TextureAtlas::LeftBottom)  },
@@ -116,30 +116,30 @@ namespace detail
 	}
 }
 
-template<BlockSide Side>
+template<BlockFace Face>
 inline std::array<Vertex, 6> getSingleBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 {
-	return detail::getMesh<Side>(pos, textureId, textureAtlas);
+	return detail::getMesh<Face>(pos, textureId, textureAtlas);
 }
 
-template<BlockSide Side>
+template<BlockFace Face>
 inline void getBlockMeshImp(std::vector<Vertex>& data, const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 {
-	auto mesh = detail::getMesh<Side>(pos, textureId, textureAtlas);
+	auto mesh = detail::getMesh<Face>(pos, textureId, textureAtlas);
 
 	data.insert(data.end(), mesh.begin(), mesh.end());
 }
 
-template<BlockSide... Side>
+template<BlockFace... Faces>
 inline std::vector<Vertex> getBlockMesh(const glm::vec3& pos, TextureId textureId, TextureAtlas& textureAtlas)
 {
 	std::vector<Vertex> result;
 
-	constexpr auto argumentCount = sizeof...(Side);
+	constexpr auto argumentCount = sizeof...(Faces);
 
 	result.reserve(argumentCount * 6);
 
-	(getBlockMeshImp<Side>(result, pos, textureId, textureAtlas), ...);
+	(getBlockMeshImp<Faces>(result, pos, textureId, textureAtlas), ...);
 
 	return result;
 }

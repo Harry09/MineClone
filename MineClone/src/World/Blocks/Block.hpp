@@ -14,7 +14,7 @@ class ChunkSegment;
 class Block
 {
 public:
-	static constexpr int BlockSideSize = static_cast<int>(BlockSide::Size);
+	static constexpr int BlockFaceCount = static_cast<int>(BlockFace::Size);
 
 protected:
 	ChunkSegment& _chunk;
@@ -23,7 +23,7 @@ protected:
 
 	Blocks _blockType;
 
-	TextureId _faceTexture[BlockSideSize] = { TextureId::None };
+	TextureId _faceTexture[BlockFaceCount] = { TextureId::None };
 
 public:
 	Block(ChunkSegment& chunk, const coords::LocalPos& localPos, Blocks blockType) noexcept;
@@ -39,38 +39,38 @@ public:
 	const coords::LocalPos& getLocalPos() const { return _localPos; }
 	coords::WorldPos getWorldPos() const;
 
-	Block* getNeighbor(BlockSide side) const;
+	Block* getNeighbor(BlockFace face) const;
 
-	bool hasNeighbor(BlockSide side) const { return getNeighbor(side) != nullptr; }
+	bool hasNeighbor(BlockFace face) const { return getNeighbor(face) != nullptr; }
 
-	template<BlockSide... Sides>
+	template<BlockFace... Faces>
 	const auto getVertices(TextureAtlas& textureAtlas) const
 	{
 		std::vector<Vertex> vertices;
 
 		int offset = 0;
 
-		((getVerticesImp<Sides>(vertices, offset, textureAtlas), offset++), ...);
+		((getVerticesImp<Faces>(vertices, offset, textureAtlas), offset++), ...);
 
 		return vertices;
 	}
 
 protected:
-	template<BlockSide... Sides>
+	template<BlockFace... Faces>
 	constexpr void setTexture(TextureId textureId)
 	{
-		((_faceTexture[static_cast<int>(Sides)] = textureId), ...);
+		((_faceTexture[static_cast<int>(Faces)] = textureId), ...);
 	}
 
 private:
-	template<BlockSide Side>
+	template<BlockFace Face>
 	const void getVerticesImp(std::vector<Vertex>& vertices, int offset, TextureAtlas& textureAtlas) const
 	{
-		if (!hasNeighbor(Side))
+		if (!hasNeighbor(Face))
 		{
-			unsigned sideValue = static_cast<unsigned>(Side);
+			unsigned faceValue = static_cast<unsigned>(Face);
 
-			std::array<Vertex, 6> mesh = getSingleBlockMesh<Side>(_localPos, _faceTexture[sideValue], textureAtlas);
+			std::array<Vertex, 6> mesh = getSingleBlockMesh<Face>(_localPos, _faceTexture[faceValue], textureAtlas);
 
 			vertices.reserve(vertices.size() + 6);
 

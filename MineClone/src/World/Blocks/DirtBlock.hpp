@@ -9,11 +9,11 @@ public:
 		: Block(chunk, localPos, Blocks::Dirt)
 	{
 		setTexture<
-			BlockSide::North,
-			BlockSide::East,
-			BlockSide::South,
-			BlockSide::West,
-			BlockSide::Top,
-			BlockSide::Bottom>(TextureId::Dirt);
+			BlockFace::North,
+			BlockFace::East,
+			BlockFace::South,
+			BlockFace::West,
+			BlockFace::Top,
+			BlockFace::Bottom>(TextureId::Dirt);
 	}
 };
