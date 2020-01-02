@@ -1,6 +1,6 @@
 #include "Coords.hpp"
 
-#include "World/ChunkSegment.hpp"
+#include "World/Chunk/ChunkSegment.hpp"
 
 namespace coords
 {

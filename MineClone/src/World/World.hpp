@@ -6,7 +6,7 @@
 #include "Graphics/Texture.hpp"
 
 #include "TextureAtlas.hpp"
-#include "ChunkManager.hpp"
+#include "Chunk/ChunkManager.hpp"
 #include "Maths/FrustumView.hpp"
 
 class Camera;
@@ -46,7 +46,7 @@ public:
 		chunk->placeBlock<T>(coords::getLocalPos(worldPos));
 		chunk->generateMesh(_textureAtlas);
 
-		tryUpdateNearChunks(worldPos, chunkSegmentPos);
+		tryUpdateNearbyChunks(worldPos, chunkSegmentPos);
 	}
 
 	void removeBlock(const coords::WorldPos& worldPos);
@@ -62,6 +62,6 @@ public:
 	void drawGrid(ShaderProgram& shaderProgram);
 
 public:
-	void tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos);
+	void tryUpdateNearbyChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos);
 	std::vector<glm::ivec3> getNeighborIfOnBound(const coords::WorldPos& worldPos);
 };

@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "World.hpp"
+#include "World/World.hpp"
 
 ChunkManager::ChunkManager(World& world)
 	: _world(world)

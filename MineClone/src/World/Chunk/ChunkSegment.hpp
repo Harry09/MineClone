@@ -5,7 +5,7 @@
 
 #include "Graphics/VertexBuffer.hpp"
 
-#include "Blocks/Block.hpp"
+#include "World/Blocks/Block.hpp"
 #include "TextureAtlas.hpp"
 
 class World;

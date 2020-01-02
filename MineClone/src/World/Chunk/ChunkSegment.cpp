@@ -3,11 +3,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <FastNoise.h>
 
-#include "Blocks/DirtBlock.hpp"
-#include "Blocks/GrassBlock.hpp"
-#include "Blocks/StoneBlock.hpp"
+#include "World/Blocks/DirtBlock.hpp"
+#include "World/Blocks/GrassBlock.hpp"
+#include "World/Blocks/StoneBlock.hpp"
 
-#include "World.hpp"
+#include "World/World.hpp"
 
 ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas)
 	: _world(world), _chunkSegmentPos(chunkSegmentPos), _textureAtlas(textureAtlas.getTexture())
