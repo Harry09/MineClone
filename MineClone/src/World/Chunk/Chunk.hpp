@@ -18,6 +18,8 @@ public:
 
 	const coords::ChunkPos& getChunkPos() const { return _chunkPos; }
 
+	void addChunkSegment(std::unique_ptr<ChunkSegment>& segment);
+
 	ChunkSegment* getChunkSegment(int posZ);
 
 	void generateMesh(TextureAtlas& textureAtlas);

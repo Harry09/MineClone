@@ -9,56 +9,12 @@
 
 #include "World/World.hpp"
 
-ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas)
+ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, TextureAtlas& textureAtlas)
 	: _world(world), _chunkSegmentPos(chunkSegmentPos), _textureAtlas(textureAtlas.getTexture())
 {
-	_data.move(glm::vec3(chunkSegmentPos * ChunkSegment::Size));
-
-	auto yy = _chunkSegmentPos.y * ChunkSegment::Size;
-
-	for (int x = 0; x < 16; x++)
-	{
-		for (int z = 0; z < 16; z++)
-		{
-			auto height = heightMap[x][z];
-			auto height_ = height;
-
-			// is under chunk
-			if (height < yy)
-			{
-				continue;
-			}
-
-			// is in chunk
-			if (height < yy + 16)
-			{
-				height_ = height - yy;
-
-				placeBlock<GrassBlock>(coords::LocalPos{ x, height_, z });
-			}
-			else // is above chunk
-			{
-				height_ = 16;
-			}
-
-			// fill rest
-			for (int y = 0; y < height_; y++)
-			{
-				// if current block is at least 4 block beneath the top
-				if (height - (y + yy) > 4)
-				{
-					placeBlock<StoneBlock>(coords::LocalPos{ x, y, z });
-				}
-				else
-				{
-					placeBlock<DirtBlock>(coords::LocalPos{ x, y, z });
-				}
-			}
-		}
-	}
+	_mesh.move(glm::vec3(chunkSegmentPos * ChunkSegment::Size));
 
 	initOutline();
-
 }
 
 Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockFace face) const
@@ -81,6 +37,9 @@ Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockFace face) cons
 
 void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 {
+	if (!_meshNeedUpdate)
+		return;
+
 	std::vector<Vertex> data;
 	data.reserve(36 * _blockCount);
 
@@ -110,13 +69,15 @@ void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 
 	printf("Predicted size: %lld, Used size: %lld\n", data.capacity(), data.size());
 
-	_data.resize(data.size());
-	_data.setVertices(0, data.data(), data.size());
+	_mesh.resize(data.size());
+	_mesh.setVertices(0, data.data(), data.size());
+
+	_meshNeedUpdate = false;
 }
 
 void ChunkSegment::drawChunks(ShaderProgram& shaderProgram)
 {
-	_data.draw(_textureAtlas, shaderProgram);
+	_mesh.draw(_textureAtlas, shaderProgram);
 }
 
 void ChunkSegment::drawGrid(ShaderProgram& shaderProgram)

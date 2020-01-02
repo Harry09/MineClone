@@ -9,6 +9,8 @@
 #include "Chunk/ChunkManager.hpp"
 #include "Maths/FrustumView.hpp"
 
+#include "Generators/WorldGeneratorV1.hpp"
+
 class Camera;
 
 class World
@@ -24,6 +26,8 @@ private:
 	ChunkManager _chunkManager;
 
 	glm::vec3 _boundingSpherePos{ 0.f };
+
+	std::unique_ptr<IWorldGenerator> _worldGenerator;
 
 public:
 	World(Camera& camera);

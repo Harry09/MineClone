@@ -13,35 +13,15 @@ World::World(Camera& camera)
 	_frustumView(camera),
 	_texture("textures.jpg"),
 	_textureAtlas(_texture, 16),
-	_chunkManager(*this)
+	_chunkManager(*this),
+	_worldGenerator(std::make_unique<WorldGeneratorV1>())
 {
+
 }
 
 void World::init()
 {
-	FastNoise noise;
-	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
-	noise.SetFrequency(0.01f);
 
-	const int ChunkCount = 4;
-
-	const int Size = ChunkCount * 16;
-
-	printf("Generating world...\n");
-
-	for (int x = -ChunkCount; x < ChunkCount; x++)
-	{
-		for (int z = -ChunkCount; z < ChunkCount; z++)
-		{
-			_chunkManager.addChunk(coords::ChunkPos{ x, z }, noise, _textureAtlas);
-
-			printf("%d %d\n", x, z);
-		}
-	}
-
-	printf("Generating mesh...\n");
-
-	_chunkManager.updateMeshes(_textureAtlas);
 }
 
 Chunk* World::getChunk(const coords::ChunkPos& chunkPos) const
@@ -66,7 +46,7 @@ void World::removeBlock(const coords::WorldPos& worldPos)
 	chunk->removeBlock(coords::getLocalPos(worldPos));
 	chunk->generateMesh(_textureAtlas);
 
-	tryUpdateNearChunks(worldPos, chunkPos);
+	tryUpdateNearbyChunks(worldPos, chunkPos);
 }
 
 Block* World::getBlock(const coords::WorldPos& worldPos) const
@@ -96,7 +76,7 @@ void World::drawGrid(ShaderProgram& shaderProgram)
 	_chunkManager.drawGrid(shaderProgram);
 }
 
-void World::tryUpdateNearChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos)
+void World::tryUpdateNearbyChunks(const coords::WorldPos& worldPos, const coords::ChunkSegmentPos& chunkSegmentPos)
 {
 	auto neighbors = getNeighborIfOnBound(worldPos);
 

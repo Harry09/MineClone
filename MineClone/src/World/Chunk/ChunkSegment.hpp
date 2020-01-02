@@ -17,7 +17,6 @@ public:
 	static constexpr int Size = 16;
 
 private:
-	using HeightMapType = std::array<std::array<int, Size>, Size>;
 
 private:
 	World& _world;
@@ -26,7 +25,8 @@ private:
 
 	Texture& _textureAtlas;
 
-	VertexBuffer _data{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
+	bool _meshNeedUpdate = false;
+	VertexBuffer _mesh{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
 	std::unique_ptr<Block> _blocks[Size][Size][Size];
 
 	VertexBuffer _outline{ 24, PrimitiveType::Lines };
@@ -34,7 +34,7 @@ private:
 	int _blockCount = 0;
 
 public:
-	ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, const HeightMapType& heightMap, TextureAtlas& textureAtlas);
+	ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, TextureAtlas& textureAtlas);
 	~ChunkSegment() = default;
 
 	const coords::ChunkSegmentPos& getChunkSegmentPos() const { return _chunkSegmentPos; }
@@ -57,6 +57,8 @@ public:
 
 		_blockCount++;
 
+		_meshNeedUpdate = true;
+
 		return blockPtr;
 	}
 
@@ -68,6 +70,7 @@ public:
 		{
 			block.reset();
 			_blockCount--; 
+			_meshNeedUpdate = true;
 		}
 	}
 
