@@ -23,7 +23,7 @@ private:
 
 	coords::ChunkSegmentPos _chunkSegmentPos;
 
-	Texture& _textureAtlas;
+	TextureAtlas& _textureAtlas;
 
 	bool _meshNeedUpdate = false;
 	VertexBuffer _mesh{ 0, PrimitiveType::Triangles, VertexBuffer::DrawType::Dynamic };
@@ -79,7 +79,7 @@ public:
 
 	Block* getNeighborOfBlock(const Block* block, BlockFace face) const;
 
-	void generateMesh(TextureAtlas& textureAtlas);
+	void generateMesh();
 
 	void drawChunks(ShaderProgram& shaderProgram);
 	void drawGrid(ShaderProgram& shaderProgram);

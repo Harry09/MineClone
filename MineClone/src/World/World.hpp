@@ -48,7 +48,7 @@ public:
 			return;
 
 		chunk->placeBlock<T>(coords::getLocalPos(worldPos));
-		chunk->generateMesh(_textureAtlas);
+		chunk->generateMesh();
 
 		tryUpdateNearbyChunks(worldPos, chunkSegmentPos);
 	}

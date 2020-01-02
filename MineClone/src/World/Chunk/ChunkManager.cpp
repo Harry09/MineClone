@@ -35,16 +35,16 @@ ChunkSegment* ChunkManager::getChunkSegment(const coords::ChunkSegmentPos& chunk
 	return chunk->getChunkSegment(chunkSegmentPos.y);
 }
 
-void ChunkManager::addChunk(const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas)
+void ChunkManager::addChunk(Chunk* chunk)
 {
-	_chunks.push_back(std::make_unique<Chunk>(_world, chunkPos, noise, textureAtlas));
+	_chunks.push_back(std::unique_ptr<Chunk>(chunk));
 }
 
-void ChunkManager::updateMeshes(TextureAtlas& textureAtlas)
+void ChunkManager::updateMeshes()
 {
 	for (auto& chunk : _chunks)
 	{
-		chunk->generateMesh(textureAtlas);
+		chunk->generateMesh();
 	}
 }
 

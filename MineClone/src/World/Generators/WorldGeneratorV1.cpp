@@ -10,40 +10,41 @@
 #include "World/Blocks/GrassBlock.hpp"
 #include "World/Blocks/StoneBlock.hpp"
 
-WorldGeneratorV1::WorldGeneratorV1()
+WorldGeneratorV1::WorldGeneratorV1(World& world)
+	: IWorldGenerator(world)
 {
 	noise.SetNoiseType(FastNoise::NoiseType::Simplex);
 	noise.SetFrequency(0.01f);
 }
 
-void WorldGeneratorV1::generateChunk(World& world, Chunk& chunk)
+Chunk* WorldGeneratorV1::generateChunk(coords::ChunkPos&& chunkPos)
 {
-	auto chunkPos = chunk.getChunkPos();
+	Chunk* chunk = new Chunk(chunkPos);
 
 	for (int i = 0; i < Chunk::Height; i++)
 	{
-		auto segment = std::make_unique<ChunkSegment>(world, coords::ChunkSegmentPos{ chunkPos.x, i, chunkPos.y }, world.getTextureAtlas());
+		auto segment = std::make_unique<ChunkSegment>(_world, coords::ChunkSegmentPos{ chunkPos.x, i, chunkPos.y }, _world.getTextureAtlas());
 
-		generateChunkSegment(chunkPos, *segment);
+		generateChunkSegment({ chunkPos.x, i, chunkPos.y }, *segment);
 
-		chunk.addChunkSegment(std::move(segment));
-
-
+		chunk->addChunkSegment(std::move(segment));
 	}
+
+	return chunk;
 }
 
-void WorldGeneratorV1::generateChunkSegment(const coords::ChunkPos& chunkPos, ChunkSegment& segment)
+void WorldGeneratorV1::generateChunkSegment(const coords::ChunkSegmentPos& segmentPos, ChunkSegment& segment)
 {
-	auto yy = chunkPos.y * ChunkSegment::Size;
+	auto yy = segmentPos.y * ChunkSegment::Size;
 
 	for (int x = 0; x < ChunkSegment::Size; x++)
 	{
 		for (int z = 0; z < ChunkSegment::Size; z++)
 		{
-			float xx = static_cast<float>(x + chunkPos.x * ChunkSegment::Size);
-			float zz = static_cast<float>(z + chunkPos.y * ChunkSegment::Size);
+			float blockPosX = static_cast<float>(x + segmentPos.x * ChunkSegment::Size);
+			float blockPosZ = static_cast<float>(z + segmentPos.z * ChunkSegment::Size);
 
-			const auto constHeight = static_cast<int>((noise.GetNoise(xx, zz) + 0.8f) * 16);
+			const auto constHeight = static_cast<int>((noise.GetNoise(blockPosX, blockPosZ) + 0.8f) * 16);
 			auto height = constHeight;
 
 			// is under chunk

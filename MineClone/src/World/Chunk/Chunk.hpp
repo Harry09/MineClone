@@ -14,7 +14,7 @@ private:
 	coords::ChunkPos _chunkPos{ 0 };
 
 public:
-	Chunk(World& world, const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas);
+	Chunk(const coords::ChunkPos& chunkPos);
 
 	const coords::ChunkPos& getChunkPos() const { return _chunkPos; }
 
@@ -22,7 +22,7 @@ public:
 
 	ChunkSegment* getChunkSegment(int posZ);
 
-	void generateMesh(TextureAtlas& textureAtlas);
+	void generateMesh();
 
 	void drawChunks(ShaderProgram& shaderProgram);
 	void drawGrid(ShaderProgram& shaderProgram);

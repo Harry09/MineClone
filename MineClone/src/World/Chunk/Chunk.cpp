@@ -2,7 +2,7 @@
 
 #include <FastNoise.h>
 
-Chunk::Chunk(World& world, const coords::ChunkPos& chunkPos, FastNoise& noise, TextureAtlas& textureAtlas)
+Chunk::Chunk(const coords::ChunkPos& chunkPos)
 	: _chunkPos(chunkPos)
 {
 	_segments.resize(Chunk::Height);
@@ -23,11 +23,11 @@ ChunkSegment* Chunk::getChunkSegment(int posZ)
 	return _segments[posZ].get();
 }
 
-void Chunk::generateMesh(TextureAtlas& textureAtlas)
+void Chunk::generateMesh()
 {
 	for (auto& segment : _segments)
 	{
-		segment->generateMesh(textureAtlas);
+		segment->generateMesh();
 	}
 }
 

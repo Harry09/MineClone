@@ -14,14 +14,28 @@ World::World(Camera& camera)
 	_texture("textures.jpg"),
 	_textureAtlas(_texture, 16),
 	_chunkManager(*this),
-	_worldGenerator(std::make_unique<WorldGeneratorV1>())
+	_worldGenerator(std::make_unique<WorldGeneratorV1>(*this))
 {
 
 }
 
 void World::init()
 {
+	// generate spawn
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 0, 0 }));
 
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 1, 0 }));
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 0, 1 }));
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 1, 1 }));
+
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ -1, 0 }));
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 0, -1 }));
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ -1, -1 }));
+
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ 1, -1 }));
+	_chunkManager.addChunk(_worldGenerator->generateChunk({ -1, 1 }));
+
+	_chunkManager.updateMeshes();
 }
 
 Chunk* World::getChunk(const coords::ChunkPos& chunkPos) const
@@ -44,7 +58,7 @@ void World::removeBlock(const coords::WorldPos& worldPos)
 		return;
 	
 	chunk->removeBlock(coords::getLocalPos(worldPos));
-	chunk->generateMesh(_textureAtlas);
+	chunk->generateMesh();
 
 	tryUpdateNearbyChunks(worldPos, chunkPos);
 }
@@ -89,7 +103,7 @@ void World::tryUpdateNearbyChunks(const coords::WorldPos& worldPos, const coords
 
 		if (neighborChunk->getBlock(coords::getLocalPos(worldPos + neighbor)) != nullptr)
 		{
-			neighborChunk->generateMesh(_textureAtlas);
+			neighborChunk->generateMesh();
 		}
 	}
 }

@@ -10,7 +10,7 @@
 #include "World/World.hpp"
 
 ChunkSegment::ChunkSegment(World& world, const coords::ChunkSegmentPos& chunkSegmentPos, TextureAtlas& textureAtlas)
-	: _world(world), _chunkSegmentPos(chunkSegmentPos), _textureAtlas(textureAtlas.getTexture())
+	: _world(world), _chunkSegmentPos(chunkSegmentPos), _textureAtlas(textureAtlas)
 {
 	_mesh.move(glm::vec3(chunkSegmentPos * ChunkSegment::Size));
 
@@ -35,7 +35,7 @@ Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockFace face) cons
 	return getBlock(localPos);
 }
 
-void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
+void ChunkSegment::generateMesh()
 {
 	if (!_meshNeedUpdate)
 		return;
@@ -59,7 +59,7 @@ void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 						BlockFace::South, 
 						BlockFace::West, 
 						BlockFace::Top, 
-						BlockFace::Bottom>(textureAtlas);
+						BlockFace::Bottom>(_textureAtlas);
 
 					data.insert(data.end(), vertices.begin(), vertices.end());
 				}
@@ -77,7 +77,7 @@ void ChunkSegment::generateMesh(TextureAtlas& textureAtlas)
 
 void ChunkSegment::drawChunks(ShaderProgram& shaderProgram)
 {
-	_mesh.draw(_textureAtlas, shaderProgram);
+	_mesh.draw(_textureAtlas.getTexture(), shaderProgram);
 }
 
 void ChunkSegment::drawGrid(ShaderProgram& shaderProgram)

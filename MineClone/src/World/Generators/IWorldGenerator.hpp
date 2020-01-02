@@ -1,15 +1,21 @@
 ﻿#pragma once
 
+#include "Maths/Coords.hpp"
+
 class World;
 class Chunk;
 
 class IWorldGenerator
 {
+protected:
+	World& _world;
+
 public:
-	IWorldGenerator()
+	IWorldGenerator(World& world)
+		: _world(world)
 	{
 
 	}
 
-	virtual void generateChunk(World& world, Chunk& chunk) = 0;
+	virtual Chunk* generateChunk(coords::ChunkPos&& chunkPos) = 0;
 };

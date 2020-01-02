@@ -18,10 +18,10 @@ private:
 	FastNoise noise;
 
 public:
-	WorldGeneratorV1();
+	WorldGeneratorV1(World& world);
 
-	void generateChunk(World& world, Chunk& chunk) override;
+	Chunk* generateChunk(coords::ChunkPos&& chunkPos) override;
 
 private:
-	void generateChunkSegment(const coords::ChunkPos& chunkPos, ChunkSegment& segment);
+	void generateChunkSegment(const coords::ChunkSegmentPos& segmentPos, ChunkSegment& segment);
 };
