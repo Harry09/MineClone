@@ -35,9 +35,9 @@ Block* ChunkSegment::getNeighborOfBlock(const Block* block, BlockFace face) cons
 	return getBlock(localPos);
 }
 
-void ChunkSegment::generateMesh()
+void ChunkSegment::generateMesh(bool force)
 {
-	if (!_meshNeedUpdate)
+	if (force == false && !_meshNeedUpdate)
 		return;
 
 	std::vector<Vertex> data;

@@ -79,7 +79,7 @@ public:
 
 	Block* getNeighborOfBlock(const Block* block, BlockFace face) const;
 
-	void generateMesh();
+	void generateMesh(bool force = false);
 
 	void drawChunks(ShaderProgram& shaderProgram);
 	void drawGrid(ShaderProgram& shaderProgram);

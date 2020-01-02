@@ -103,7 +103,7 @@ void World::tryUpdateNearbyChunks(const coords::WorldPos& worldPos, const coords
 
 		if (neighborChunk->getBlock(coords::getLocalPos(worldPos + neighbor)) != nullptr)
 		{
-			neighborChunk->generateMesh();
+			neighborChunk->generateMesh(true);
 		}
 	}
 }
