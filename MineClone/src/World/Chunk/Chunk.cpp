@@ -8,7 +8,7 @@ Chunk::Chunk(const coords::ChunkPos& chunkPos)
 	_segments.resize(Chunk::Height);
 }
 
-void Chunk::addChunkSegment(std::unique_ptr<ChunkSegment>& segment)
+void Chunk::addChunkSegment(std::unique_ptr<ChunkSegment> segment)
 {
 	auto y = segment->getChunkSegmentPos().y;
 
