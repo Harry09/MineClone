@@ -1,5 +1,5 @@
 vendor/*/*
-!vendor/*/.gitkeep
+!vendor/glad/*
 
 MineClone/*
 !MineClone/assets/
